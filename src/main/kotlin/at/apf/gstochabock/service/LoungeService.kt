@@ -33,6 +33,12 @@ class LoungeService {
 
     fun joinTable(tableid: String, playerid: String, playername: String, position: Int, password: String?) {
         val table = gameRepo.lockedRead(tableid)
+
+        if (table.state !== TableState.PENDING) {
+            gameRepo.unlock(tableid)
+            throw RuntimeException("Wrong state to join")
+        }
+
         if (table.players.size >= table.logic.amountPlayers()) {
             gameRepo.unlock(tableid)
             throw RuntimeException("Full table")
@@ -54,7 +60,6 @@ class LoungeService {
 
         // table full
         if (table.players.size === table.logic.amountPlayers()) {
-            table.state = TableState.TRUMPF
             tableService.nextGame(table)
         }
 

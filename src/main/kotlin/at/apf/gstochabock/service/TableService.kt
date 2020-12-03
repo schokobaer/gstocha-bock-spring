@@ -22,12 +22,18 @@ class TableService {
         table.matschable = null
         table.history = null
         table.trumpf = null
-
+        table.state = TableState.TRUMPF
 
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
-            table.players[i].cards = playercards[i]
+            table.players[i].cards = playercards[i].toMutableList()
         }
+    }
+
+    fun addHistory(table: Table) {
+        val t2 = Table(table.id, table.password, MutablePair(table.points.first, table.points.second), MutablePair(table.weisPoints.first, table.weisPoints.second), table.currentMove,
+                table.trumpf, table.round.toMutableList(), null, table.matschable, table.players.toMutableList(), null, table.logic, table.state)
+        table.history = t2
     }
 
     fun setTrumpf(tableid: String, startingPlayerid: String, trumpf: Trumpf) {
@@ -45,9 +51,10 @@ class TableService {
             throw RuntimeException("Player not at table")
         }
 
+        addHistory(table)
+
         table.trumpf = trumpf
         table.currentMove = table.players.find { it.playerid == startingPlayerid }!!.position
-        // TODO: Something to make the undo of the trumpf selection possible
         table.state = TableState.PLAYING
 
         // search for stoeckable player
@@ -84,7 +91,7 @@ class TableService {
             throw RuntimeException("Only cards on the hand can be weised")
         }
 
-        player.weises = table.logic.cardsToWeis(cards)
+        player.weises = table.logic.cardsToWeis(cards).toMutableList()
 
         gameRepo.writeBack(table)
     }
@@ -229,15 +236,44 @@ class TableService {
 
 
     fun undo(tableid: String, playerid: String) {
+        var table = gameRepo.lockedRead(tableid)
 
+        if (!table.players.none { it.playerid == playerid }) {
+            gameRepo.unlock(tableid)
+            throw RuntimeException("Player not at table")
+        }
+
+        if (table.state === TableState.TRUMPF) {
+           table = table.history!!
+        } else if (table.state === TableState.PLAYING && table.players.all { it.cards.size === table.logic.amountCards() }) {
+            // no cards played yet
+            table = table.history!!
+        }
+
+        gameRepo.writeBack(table)
     }
 
     fun newGame(tableid: String, playerid: String) {
+        val table = gameRepo.lockedRead(tableid)
 
+        if (!table.players.none { it.playerid == playerid }) {
+            gameRepo.unlock(tableid)
+            throw RuntimeException("Player not at table")
+        }
+
+        if (table.state !== TableState.FINISHED) {
+            gameRepo.unlock(tableid)
+            throw RuntimeException("Wrong state for new game")
+        }
+
+        addHistory(table)
+        nextGame(table)
+
+        gameRepo.writeBack(table)
     }
 
     fun leave(tableid: String, playerid: String) {
-
+        // TODO: Implement
     }
 
 }
