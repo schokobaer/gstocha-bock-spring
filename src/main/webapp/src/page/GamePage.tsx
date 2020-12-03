@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, NewRequestBody, TableDto, Position, JoinRequestBody, UndoRequestBody, PlayerDto, StoeckeRequestBody } from 'gstochabock-core'
+import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, PlayerDto } from '../dto/dtos'
 import '../App.css';
 import Hand from '../component/Hand';
 import Runde from '../component/Runde';
@@ -98,12 +98,11 @@ class GamePage extends React.Component<Props, State> {
     joinTable(table: TableDto, position: Position, password?: string) {
       console.info('Player joins table on position: ' + position)
       const reqBody: JoinRequestBody = {
-        playerid: window.localStorage.playerid,
         name: window.localStorage.name,
         position: position,
         password: password
       }
-      this.rest.join(this.props.tableId, reqBody)
+      this.rest.join(window.localStorage.playerid, this.props.tableId, reqBody)
       .catch(err => console.error('Could not join ', err))
       .finally(() => this.loadTable())
       this.setState({loading: true})
@@ -112,10 +111,9 @@ class GamePage extends React.Component<Props, State> {
     trumpfSelected(trumpf: Trumpf) {
       console.info('Player selected trumpf: ' + trumpf)
       const reqBody: TrumpfRequestBody = {
-        playerid: window.localStorage.playerid,
         trumpf: trumpf
       }
-      this.rest.trumpf(this.props.tableId, reqBody)
+      this.rest.trumpf(window.localStorage.playerid, this.props.tableId, reqBody)
       .then(() => this.loadTable()).catch(err => console.error('Could not set trumpf ', err))
       this.setState({loading: true})
     }
@@ -129,10 +127,9 @@ class GamePage extends React.Component<Props, State> {
     makeWeis() {
       console.info('Player makes the weis ' + this.state.weisCards)
       const reqBody: WeisRequestBody = {
-        playerid: window.localStorage.playerid,
         cards: this.state.weisCards
       }
-      this.rest.weis(this.props.tableId, reqBody)
+      this.rest.weis(window.localStorage.playerid, this.props.tableId, reqBody)
       .then(() => this.loadTable()).catch(err => console.error('Could set weis ', err))
       this.setState({weising: false, weisCards: []})
     }
@@ -161,11 +158,8 @@ class GamePage extends React.Component<Props, State> {
       let stoecke = this.state.stoecke
       if (stoecke === true) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
-          const stoeckeReqBody: StoeckeRequestBody = {
-            playerid: window.localStorage.playerid
-          }
           console.info('Send stocke YESS')
-          await this.rest.stoecke(this.props.tableId, stoeckeReqBody)
+          await this.rest.stoecke(window.localStorage.playerid, this.props.tableId)
           .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
         } else {
           stoecke = false
@@ -173,27 +167,20 @@ class GamePage extends React.Component<Props, State> {
       }
       this.setState({game: table, weisResult: undefined, stoecke: stoecke})
       const reqBody: PlayRequestBody = {
-        playerid: window.localStorage.playerid,
         card: card
       }
-      this.rest.play(this.props.tableId, reqBody)
+      this.rest.play(window.localStorage.playerid, this.props.tableId, reqBody)
       .catch(err => console.error('Could not play card ', err))
     }
 
     undo() {
-      const reqBody: UndoRequestBody = {
-        playerid: window.localStorage.playerid
-      }
-      this.rest.undo(this.props.tableId, reqBody)
+      this.rest.undo(window.localStorage.playerid, this.props.tableId)
       .catch(err => console.error('Could not clean ', err))
       this.setState({loading: true})
     }
 
     nextGame() {
-      const reqBody: NewRequestBody = {
-        playerid: window.localStorage.playerid
-      }
-      this.rest.new(this.props.tableId, reqBody)
+      this.rest.new(window.localStorage.playerid, this.props.tableId)
       .catch(err => console.error('Could not init next game ', err))
       this.setState({loading: true})
     }

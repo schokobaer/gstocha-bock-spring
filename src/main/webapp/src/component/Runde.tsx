@@ -84,7 +84,7 @@ interface Props {
     trumpf?: string
     lastRound?: {
         startPosition: number;
-        cards: [string, string, string, string];
+        cards: Array<string>;
     }
 }
 

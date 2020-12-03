@@ -1,6 +1,7 @@
 package at.apf.gstochabock.rest
 
 import at.apf.gstochabock.dto.*
+import at.apf.gstochabock.mapper.TableMapper
 import at.apf.gstochabock.model.Card
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.service.TableService
@@ -13,11 +14,17 @@ class GameController {
     @Autowired
     lateinit var tableService: TableService
 
+    @Autowired
+    lateinit var tableMapper: TableMapper
+
     @GetMapping("/api/table/{id}")
-    fun getGame(@PathVariable id: String, @RequestHeader playerid: String): String {
+    fun getGame(@PathVariable id: String, @RequestHeader playerid: String): Any {
+        val game = tableService.getGameTable(id)
+        if (game.players.find { it.playerid == playerid } !== null) {
+            return tableMapper.toGameDto(game, playerid)
+        }
 
-
-        return "table: $id / playerid: $playerid"
+        return tableMapper.toTableDto(game)
     }
 
     @PostMapping("/api/table/{id}/trumpf")

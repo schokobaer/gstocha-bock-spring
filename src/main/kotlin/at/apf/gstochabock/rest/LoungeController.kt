@@ -24,14 +24,14 @@ class LoungeController {
     }
 
     @PostMapping("/api/table")
-    fun createTable(@RequestBody req: CreateRequestBody): CreateResponseBody {
-        val table = loungeService.createTable(req.playerid, req.name, req.password)
+    fun createTable(@RequestHeader playerid: String, @RequestBody req: CreateRequestBody): CreateResponseBody {
+        val table = loungeService.createTable(playerid, req.name, req.password)
         return CreateResponseBody(table.id)
     }
 
     @PostMapping("/api/table/{id}/join")
-    fun join(@PathVariable id: String, @RequestBody req: JoinRequestBody) {
-        loungeService.joinTable(id, req.playerid, req.name, req.position, req.password)
+    fun join(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: JoinRequestBody) {
+        loungeService.joinTable(id, playerid, req.name, req.position, req.password)
     }
 
 }

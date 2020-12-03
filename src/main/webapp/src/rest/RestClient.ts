@@ -1,4 +1,4 @@
-import { TableDto, JoinRequestBody, TrumpfRequestBody, WeisRequestBody, PlayRequestBody, UndoRequestBody, NewRequestBody, CreateRequestBody, CreateResponseBody, StoeckeRequestBody } from 'gstochabock-core'
+import { TableDto, JoinRequestBody, TrumpfRequestBody, WeisRequestBody, PlayRequestBody, CreateRequestBody, CreateResponseBody } from '../dto/dtos'
 
 const api = '/api/table'
 export default class RestClient {
@@ -20,11 +20,12 @@ export default class RestClient {
         })
     }
 
-    getTable(tableId: string, playerId: string): Promise<any> {
-        return fetch(`${api}/${tableId}/?playerid=${playerId}`, {
+    getTable(tableId: string, playerid: string): Promise<any> {
+        return fetch(`${api}/${tableId}`, {
             method: 'GET',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'playerid': playerid
             },
             cache: 'no-cache'
         }).then(resp => {
@@ -37,12 +38,13 @@ export default class RestClient {
         })
     }
 
-    private sendPost(url: string, req: object): Promise<Response> {
+    private sendPost(url: string, req: object, playerid: string): Promise<Response> {
         return fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'playerid': playerid
             },
             cache: 'no-cache',
             body: JSON.stringify(req)
@@ -54,8 +56,8 @@ export default class RestClient {
         })
     }
 
-    create(req: CreateRequestBody): Promise<CreateResponseBody> {
-        return this.sendPost(`${api}/`, req)
+    create(playerid: string, req: CreateRequestBody): Promise<CreateResponseBody> {
+        return this.sendPost(`${api}/`, req, playerid)
                 .then(resp => {
                     return resp.json().then(data => {
                         return data as CreateResponseBody
@@ -63,31 +65,31 @@ export default class RestClient {
                 })
     }
 
-    join(id: string, req: JoinRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/join`, req)
+    join(playerid: string, id: string, req: JoinRequestBody): Promise<any> {
+        return this.sendPost(`${api}/${id}/join`, req, playerid)
     }
 
-    trumpf(id: string, req: TrumpfRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/trumpf`, req)
+    trumpf(playerid: string, id: string, req: TrumpfRequestBody): Promise<any> {
+        return this.sendPost(`${api}/${id}/trumpf`, req, playerid)
     }
 
-    weis(id: string, req: WeisRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/weis`, req)
+    weis(playerid: string, id: string, req: WeisRequestBody): Promise<any> {
+        return this.sendPost(`${api}/${id}/weis`, req, playerid)
     }
 
-    stoecke(id: string, req: StoeckeRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/stoecke`, req)
+    stoecke(playerid: string, id: string): Promise<any> {
+        return this.sendPost(`${api}/${id}/stoecke`, {}, playerid)
     }
 
-    play(id: string, req: PlayRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/play`, req)
+    play(playerid: string, id: string, req: PlayRequestBody): Promise<any> {
+        return this.sendPost(`${api}/${id}/play`, req, playerid)
     }
 
-    undo(id: string, req: UndoRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/undo`, req)
+    undo(playerid: string, id: string): Promise<any> {
+        return this.sendPost(`${api}/${id}/undo`, {}, playerid)
     }
 
-    new(id: string, req: NewRequestBody): Promise<any> {
-        return this.sendPost(`${api}/${id}/new`, req)
+    new(playerid: string, id: string): Promise<any> {
+        return this.sendPost(`${api}/${id}/new`, {}, playerid)
     }
 }
