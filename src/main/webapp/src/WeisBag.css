@@ -1,0 +1,8 @@
+.weis-bag {
+    display: flex;
+    flex-direction: row;
+}
+
+.weis-bag > div {
+    margin-right: 5px;
+}

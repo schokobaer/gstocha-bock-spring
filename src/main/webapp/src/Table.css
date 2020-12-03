@@ -1,0 +1,34 @@
+.table-ct {
+
+    padding: 15px;
+    background-color: #136600;
+    border-radius: 20px;
+    box-shadow: #555 3px 3px 3px 3px;
+
+    background-color: #8b5a2b;
+    background-image: url("texture/dark-wood.png");
+
+}
+
+.table-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-ct .table-row:first-of-type {
+    border-bottom: solid #000 3px;
+}
+
+.table-row > div {
+    width: 100%;
+    padding: 3% 0px;
+}
+
+.table-row > div {
+    font-size: 24px;
+    text-align: center;
+}
+
+.table-ct .table-row div:first-of-type {
+    border-right: solid #000 3px;
+}

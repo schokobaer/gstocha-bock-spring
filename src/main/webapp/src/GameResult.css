@@ -1,0 +1,33 @@
+.result-window {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    border: 3px solid #000;
+    border-radius: 20px;
+    padding: 30px;
+    z-index: 1100;
+
+    background-color: #67d1eb;
+    background-image: url(texture/diagmonds.png);
+}
+
+.result-window button {
+    margin-top: 15px;
+}
+
+.result-window table {
+    font-size: 24px;
+    border-collapse: collapse;
+}
+.result-window table tr:first-child {
+    border-bottom: 2px solid #000;
+}
+.result-window td {
+    padding: 5px 15px;
+    text-align: center;
+}
+
+.last-stich > div {
+    display: inline;
+    margin-right: 5px;
+}

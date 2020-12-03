@@ -1,7 +1,10 @@
 package at.apf.gstochabock.dto
 
-data class CreateRequestBody(val playerid: String, val name: String, val password: String?)
-data class JoinRequestBody(val playerid: String, val name: String, val position: Int, val password: String?)
+class CreateRequestBody(val playerid: String, val name: String, val password: String? = null)
+
+data class JoinRequestBody(val playerid: String, val name: String, val position: Int, val password: String? = null)
+
+
 data class TrumpRequestBody(val playerid: String, val trumpf: Trumpf)
 data class WeisRequestBody(val playerid: String, val cards: List<String>)
 data class StoeckeRequestBody(val playerid: String)

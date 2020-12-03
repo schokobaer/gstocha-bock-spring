@@ -1,0 +1,17 @@
+.tablepage {
+    margin-top: 30px;
+}
+
+.tables-ct {
+    margin-top: 30px;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+}
+
+.table-ct-ct {
+    width: 250px;
+    margin-bottom: 15px;
+    margin-left: 5px;
+    margin-right: 5px;
+}

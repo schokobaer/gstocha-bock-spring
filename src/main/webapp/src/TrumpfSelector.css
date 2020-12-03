@@ -1,0 +1,42 @@
+.trumpfselector-ct {
+    max-width: 800px;
+    margin: 30px auto 0px auto;
+    padding: 5px;
+    background-color: #136600;
+    border-radius: 20px;
+    padding: 20px;
+    /* background-color: #8b5a2b; */
+    /* background-color: #f54f29; */
+    background-color: #67d1eb;
+    background-image: url(texture/diagmonds.png);
+}
+
+.trumpfselector-flex {
+    display: flex;
+    justify-content: space-around;
+    width: 500px;
+    margin: 0px auto 30px auto;
+}
+
+.trumpfselector-trumpf {
+    cursor: pointer;
+    border: solid 2px #093300;
+    background-color: #ddd;
+    border-radius: 100px;
+    height: 64px;
+    width: 64px;
+}
+
+.trumpfselector-trumpf:hover {
+    background-color: #67d1eb;
+}
+
+.trumpfselector-trumpf>img {
+    height: 40px;
+}
+
+.table-ct-ct {
+    width: 250px;
+    margin-left: auto;
+    margin-right: auto;
+}

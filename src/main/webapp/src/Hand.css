@@ -1,0 +1,30 @@
+.hand-ct {
+    position:fixed;
+    left:0px;
+    bottom:30px;
+    height:25%;
+    width: 100%;
+    /* background-color: #F54F29; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    /* background-color: #8b5a2b;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png"); */
+}
+
+.hand-card-ct {
+    width:100%;
+    display: flex;
+    justify-content: center;
+}
+
+.hand-card-ct>div {
+    margin-left: -20px;
+    transition: 0.3s ease;
+}
+
+.hand-card-ct>div:hover {
+    margin-top: -30px;
+}
+

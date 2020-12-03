@@ -1,0 +1,7 @@
+.app-logout {
+    position: absolute;
+    display: flex;
+    justify-content: end;
+    top: 15px;
+    right: 15px;    
+}

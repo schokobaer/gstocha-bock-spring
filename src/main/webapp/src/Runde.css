@@ -1,0 +1,70 @@
+.runde-ct {
+    max-width: 800px;
+    margin: 30px auto 0px auto;
+    padding: 20px;
+    background-color: #136600;
+    border-radius: 20px;
+    box-shadow: #555 3px 3px 3px 3px;
+
+    background-color: #8b5a2b;
+    background-image: url("texture/dark-wood.png");
+}
+
+.runde-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.runde-middle {
+    display: flex;
+    justify-content: center;
+}
+
+.runde-middle > * {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.action-ct {
+    margin-bottom: -100px;
+    display: table-caption;
+}
+
+.action-ct > div {
+    margin-bottom: 5px;
+}
+
+.trumpf-ct {
+    padding: 10px;
+    border: solid 2px #093300;
+    background-color: #ddd;
+    display: inline-flex;
+    border-radius: 100px;
+}
+
+.trumpf-ct>img {
+    height: 40px;
+}
+
+.peek-btn {
+    border: solid 2px #093300;
+    background-color: #ddd;
+    border-radius: 100px;
+    display: inline-flex;
+    font-size: 35px;
+    height: 60px;
+    width: 60px;
+    justify-content: center;
+    cursor: grab;
+}
+
+.peek-btn:hover {
+    background-color: #67d1eb;
+}
+
+.runde-playername {
+    font-family: TheDeadSaloon;
+    font-size: 24px;
+}

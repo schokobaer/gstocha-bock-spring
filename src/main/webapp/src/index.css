@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+  font-family: TheDeadSaloon;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* background-color:#0E4D00; */
+
+  background-color: #008c00;
+  background-image: url("texture/black-felt.png");
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  margin: 0px auto 0px auto;
+  width: 100%;
+  max-width: 800px;
+  
+}
+
+@font-face {
+  font-family: JoeJack;
+  src: url(font/JoeJack.ttf);
+}
+
+@font-face {
+  font-family: TheDeadSaloon;
+  src: url(font/thedeadsaloon-Regular.ttf);
+}
+
+.jass-btn {
+  font-family: TheDeadSaloon;
+  background-color: #ddd;
+  font-size: 24px;
+  display: inline-block;
+  padding: 5px 20px;
+  box-shadow: #777 3px 3px 3px;
+  cursor: pointer;
+}
+
+.jass-btn:hover {
+  background-color: #ccc;
+}
+
+.jass-btn:active{
+  background-color: #aaa;
+  box-shadow: #777 0px 0px 0px;
+}
