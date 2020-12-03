@@ -1,12 +1,13 @@
 package at.apf.gstochabock.service
 
+import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.model.*
 import org.junit.Assert
 import org.junit.jupiter.api.Test
 
 class JassBaseServiceCardsToWeisTest {
 
-    val svc = JassBaseService()
+    val svc = BaseJassLogic()
 
     @Test
     fun dreiBlattInDreiCardHand() {

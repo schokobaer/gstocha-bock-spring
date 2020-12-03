@@ -1,5 +1,6 @@
 package at.apf.gstochabock.repo
 
+import at.apf.gstochabock.model.MutablePair
 import at.apf.gstochabock.model.Table
 import org.springframework.stereotype.Repository
 import java.lang.RuntimeException
@@ -20,6 +21,14 @@ class GameRepository {
         return uuid
     }
 
+    fun list(pred: (Table) -> Boolean): List<Table> {
+        val tables = gameStore.values.map { it.first }
+        if (pred !== null) {
+            return tables.filter { pred.invoke(it) }
+        }
+        return tables
+    }
+
     fun read(id: String) : Table {
         val pair = gameStore[id]
         if (pair !== null) {
@@ -37,6 +46,14 @@ class GameRepository {
         throw RuntimeException("Could not find table with id $id")
     }
 
+    fun unlock(id: String) {
+        val pair = gameStore[id]
+        if (pair !== null) {
+            pair.second.unlock()
+        }
+        throw RuntimeException("Could not find table with id $id")
+    }
+
     fun writeBack(table: Table) {
         val pair = gameStore[table.id]
         if (pair !== null) {
@@ -45,7 +62,5 @@ class GameRepository {
         }
         throw RuntimeException("Could not find table with id ${table.id}")
     }
-
-    private data class MutablePair<K, V>(var first: K, var second: V)
 
 }

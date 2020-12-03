@@ -1,27 +1,55 @@
-package at.apf.gstochabock.service
+package at.apf.gstochabock.gamelogic
 
 import at.apf.gstochabock.dto.Trumpf
 import at.apf.gstochabock.model.*
 import org.springframework.stereotype.Service
+import kotlin.random.Random
 
 @Service
-class JassBaseService {
+class BaseJassLogic : JassLogic {
 
-    val trumpfRanking: List<CardValue> = listOf(CardValue.Sechs, CardValue.Sieben, CardValue.Acht, CardValue.Zehn,
+    private val rnd = Random(System.currentTimeMillis())
+
+    private val trumpfRanking: List<CardValue> = listOf(CardValue.Sechs, CardValue.Sieben, CardValue.Acht, CardValue.Zehn,
             CardValue.Ober, CardValue.Koenig, CardValue.Ass, CardValue.Nell, CardValue.Bauer)
+
+    override fun trumpfRanking(cardValue: CardValue): Int  {
+        return trumpfRanking.indexOf(cardValue)
+    }
+
+    override fun assignCards(): List<List<Card>> {
+        val allCards: MutableList<Card> = mutableListOf()
+        for (col in CardColor.values()) {
+            for (v in CardValue.values()) {
+                allCards.add(Card(col, v))
+            }
+        }
+
+        val players: MutableList<MutableList<Card>> = mutableListOf()
+        for (i in 1..amountPlayers()) {
+            val cards: MutableList<Card> = mutableListOf()
+            for (j in 1..amountCards()) {
+                val r = rnd.nextInt(allCards.size)
+                cards.add(allCards[r])
+                allCards.removeAt(r)
+            }
+        }
+
+        return players
+    }
 
 
     /**
      * Returns a sorted List of the cards.
      */
-    fun sort(cards: List<Card>) : List<Card> {
+    override fun sort(cards: List<Card>) : List<Card> {
         return cards.sortedBy { it.hashCode() }
     }
 
     /**
      * Sums up the points for the given Weis.
      */
-    fun calcWeissPoints(weises: List<Weis>): Int {
+    override fun calcWeissPoints(weises: List<Weis>): Int {
         return weises.sumBy {
             if (it.rank === WeisRank.Quartett) {
                 return when (it.value) {
@@ -37,7 +65,7 @@ class JassBaseService {
     /**
      * Analyzes the cards and returns a list of the found Weises.
      */
-    fun cardsToWeis(cards: List<Card>) : List<Weis> {
+    override fun cardsToWeis(cards: List<Card>) : List<Weis> {
 
         val cards2: MutableList<Card> = sort(cards).toMutableList()
         val weis: MutableList<Weis> = mutableListOf()
@@ -97,10 +125,33 @@ class JassBaseService {
         return weis
     }
 
+    private fun weisToCards(weis: Weis): List<Card> {
+        val cards: MutableList<Card> = mutableListOf()
+
+        if (weis.rank === WeisRank.Quartett) {
+            for (c in CardColor.values()) {
+                cards.add(Card(c, weis.value))
+            }
+        } else {
+            for (i in (weis.rank.value.toInt() - 1).rangeTo(0)) {
+                val v: CardValue = CardValue.values().find { it.ordinal === weis.value.ordinal - i }!!
+                cards.add(Card(weis.color!!, v))
+            }
+        }
+
+        return cards
+    }
+
+    override fun weisToCards(weises: List<Weis>): List<Card> {
+        val cards: HashSet<Card> = HashSet()
+        weises.forEach { cards.addAll(weisToCards(it)) }
+        return cards.toList()
+    }
+
     /**
      * Returns true if there are Stoecke in the cards, otherwise false.
      */
-    fun hasStoecke(cards: List<Card>, trumpf: Trumpf): Boolean {
+    override fun hasStoecke(cards: List<Card>, trumpf: Trumpf): Boolean {
         val trumpfCol = CardColor.values().find { trumpf.equals(it) }
         if (trumpfCol !== null) {
             return cards.contains(Card(trumpfCol, CardValue.Ober))
@@ -112,7 +163,7 @@ class JassBaseService {
     /**
      * Compare function for Weis with the needed trumpf.
      */
-    fun compareWeis(weisA: Weis, weisB: Weis, trumpf: Trumpf): Int {
+    override fun compareWeis(weisA: Weis, weisB: Weis, trumpf: Trumpf): Int {
         if (weisA.rank !== weisB.rank) {
             return weisA.rank.ordinal - weisB.rank.ordinal
         }
@@ -125,7 +176,7 @@ class JassBaseService {
     /**
      * Compare function for Weises wit hthe needed trumpf.
      */
-    fun compareWeis(weisA: List<Weis>, weisB: List<Weis>, trumpf: Trumpf): Int {
+    override fun compareWeis(weisA: List<Weis>, weisB: List<Weis>, trumpf: Trumpf): Int {
         val bestA = weisA.maxBy { it.hashCode() }
         val bestB = weisB.maxBy { it.hashCode() }
 
@@ -145,7 +196,7 @@ class JassBaseService {
     /**
      * Checks if card is allowed to play in the given setting of hand cards, round cards and the trumpf of the game.
      */
-    fun cardAllowed(round: List<Card>, card: Card, hand: List<Card>, trumpf: Trumpf): Boolean {
+    override fun cardAllowed(round: List<Card>, card: Card, hand: List<Card>, trumpf: Trumpf): Boolean {
         if (!hand.contains(card)) {
             return false
         }
@@ -162,19 +213,19 @@ class JassBaseService {
 
         // check if card is trumpf
         if (card.color === trumpfCol) {
-            val bestPlayedTrumpfCard: Card? = round.filter { it.color === trumpfCol }.maxBy { trumpfRanking.indexOf(it.value) }
+            val bestPlayedTrumpfCard: Card? = round.filter { it.color === trumpfCol }.maxBy { trumpfRanking(it.value) }
             if (bestPlayedTrumpfCard === null) {
                 return true
             }
 
             // check for untertrumpfing
-            if (trumpfRanking.indexOf(bestPlayedTrumpfCard.value) < trumpfRanking.indexOf(card.value)) {
+            if (trumpfRanking(bestPlayedTrumpfCard.value) < trumpfRanking(card.value)) {
                 return true
             }
 
             // if only trumpfs are left on the hand and  all hand cards are lower than the best played
             if (hand.all { trumpf.equals(it.color)
-                            && trumpfRanking.indexOf(it.value) < trumpfRanking.indexOf(bestPlayedTrumpfCard.value) }) {
+                            && trumpfRanking(it.value) < trumpfRanking(bestPlayedTrumpfCard.value) }) {
                 return true
             }
 
@@ -195,7 +246,7 @@ class JassBaseService {
     /**
      * Calculates the winner of the given round and the game trumpf.
      */
-    fun roundWinner(round: List<Card>, trumpf: Trumpf): Int {
+    override fun roundWinner(round: List<Card>, trumpf: Trumpf): Int {
         var best = 0
         for (i in 1..3) {
             if (round[i].color == round[best].color && !trumpf.equals(round[best].color)) {
@@ -215,7 +266,7 @@ class JassBaseService {
             } else if (trumpf.equals(round[i].color)) {
                 // best is not a trumpf or i is a better trumpf
                 if (!trumpf.equals(round[best].color) ||
-                        trumpfRanking.indexOf(round[i].value) > trumpfRanking.indexOf(round[best].value)) {
+                        trumpfRanking(round[i].value) > trumpfRanking(round[best].value)) {
                     best = i
                 }
             }
@@ -226,7 +277,7 @@ class JassBaseService {
     /**
      * Calculates the sum of the points of the played round with the given game trumpf.
      */
-    fun calcPoints(round: List<Card>, trumpf: Trumpf): Int {
+    override fun calcPoints(round: List<Card>, trumpf: Trumpf): Int {
         return round.sumBy {
             if (trumpf.equals(it.color)) {
                 if (it.value === CardValue.Bauer) {
