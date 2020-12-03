@@ -1,6 +1,6 @@
 package at.apf.gstochabock.gamelogic
 
-import at.apf.gstochabock.dto.Trumpf
+import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
 import org.springframework.stereotype.Service
 import kotlin.random.Random

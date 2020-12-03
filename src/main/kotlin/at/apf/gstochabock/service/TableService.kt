@@ -1,6 +1,6 @@
 package at.apf.gstochabock.service
 
-import at.apf.gstochabock.dto.Trumpf
+import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,14 +15,21 @@ class TableService {
 
     fun nextGame(table: Table) {
         table.currentMove = null
-        table.points.first = 0
-        table.points.second = 0
+        table.points.clear()
+        table.weisPoints.clear()
         table.round.clear()
         table.lastRound = null
         table.matschable = null
         table.history = null
         table.trumpf = null
         table.state = TableState.TRUMPF
+
+        var i = 0
+        while (i < table.logic.amountTeams()) {
+            table.points.add(0)
+            table.weisPoints.add(0)
+            i++
+        }
 
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
@@ -31,9 +38,13 @@ class TableService {
     }
 
     fun addHistory(table: Table) {
-        val t2 = Table(table.id, table.password, MutablePair(table.points.first, table.points.second), MutablePair(table.weisPoints.first, table.weisPoints.second), table.currentMove,
+        val t2 = Table(table.id, table.password, table.points.toMutableList(), table.weisPoints.toMutableList(), table.currentMove,
                 table.trumpf, table.round.toMutableList(), null, table.matschable, table.players.toMutableList(), null, table.logic, table.state)
         table.history = t2
+    }
+
+    fun getGameTable(tableid: String): Table {
+        return gameRepo.read(tableid)
     }
 
     fun setTrumpf(tableid: String, startingPlayerid: String, trumpf: Trumpf) {
@@ -181,12 +192,7 @@ class TableService {
                         table.players[i].stoeckeable = true
                     }
 
-
-                    if (i % 2 === 0) {
-                        table.weisPoints.first += points
-                    } else {
-                        table.weisPoints.second += points
-                    }
+                    table.weisPoints[i % table.logic.amountTeams()] += points
                 }
             }
 
@@ -214,11 +220,7 @@ class TableService {
             }
 
             // assign points
-            if (nextMove % 2 === 0) {
-                table.points.first += points
-            } else {
-                table.points.second += points
-            }
+            table.points[nextMove % table.logic.amountTeams()] += points
 
             table.currentMove = nextMove
             table.round.clear()

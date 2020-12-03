@@ -1,15 +1,15 @@
 import React, { Fragment } from 'react'
 import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, NewRequestBody, TableDto, Position, JoinRequestBody, UndoRequestBody, PlayerDto, StoeckeRequestBody } from 'gstochabock-core'
-import './App.css';
-import Hand from './Hand';
-import Runde from './Runde';
-import TrumpfSelector from './TrumpfSelector';
-import WeisBag from './WeisBag';
+import '../App.css';
+import Hand from '../component/Hand';
+import Runde from '../component/Runde';
+import TrumpfSelector from '../component/TrumpfSelector';
+import WeisBag from '../component/WeisBag';
 import { setTimeout } from 'timers';
-import WeisResolve from './WeisResolve';
-import Table from './Table';
-import RestClient from './RestClient';
-import GameResult from './GameResult';
+import WeisResolve from '../component/WeisResolve';
+import Table from '../component/Table';
+import RestClient from '../rest/RestClient';
+import GameResult from '../component/GameResult';
 
 class GamePage extends React.Component<Props, State> {
 

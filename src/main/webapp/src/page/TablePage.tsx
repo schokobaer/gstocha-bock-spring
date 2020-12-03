@@ -1,7 +1,7 @@
 import React from 'react';
-import RestClient from './RestClient';
+import RestClient from '../rest/RestClient';
 import { TableDto, JoinRequestBody, Position, CreateRequestBody } from 'gstochabock-core';
-import Table from './Table';
+import Table from '../component/Table';
 import './TablePage.css'
 
 class TablePage extends React.Component<Props, State> {
@@ -10,7 +10,6 @@ class TablePage extends React.Component<Props, State> {
     loading: true,
     tables: []
   }
-
   rest: RestClient = new RestClient()
   bcc: BroadcastChannel = new BroadcastChannel('table')
 

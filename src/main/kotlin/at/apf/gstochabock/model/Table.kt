@@ -1,9 +1,8 @@
 package at.apf.gstochabock.model
 
-import at.apf.gstochabock.dto.Trumpf
 import at.apf.gstochabock.gamelogic.JassLogic
 
-data class Table(var id: String, var password: String?, var points: MutablePair<Int, Int>, var weisPoints: MutablePair<Int, Int>,
+data class Table(var id: String, var password: String?, var points: MutableList<Int>, var weisPoints: MutableList<Int>,
                  var currentMove: Int?, var trumpf: Trumpf?, var round: MutableList<Card>, var lastRound: RoundHistory?,
                  var matschable: Boolean?, var players: MutableList<Player>, var history: Table?, val logic: JassLogic,
                  var state: TableState = TableState.PENDING)

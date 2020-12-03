@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import './App.css';
-import TablePage from './TablePage';
-import GamePage from './GamePage';
+import TablePage from './page/TablePage';
+import GamePage from './page/GamePage';
 import { uuid } from 'uuidv4'
 
 class App extends React.Component<Props, State> {

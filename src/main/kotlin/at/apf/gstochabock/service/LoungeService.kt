@@ -24,7 +24,7 @@ class LoungeService {
     }
 
     fun createTable(playerid: String, playername: String, password: String?): Table {
-        val table = Table("", password, MutablePair(0, 0), MutablePair(0, 0), null, null,
+        val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
                 mutableListOf(), null, null, mutableListOf(), null, BaseJassLogic())
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), null))
         gameRepo.create(table)

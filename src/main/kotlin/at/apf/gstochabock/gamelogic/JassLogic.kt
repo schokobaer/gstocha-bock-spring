@@ -1,6 +1,6 @@
 package at.apf.gstochabock.gamelogic
 
-import at.apf.gstochabock.dto.Trumpf
+import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.Card
 import at.apf.gstochabock.model.CardValue
 import at.apf.gstochabock.model.Weis
@@ -8,6 +8,8 @@ import at.apf.gstochabock.model.Weis
 interface JassLogic {
 
     fun allowedTrumpfs() : List<Trumpf> = Trumpf.values().toList()
+
+    fun amountTeams() : Int = 2
 
     fun amountPlayers() : Int = 4
 
