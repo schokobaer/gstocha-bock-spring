@@ -5,6 +5,7 @@ import at.apf.gstochabock.model.*
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 
+
 @Service
 class BaseJassLogic : JassLogic {
 
@@ -51,16 +52,18 @@ class BaseJassLogic : JassLogic {
      * Sums up the points for the given Weis.
      */
     override fun calcWeissPoints(weises: List<Weis>): Int {
-        return weises.sumBy {
-            if (it.rank === WeisRank.Quartett) {
-                return when (it.value) {
-                    CardValue.Bauer -> 200
-                    CardValue.Nell -> 150
-                    else -> 100
-                }
+        return weises.sumBy { calcWeisPoints(it) }
+    }
+
+    private fun calcWeisPoints(weis: Weis): Int {
+        if (weis.rank === WeisRank.Quartett) {
+            return when (weis.value) {
+                CardValue.Bauer -> 200
+                CardValue.Nell -> 150
+                else -> 100
             }
-            return it.rank.points
         }
+        return weis.rank.points
     }
 
     /**
@@ -279,27 +282,28 @@ class BaseJassLogic : JassLogic {
      * Calculates the sum of the points of the played round with the given game trumpf.
      */
     override fun calcPoints(round: List<Card>, trumpf: Trumpf): Int {
-        // TODO: Fix me
-        return round.sumBy {
-            if (trumpf.equals(it.color)) {
-                if (it.value === CardValue.Bauer) {
-                    return 20
-                }
-                if (it.value === CardValue.Nell) {
-                    return 14
-                }
+        return round.sumBy { cardPoints(it, trumpf) }
+    }
+
+    private fun cardPoints(card: Card, trumpf: Trumpf): Int {
+        if (trumpf.equals(card.color)) {
+            if (card.value === CardValue.Bauer) {
+                return 20
             }
-            if (trumpf >= Trumpf.Geiss && it.value === CardValue.Acht) {
-                return 8
+            if (card.value === CardValue.Nell) {
+                return 14
             }
-            return when(it.value) {
-                CardValue.Zehn -> 10
-                CardValue.Bauer -> 2
-                CardValue.Ober -> 3
-                CardValue.Koenig -> 4
-                CardValue.Ass -> 11
-                else -> 0
-            }
+        }
+        if (trumpf >= Trumpf.Geiss && card.value === CardValue.Acht) {
+            return 8
+        }
+        return when(card.value) {
+            CardValue.Zehn -> 10
+            CardValue.Bauer -> 2
+            CardValue.Ober -> 3
+            CardValue.Koenig -> 4
+            CardValue.Ass -> 11
+            else -> 0
         }
     }
 

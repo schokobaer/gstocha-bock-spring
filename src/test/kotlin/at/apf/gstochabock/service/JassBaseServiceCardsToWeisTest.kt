@@ -3,7 +3,7 @@ package at.apf.gstochabock.service
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.model.*
 import org.junit.Assert
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
 class JassBaseServiceCardsToWeisTest {
 
