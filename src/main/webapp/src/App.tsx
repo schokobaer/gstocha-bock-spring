@@ -66,7 +66,7 @@ class App extends React.Component<Props, State> {
     if (this.state.tableId) {
       return <div>
         {howto}
-        <GamePage tableId={this.state.tableId} />
+        <GamePage websocket={this.ws!} tableId={this.state.tableId} />
       </div>
     }
 

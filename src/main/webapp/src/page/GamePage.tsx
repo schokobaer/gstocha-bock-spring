@@ -10,6 +10,7 @@ import WeisResolve from '../component/WeisResolve';
 import Table from '../component/Table';
 import RestClient from '../rest/RestClient';
 import GameResult from '../component/GameResult';
+import WebSocketClient from "../rest/WebSocketClient";
 
 class GamePage extends React.Component<Props, State> {
 
@@ -37,11 +38,17 @@ class GamePage extends React.Component<Props, State> {
         this.undo = this.undo.bind(this)
         this.loadTable()
 
+        this.props.websocket.subscribeToGame(this.props.tableId)
+
         this.bcc.onmessage = (msg: MessageEvent) => {
-          console.info('GamePage: Received a BCC Msg')
-          const updateMsg =  JSON.parse(msg.data) as TableUpdateMessage
-          if (updateMsg.id === this.props.tableId) {
+          console.info('GamePage: Received a BCC Msg', msg)
+          const gameid = msg.data
+          if (gameid === this.props.tableId) {
+            console.info('Update for my game')
             this.loadTable()
+          } else {
+              console.info('Update not for my game')
+              console.info(gameid.data)
           }
         }
     }
@@ -300,6 +307,7 @@ class GamePage extends React.Component<Props, State> {
   
   interface Props {
     tableId: string
+    websocket: WebSocketClient
   }
   interface State {
     stoecke?: boolean // undefined -> not able; false -> able to but not done; true -> indicated stoecke

@@ -4,6 +4,8 @@ import Stomp from 'stompjs';
 export default class WebSocketClient {
     private socket: any
     private client: any
+    private establieshed = false
+    private connectionCalls: Array<Function> = []
     private subscriptions = new Map<string, any>()
 
     private loungeBCC = new BroadcastChannel('lounge')
@@ -15,6 +17,8 @@ export default class WebSocketClient {
         const that = this;
         console.info("Trying to connect to websocket endpoint")
         this.client.connect({}, function(frame: any) {
+            that.establieshed = true
+            that.connectionCalls.forEach(f => f())
             console.info("Connect fallback")
             console.info(frame)
             that.subscribe('/event/lounge', (msg: any) => {
@@ -24,15 +28,26 @@ export default class WebSocketClient {
         });
     }
 
-    subscribeToTable(tableid: string) {
+    subscribeToGame(tableid: string) {
         console.info('WebSocketClient subscribes to ' + tableid)
+        this.subscribe(`/event/game/${tableid}`, (msg: any) => {
+            console.info("Received a websocket message for game " + tableid)
+            this.gameBCC.postMessage(tableid)
+        })
     }
 
 
     subscribe(path: string, msgHandler: Function) {
-        let sub = this.client.subscribe(path, msgHandler);
-        console.info("Subscribing for topic " + path)
-        this.subscriptions.set(path, sub);
+        const f = () => {
+            let sub = this.client.subscribe(path, msgHandler);
+            console.info("Subscribing for topic " + path)
+            this.subscriptions.set(path, sub);
+        }
+        if (this.establieshed === true) {
+            f()
+        } else {
+            this.connectionCalls.push(f)
+        }
     }
 
 }

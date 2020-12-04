@@ -17,6 +17,6 @@ class WebSocketNotifyService {
     }
 
     fun gameUpdate(table: Table) {
-        simp.convertAndSend("/event/game/${table.id}", "")
+        simp.convertAndSend("/event/game/${table.id}", table.id)
     }
 }

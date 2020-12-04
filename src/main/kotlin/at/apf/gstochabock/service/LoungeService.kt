@@ -74,6 +74,7 @@ class LoungeService {
 
         gameRepo.writeBack(table)
         notifyService.loungeUpadte()
+        notifyService.gameUpdate(table)
     }
 
 }
