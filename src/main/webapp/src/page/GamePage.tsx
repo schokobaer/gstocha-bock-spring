@@ -263,8 +263,8 @@ class GamePage extends React.Component<Props, State> {
                   players={this.state.game.players.map(p => p as GamePlayerDto)}
                   points={this.state.game.points!}
                   lastStich={this.state.game.lastRound!.cards}
-                  weisPoints={[this.state.game.weisPoints![0].points, this.state.game.weisPoints![1].points]}
-                  stoecke={[this.state.game.weisPoints![0].stoecke, this.state.game.weisPoints![1].stoecke]}
+                  weisPoints={this.state.game.weisPoints ? this.state.game.weisPoints.map(wp => wp.points) : [0, 0]}
+                  stoecke={this.state.game.weisPoints ? this.state.game.weisPoints.map(wp => wp.stoecke) : [false, false]}
                   onNewGame={this.nextGame} />
       }
 

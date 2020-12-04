@@ -279,6 +279,7 @@ class BaseJassLogic : JassLogic {
      * Calculates the sum of the points of the played round with the given game trumpf.
      */
     override fun calcPoints(round: List<Card>, trumpf: Trumpf): Int {
+        // TODO: Fix me
         return round.sumBy {
             if (trumpf.equals(it.color)) {
                 if (it.value === CardValue.Bauer) {

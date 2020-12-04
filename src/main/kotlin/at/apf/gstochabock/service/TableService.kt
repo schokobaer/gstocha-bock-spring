@@ -36,8 +36,7 @@ class TableService {
 
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
-            table.players[i].cards = playercards[i].toMutableList()
-            table.logic.sort(table.players[i].cards)
+            table.players[i].cards = table.logic.sort(playercards[i]).toMutableList()
         }
     }
 
@@ -206,7 +205,7 @@ class TableService {
             }
 
             // store last round
-            table.lastRound = RoundHistory(table.currentMove!!, table.round, nextMove)
+            table.lastRound = RoundHistory(table.currentMove!!, table.round.toList(), nextMove)
 
             // last round
             if (table.players.all { it.cards.isEmpty() }) {
