@@ -13,6 +13,9 @@ class TableService {
     @Autowired
     lateinit var gameRepo: GameRepository
 
+    @Autowired
+    lateinit var notifyService: WebSocketNotifyService
+
     fun nextGame(table: Table) {
         table.currentMove = null
         table.points.clear()
@@ -34,6 +37,7 @@ class TableService {
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
             table.players[i].cards = playercards[i].toMutableList()
+            table.logic.sort(table.players[i].cards)
         }
     }
 
@@ -41,6 +45,15 @@ class TableService {
         val t2 = Table(table.id, table.password, table.points.toMutableList(), table.weisPoints.toMutableList(), table.currentMove,
                 table.trumpf, table.round.toMutableList(), null, table.matschable, table.players.toMutableList(), null, table.logic, table.state)
         table.history = t2
+    }
+
+    private fun getPlayer(table: Table, playerid: String): Player {
+        val player = table.players.find { it.playerid == playerid }
+        if (player === null) {
+            gameRepo.unlock(table.id)
+            throw RuntimeException("Player not at table")
+        }
+        return player
     }
 
     fun getGameTable(tableid: String): Table {
@@ -57,15 +70,12 @@ class TableService {
             gameRepo.unlock(tableid)
             throw RuntimeException("Trumpf not allowed")
         }
-        if (!table.players.none { it.playerid == startingPlayerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
+        val player = getPlayer(table, startingPlayerid)
 
         addHistory(table)
 
         table.trumpf = trumpf
-        table.currentMove = table.players.find { it.playerid == startingPlayerid }!!.position
+        table.currentMove = player.position
         table.state = TableState.PLAYING
 
         // search for stoeckable player
@@ -76,21 +86,18 @@ class TableService {
         }
 
         gameRepo.writeBack(table)
+        notifyService.gameUpdate(table)
     }
 
     fun weis(tableid: String, playerid: String, cards: List<Card>) {
         val table = gameRepo.lockedRead(tableid)
 
-        if (!table.players.none { it.playerid == playerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
         if (table.state !== TableState.PLAYING) {
             gameRepo.unlock(tableid)
             throw RuntimeException("Weis no possible at this time")
         }
 
-        val player = table.players.find { it.playerid == playerid }!!
+        val player = getPlayer(table, playerid)
         if (player!!.cards.size !== table.logic.amountCards()) {
             gameRepo.unlock(tableid)
             throw RuntimeException("Weis only possible if the player hasnt played any card yet")
@@ -110,12 +117,7 @@ class TableService {
     fun stoecke(tableid: String, playerid: String) {
         val table = gameRepo.lockedRead(tableid)
 
-        if (!table.players.none { it.playerid == playerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
-
-        val player = table.players.find { it.playerid == playerid }!!
+        val player = getPlayer(table, playerid)
         if (player.stoeckeable === false) {
             player.stoeckeable = true
         }
@@ -128,11 +130,7 @@ class TableService {
     fun play(tableid: String, playerid: String, card: Card) {
         val table = gameRepo.lockedRead(tableid)
 
-        if (!table.players.none { it.playerid == playerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
-        val player = table.players.find { it.playerid == playerid }!!
+        val player = getPlayer(table, playerid)
 
         if (table.state !== TableState.PLAYING) {
             gameRepo.unlock(tableid)
@@ -234,16 +232,14 @@ class TableService {
         }
 
         gameRepo.writeBack(table)
+        notifyService.gameUpdate(table)
     }
 
 
     fun undo(tableid: String, playerid: String) {
         var table = gameRepo.lockedRead(tableid)
 
-        if (!table.players.none { it.playerid == playerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
+        getPlayer(table, playerid)
 
         if (table.state === TableState.TRUMPF) {
            table = table.history!!
@@ -253,15 +249,13 @@ class TableService {
         }
 
         gameRepo.writeBack(table)
+        notifyService.gameUpdate(table)
     }
 
     fun newGame(tableid: String, playerid: String) {
         val table = gameRepo.lockedRead(tableid)
 
-        if (!table.players.none { it.playerid == playerid }) {
-            gameRepo.unlock(tableid)
-            throw RuntimeException("Player not at table")
-        }
+        getPlayer(table, playerid)
 
         if (table.state !== TableState.FINISHED) {
             gameRepo.unlock(tableid)
@@ -272,6 +266,7 @@ class TableService {
         nextGame(table)
 
         gameRepo.writeBack(table)
+        notifyService.gameUpdate(table)
     }
 
     fun leave(tableid: String, playerid: String) {

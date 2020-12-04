@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trumpf, PlayerDto } from 'gstochabock-core';
+import { Trumpf, GamePlayerDto } from '../dto/dtos';
 import './TrumpfSelector.css'
 import Table from './Table';
 
@@ -33,7 +33,7 @@ class TrumpfSelector extends React.Component<Props, State> {
   
   interface Props {
       onSelected: (trumpf: Trumpf) => void
-      players: Array<PlayerDto>
+      players: Array<GamePlayerDto>
   }
   interface State {
       selection: string

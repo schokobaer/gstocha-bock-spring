@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, PlayerDto } from '../dto/dtos'
+import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, GamePlayerDto } from '../dto/dtos'
 import '../App.css';
 import Hand from '../component/Hand';
 import Runde from '../component/Runde';
@@ -60,7 +60,8 @@ class GamePage extends React.Component<Props, State> {
             console.info('Was a game')
             const game = data as GameDto
             let weisResult = this.state.weisResult
-            if (game.players[0]?.cards?.length === 8 /*<- trivial ??? */ && game.players.filter(p => p?.weis?.length || 0 > 0).length > 0) {
+            if (game.cards.length === 8 /*<- trivial ??? */ && game.players.filter(p => p?.weis?.length || 0 > 0).length > 0) {
+              // first round played -> show weis if available
               weisResult = []
               for (let i = 0; i < 4; i++) {
                 if (game.players[i]?.weis?.length || 0 > 0) {
@@ -74,8 +75,8 @@ class GamePage extends React.Component<Props, State> {
             }
             // stoeckable
             let stoecke = this.state.stoecke
-            if (game.players[0]?.cards?.length === 9 && game.trumpf) {
-              if (game.players[0].cards.indexOf(game.trumpf + "O") >= 0 && game.players[0].cards.indexOf(game.trumpf + "K") >= 0) {
+            if (game.cards.length === 9 && game.trumpf) {
+              if (game.cards.indexOf(game.trumpf + "O") >= 0 && game.cards.indexOf(game.trumpf + "K") >= 0) {
                 stoecke = false
               } else {
                 stoecke = undefined
@@ -152,7 +153,7 @@ class GamePage extends React.Component<Props, State> {
         table.round = []
       }
       table.round.push(card)
-      table.players[0]!.cards!.splice(table.players[0]!.cards!.indexOf(card), 1)
+      table.cards.splice(table.cards.indexOf(card), 1)
       table.currentMove!++
       table.undoable = false
       let stoecke = this.state.stoecke
@@ -221,8 +222,8 @@ class GamePage extends React.Component<Props, State> {
       if (!this.state.game.trumpf) {
         return <Fragment>
           {undoBtn}
-          <TrumpfSelector onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as PlayerDto)} />
-          <Hand weisingAllowed={false} cards={this.state.game ? this.state.game.players[0]?.cards! : []} />
+          <TrumpfSelector onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
+          <Hand weisingAllowed={false} cards={this.state.game ? this.state.game.cards : []} />
         </Fragment>
       }
 
@@ -236,7 +237,7 @@ class GamePage extends React.Component<Props, State> {
               onCancel={() => this.setState({weising: false, weisCards: []})}/>
           <Hand 
               weisingAllowed={false}
-              cards={this.state.game.players[0]?.cards!}
+              cards={this.state.game.cards}
               onCardClick={card => this.cardClicked(card)}
               onStartWeising={() => this.setState({weising: true})} />
         </Fragment>
@@ -250,9 +251,9 @@ class GamePage extends React.Component<Props, State> {
       }
       
       // Game is over
-      if(this.state.game.players[0]?.cards?.length === 0 && this.state.game.round?.length === 0) {
+      if(this.state.game.cards.length === 0 && this.state.game.round?.length === 0) {
         return <GameResult 
-                  players={this.state.game.players.map(p => p as PlayerDto)}
+                  players={this.state.game.players.map(p => p as GamePlayerDto)}
                   points={this.state.game.points!}
                   lastStich={this.state.game.lastRound!.cards}
                   weisPoints={[this.state.game.weisPoints![0].points, this.state.game.weisPoints![1].points]}
@@ -272,7 +273,7 @@ class GamePage extends React.Component<Props, State> {
       // Stoecke Button
       let stoeckeBtn
       if (this.state.stoecke === false && 
-        this.state.game.players[0]?.cards?.filter(c => c === this.state.game?.trumpf + "O" || 
+        this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O" ||
         c === this.state.game?.trumpf + "K").length === 1 && this.state.game.currentMove === this.state.game.players[0].position) {
           stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
       }
@@ -285,8 +286,8 @@ class GamePage extends React.Component<Props, State> {
             lastRound={this.state.game.lastRound}
             trumpf={this.state.game.trumpf} />
         {stoeckeBtn}
-        <Hand weisingAllowed={this.state.game.players[0]!.cards!.length === 9}
-              cards={this.state.game.players[0]!.cards!}
+        <Hand weisingAllowed={this.state.game.cards.length === 9}
+              cards={this.state.game.cards}
               round={this.state.game.round}
               trumpf={this.state.game.trumpf}
               inMove={this.state.game.currentMove === this.state.game.players[0]!.position}

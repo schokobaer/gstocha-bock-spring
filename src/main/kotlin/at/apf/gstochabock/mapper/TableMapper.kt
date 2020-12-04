@@ -2,6 +2,7 @@ package at.apf.gstochabock.mapper
 
 import at.apf.gstochabock.dto.*
 import at.apf.gstochabock.model.Table
+import at.apf.gstochabock.model.TableState
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -26,7 +27,7 @@ class TableMapper {
         }
 
         // weisPoints
-        if (t.players.all { it.cards.isEmpty() }) {
+        if (t.state === TableState.FINISHED) {
             weisPoints = mutableListOf()
             for (i in t.weisPoints.indices) {
                 var hasStoecke = false
@@ -43,15 +44,24 @@ class TableMapper {
         val showWeiss = t.players.all { it.cards.size === t.logic.amountCards() - 1 }
         val playersCopy = t.players.toMutableList()
         val playerPos = t.players.find { it.playerid == playerid }!!.position
-        playersCopy.sortBy { it.position % playerPos }
+        // sort the players copy, so the playerPos is the first
+        playersCopy.sortBy { (it.position + (t.logic.amountPlayers() - playerPos)) % (t.logic.amountPlayers()) }
         playersCopy.forEach {
             val weis: List<String>? = if (showWeiss) it.weises.map { w -> w.toString() } else null
             players.add(GamePlayerDto(it.name, it.position, weis))
         }
 
-        return GameDto(t.currentMove, t.trumpf?.value, t.points, weisPoints, t.round.map { it.toString() },
-                lastRound, t.history !== null, players,
-                t.players.find { it.playerid == playerid }!!.cards.map { it.toString() })
+        return GameDto(
+                t.currentMove,
+                t.trumpf?.value,
+                if (t.state === TableState.FINISHED) t.points else null,
+                weisPoints,
+                t.round.map { it.toString() },
+                lastRound,
+                t.history !== null,
+                players,
+                t.players.find { it.playerid == playerid }!!.cards.map { it.toString() }
+        )
     }
 
 }

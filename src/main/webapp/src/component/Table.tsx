@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableDto, Position } from 'gstochabock-core';
+import { TableDto, Position } from '../dto/dtos';
 import './Table.css'
 
 export default class Table extends React.Component<Props> {

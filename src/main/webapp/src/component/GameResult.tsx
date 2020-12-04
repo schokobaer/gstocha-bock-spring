@@ -1,6 +1,6 @@
 import React from 'react';
 import './GameResult.css'
-import { PlayerDto } from 'gstochabock-core';
+import { GamePlayerDto } from '../dto/dtos';
 import Karte from './Karte';
 
 /**
@@ -52,10 +52,10 @@ export default class GameResult extends React.Component<Props> {
 }
 
 interface Props {
-    players: Array<PlayerDto>
-    points: [number, number]
-    weisPoints: [number, number]
-    stoecke: [boolean, boolean]
+    players: Array<GamePlayerDto>
+    points: Array<number>
+    weisPoints: Array<number>
+    stoecke: Array<boolean>
     lastStich: Array<string>
     onNewGame: () => void
 }

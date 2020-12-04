@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import './App.css';
 import TablePage from './page/TablePage';
 import GamePage from './page/GamePage';
+import WebSocketClient from './rest/WebSocketClient'
 import { uuid } from 'uuidv4'
 
 class App extends React.Component<Props, State> {
@@ -10,17 +11,21 @@ class App extends React.Component<Props, State> {
     tableId: undefined
   }
 
-  ws: WebSocket | null = null
+  ws: WebSocketClient | null = null
 
   initWebSockets() {
 
-    this.ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/events`)
+    /*this.ws = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/events`)
     this.ws.onopen = (event) => {
       this.ws?.send(window.localStorage.playerid)
-    }
+    }*/
+    this.ws = new WebSocketClient()
+    this.ws.connect()
+
+
     const tableBCC = new BroadcastChannel('table')
     const gameBCC = new BroadcastChannel('game')
-    this.ws.onmessage = (msg: MessageEvent) => {
+    /*this.ws.onmessage = (msg: MessageEvent) => {
       console.info('Received a WSS message')
       if (msg.data === 'table') {
         tableBCC.postMessage('table')
@@ -28,7 +33,7 @@ class App extends React.Component<Props, State> {
       else {
         gameBCC.postMessage(msg.data)
       }
-    }
+    }*/
   }
 
   getTableId = () => document.location.hash.length < 2 ? undefined : document.location.hash.substring(1)

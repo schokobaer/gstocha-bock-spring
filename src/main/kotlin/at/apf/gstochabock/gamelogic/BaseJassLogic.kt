@@ -33,6 +33,7 @@ class BaseJassLogic : JassLogic {
                 cards.add(allCards[r])
                 allCards.removeAt(r)
             }
+            players.add(cards)
         }
 
         return players

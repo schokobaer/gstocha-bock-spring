@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 import Karte from './Karte';
 import './Hand.css'
-import { Trumpf, cardAllowed } from 'gstochabock-core';
+import { Trumpf } from '../dto/dtos';
+import { cardAllowed } from '../logic/BaseJassLogic'
 
 export default class Hand extends React.Component<Props, State> {
 

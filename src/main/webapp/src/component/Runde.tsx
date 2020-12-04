@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import './Runde.css'
 import Karte from './Karte';
-import { PlayerDto } from 'gstochabock-core';
+import { GamePlayerDto } from '../dto/dtos';
 
 export default class Runde extends React.Component<Props, State> {
 
@@ -78,7 +78,7 @@ export default class Runde extends React.Component<Props, State> {
 }
 
 interface Props {
-    players: Array<PlayerDto | null>
+    players: Array<GamePlayerDto | null>
     roundStartPos?: number
     cards: Array<string>
     trumpf?: string

@@ -19,8 +19,16 @@ class LoungeService {
     @Autowired
     lateinit var tableService: TableService
 
+    @Autowired
+    lateinit var notifyService: WebSocketNotifyService
+
     fun getOpenTables(): List<Table> {
         return gameRepo.list { it.players.size < it.logic.amountPlayers() }
+    }
+
+    fun createTestTableT() {
+        gameRepo.createTestTable(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), null, null,
+                mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), null)), null, BaseJassLogic()))
     }
 
     fun createTable(playerid: String, playername: String, password: String?): Table {
@@ -28,6 +36,7 @@ class LoungeService {
                 mutableListOf(), null, null, mutableListOf(), null, BaseJassLogic())
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), null))
         gameRepo.create(table)
+        notifyService.loungeUpadte()
         return table
     }
 
@@ -64,6 +73,7 @@ class LoungeService {
         }
 
         gameRepo.writeBack(table)
+        notifyService.loungeUpadte()
     }
 
 }

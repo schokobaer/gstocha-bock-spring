@@ -1,9 +1,8 @@
 export type Position = 0 | 1 | 2 | 3
 export type Trumpf = 'E' | 'L' | 'H' | 'S' | 'G' | 'B' | 'KU' | 'KO'
 
-export interface PlayerDto extends TablePlayerDto {
+export interface GamePlayerDto extends TablePlayerDto {
     weis?: Array<string>
-    cards?: Array<string>
 }
 
 interface WeisPoints {
@@ -14,15 +13,16 @@ interface WeisPoints {
 export interface GameDto {
     currentMove?: number
     trumpf?: Trumpf
-    points?: [number, number]
-    weisPoints?: [WeisPoints, WeisPoints]
+    points?: Array<number>
+    weisPoints?: Array<WeisPoints>
     round: Array<string>
     lastRound?: {
         startPosition: number
         cards: Array<string>
     }
     undoable: boolean
-    players: Array<PlayerDto | null>
+    players: Array<GamePlayerDto>
+    cards: Array<string>
 }
 
 export interface TablePlayerDto {

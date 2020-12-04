@@ -13,6 +13,9 @@ class GameRepository {
 
     private val gameStore: MutableMap<String, MutablePair<Table, Lock>> = mutableMapOf()
 
+    fun createTestTable(table: Table) {
+        gameStore[table.id] = MutablePair<Table, Lock>(table, ReentrantLock())
+    }
 
     fun create(table: Table) : String {
         val uuid = UUID.randomUUID().toString()
@@ -48,10 +51,10 @@ class GameRepository {
 
     fun unlock(id: String) {
         val pair = gameStore[id]
-        if (pair !== null) {
-            pair.second.unlock()
+        if (pair === null) {
+            throw RuntimeException("Could not find table with id $id")
         }
-        throw RuntimeException("Could not find table with id $id")
+        pair.second.unlock()
     }
 
     fun writeBack(table: Table) {

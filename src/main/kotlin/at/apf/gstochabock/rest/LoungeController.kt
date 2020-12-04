@@ -23,6 +23,11 @@ class LoungeController {
         return loungeService.getOpenTables().map { tableMapper.toTableDto(it) }
     }
 
+    @PostMapping("/api/tablet")
+    fun createTestTableT() {
+        loungeService.createTestTableT()
+    }
+
     @PostMapping("/api/table")
     fun createTable(@RequestHeader playerid: String, @RequestBody req: CreateRequestBody): CreateResponseBody {
         val table = loungeService.createTable(playerid, req.name, req.password)

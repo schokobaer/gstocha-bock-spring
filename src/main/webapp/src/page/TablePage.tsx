@@ -11,7 +11,7 @@ class TablePage extends React.Component<Props, State> {
     tables: []
   }
   rest: RestClient = new RestClient()
-  bcc: BroadcastChannel = new BroadcastChannel('table')
+  bcc: BroadcastChannel = new BroadcastChannel('lounge')
 
   componentDidMount() {
     this.loadTables = this.loadTables.bind(this)
