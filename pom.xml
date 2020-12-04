@@ -85,11 +85,26 @@
             </plugin>
 
             <!-- Front End Plugin -->
+            <!--
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>
                 <executions>
+
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <skip>true</skip>
+                            <nodeVersion>10</nodeVersion>
+                            <npmVersion>6</npmVersion>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>npm install</id>
                         <goals>
@@ -102,7 +117,29 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
+
+            <!--<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+
+                    <execution>
+                        <id>run-npm-install</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
 
 
             <plugin>
