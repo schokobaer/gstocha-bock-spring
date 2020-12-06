@@ -25,6 +25,22 @@ export default class Runde extends React.Component<Props, State> {
         undefined
   }
 
+  getName(idx: number): string {
+      if (this.props.players === null || this.props.players[idx] === null) {
+          return "Empty"
+      }
+      return this.props.players[idx]!!.name
+  }
+
+  getWeisCall(idx: number) {
+      if (this.props.players[idx] !== null && this.props.players[idx]!!.weisCall !== null) {
+          const weissCall = this.props.players[idx]!!.weisCall
+          const str = weissCall === "Q" ? "4 Gleiche" : weissCall + " Blatt"
+          return <label className="runde-weiscall" style={{margin: '0 auto'}}>{str}</label>
+      }
+      return ""
+  }
+
   getMyCard(): string | undefined {
     const cards = this.state.showLast && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
     return cards.find(c => c !== this.getCard(0) && c !== this.getCard(1) && c !== this.getCard(2))
@@ -47,14 +63,16 @@ export default class Runde extends React.Component<Props, State> {
     return <div className="runde-ct">
             {actionBtns}
             <div className="runde-top">
-                <label className="runde-playername">{this.props.players[1]?.name || "Empty"}</label><br />
+                {this.getWeisCall(1)}
+                <label className="runde-playername">{this.getName(1)}</label><br />
                 <div style={{transform: 'rotate(180deg)'}}>
                     <Karte value={this.getCard(1)} />
                 </div>
             </div>
             <div className="runde-middle">
                 <div style={{flexDirection: 'column'}}>
-                    <label className="runde-playername" style={{margin: '0 auto'}}>{this.props.players[0]?.name || "Empty"}</label>
+                    <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(0)}</label>
+                    {this.getWeisCall(0)}
                 </div>
                 <div>
                     <div style={{transform: 'rotate(90deg)'}}>
@@ -67,7 +85,8 @@ export default class Runde extends React.Component<Props, State> {
                     </div>
                 </div>
                 <div style={{flexDirection: 'column'}}>
-                    <label className="runde-playername" style={{margin: '0 auto'}}>{this.props.players[2]?.name || "Empty"}</label>
+                    <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(2)}</label>
+                    {this.getWeisCall(2)}
                 </div>
             </div>
             <div className="runde-top">

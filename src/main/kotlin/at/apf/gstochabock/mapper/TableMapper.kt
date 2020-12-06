@@ -48,7 +48,15 @@ class TableMapper {
         playersCopy.sortBy { (it.position + (t.logic.amountPlayers() - playerPos)) % (t.logic.amountPlayers()) }
         playersCopy.forEach {
             val weis: List<String>? = if (showWeiss) it.weises.map { w -> w.toString() } else null
-            players.add(GamePlayerDto(it.name, it.position, weis))
+            var weisCall: String? = null
+            if (it.cards.size === t.logic.amountCards() - 1) {
+                val weisesSorted = it.weises.toMutableList()
+                weisesSorted.sortBy { w -> w.hashCode() }
+                if (weisesSorted.size > 0) {
+                    weisCall = weisesSorted.last().rank.value
+                }
+            }
+            players.add(GamePlayerDto(it.name, it.position, weis, weisCall))
         }
 
         val player = t.players.find { it.playerid == playerid }!!

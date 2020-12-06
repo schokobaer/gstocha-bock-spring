@@ -8,5 +8,6 @@ data class TablePlayerDto(
 data class GamePlayerDto(
         val name: String,
         val position: Int,
-        val weis: List<String>?
+        val weis: List<String>?,
+        val weisCall: String? = null
 )

@@ -30,8 +30,7 @@ class BaseJassLogic : JassLogic {
         for (i in 1..amountPlayers()) {
             val cards: MutableList<Card> = mutableListOf()
             for (j in 1..amountCards()) {
-                //val r = rnd.nextInt(allCards.size)
-                val r = 0 // TODO: Remove me
+                val r = rnd.nextInt(allCards.size)
                 cards.add(allCards[r])
                 allCards.removeAt(r)
             }

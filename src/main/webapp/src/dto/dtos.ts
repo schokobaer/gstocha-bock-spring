@@ -4,6 +4,7 @@ export type GameState = 'PENDING' | 'TRUMPF' | 'PLAYING' | 'FINISHED'
 
 export interface GamePlayerDto extends TablePlayerDto {
     weis?: Array<string>
+    weisCall?: string
 }
 
 export interface WeisPoints {

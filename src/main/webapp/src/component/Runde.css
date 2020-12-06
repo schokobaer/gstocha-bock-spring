@@ -68,3 +68,11 @@
     font-family: TheDeadSaloon;
     font-size: 24px;
 }
+
+.runde-weiscall {
+    font-family: TheDeadSaloon;
+    font-size: 16px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+}
