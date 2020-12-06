@@ -15,6 +15,8 @@ interface JassLogic {
 
     fun amountCards() : Int = 9
 
+    fun serializationCode(): String
+
     fun trumpfRanking(cardValue: CardValue): Int
 
     fun assignCards() : List<List<Card>>
@@ -23,7 +25,7 @@ interface JassLogic {
 
     fun calcWeissPoints(weises: List<Weis>): Int
 
-    fun cardsToWeis(cards: List<Card>) : List<Weis>
+    fun cardsToWeis(cards: List<Card>, trumpf: Trumpf) : List<Weis>
 
     fun weisToCards(weises: List<Weis>): List<Card>
 

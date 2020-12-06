@@ -14,6 +14,10 @@ class BaseJassLogic : JassLogic {
     private val trumpfRanking: List<CardValue> = listOf(CardValue.Sechs, CardValue.Sieben, CardValue.Acht, CardValue.Zehn,
             CardValue.Ober, CardValue.Koenig, CardValue.Ass, CardValue.Nell, CardValue.Bauer)
 
+    override fun serializationCode(): String {
+        return "base"
+    }
+
     override fun trumpfRanking(cardValue: CardValue): Int  {
         return trumpfRanking.indexOf(cardValue)
     }
@@ -69,7 +73,7 @@ class BaseJassLogic : JassLogic {
     /**
      * Analyzes the cards and returns a list of the found Weises.
      */
-    override fun cardsToWeis(cards: List<Card>) : List<Weis> {
+    override fun cardsToWeis(cards: List<Card>, trumpf: Trumpf) : List<Weis> {
 
         val cards2: MutableList<Card> = sort(cards).toMutableList()
         val weis: MutableList<Weis> = mutableListOf()
@@ -89,6 +93,10 @@ class BaseJassLogic : JassLogic {
 
         // Quartett
         for (v in CardValue.values()) {
+            if (v <= CardValue.Acht && trumpf <= Trumpf.Schell) {
+                // 6, 7, 8 -> not allowed in base trumpfs
+                continue
+            }
             if (cards2.count { it.value === v } === 4) {
                 weis.add(Weis(WeisRank.Quartett, v))
                 cards2.removeIf { it.value === v }
@@ -168,6 +176,10 @@ class BaseJassLogic : JassLogic {
      * Compare function for Weis with the needed trumpf.
      */
     override fun compareWeis(weisA: Weis, weisB: Weis, trumpf: Trumpf): Int {
+        if (trumpf === Trumpf.Geiss) {
+            return compareWeisGeiss(weisA, weisB)
+        }
+
         if (weisA.rank !== weisB.rank) {
             return weisA.rank.ordinal - weisB.rank.ordinal
         }
@@ -175,6 +187,19 @@ class BaseJassLogic : JassLogic {
             return weisA.value.ordinal - weisB.value.ordinal
         }
         return if (trumpf.equals(weisA.color)) 1 else if (trumpf.equals(weisB.color)) -1 else 0
+    }
+
+    /**
+     * Geis weising has the reverted CardValue order
+     */
+    private fun compareWeisGeiss(weisA: Weis, weisB: Weis): Int {
+        if (weisA.rank !== weisB.rank) {
+            return weisA.rank.ordinal - weisB.rank.ordinal
+        }
+        if (weisA.value !== weisB.value) {
+            return weisB.value.ordinal - weisA.value.ordinal
+        }
+        return 0
     }
 
     /**
