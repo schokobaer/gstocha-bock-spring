@@ -20,6 +20,7 @@
     background-color: #fff;
     height: 140px;
     border-radius: 5px;
+    display: inline-block;
 }
 
 .disabled img {
