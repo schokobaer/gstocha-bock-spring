@@ -1,7 +1,8 @@
 import React from 'react';
 import './GameResult.css'
-import { GamePlayerDto } from '../dto/dtos';
+import { GamePlayerDto, WeisPoints } from '../dto/dtos';
 import Karte from './Karte';
+import {Weis} from "../logic/BaseJassLogic";
 
 /**
  * className={this.props.disabled ? "disabled" : ""}
@@ -21,23 +22,20 @@ export default class GameResult extends React.Component<Props> {
             <table>
               <tr>
                 <td></td>
-                <td>{this.getNames(0)}</td>
+                <td>{this.getNames(0) /* TODO: Make generic */}</td>
                 <td>{this.getNames(1)}</td>
               </tr>
               <tr>
                 <td>Points</td>
-                <td>{this.props.points[0]}</td>
-                <td>{this.props.points[1]}</td>
+                  {this.props.points.map(p=><td>{p}</td>)}
               </tr>
               <tr>
                 <td>Weis</td>
-                <td>{this.props.weisPoints[0]}</td>
-                <td>{this.props.weisPoints[1]}</td>
+                  {this.props.weis.map(w => <td>{w.points}</td>)}
               </tr>
               <tr>
                 <td></td>
-                <td>{this.props.stoecke[0] ? 'Stöcke' : ''}</td>
-                <td>{this.props.stoecke[1] ? 'Stöcke' : ''}</td>
+                  {this.props.weis.map(w=><td>{w.stoecke ? 'Stöcke' : ''}</td>)}
               </tr>
             </table>
           </div>
@@ -54,8 +52,7 @@ export default class GameResult extends React.Component<Props> {
 interface Props {
     players: Array<GamePlayerDto>
     points: Array<number>
-    weisPoints: Array<number>
-    stoecke: Array<boolean>
+    weis: Array<WeisPoints>
     lastStich: Array<string>
     onNewGame: () => void
 }

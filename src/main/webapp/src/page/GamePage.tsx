@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { TableUpdateMessage, GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, GamePlayerDto } from '../dto/dtos'
+import { GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, GamePlayerDto } from '../dto/dtos'
 import '../App.css';
 import Hand from '../component/Hand';
 import Runde from '../component/Runde';
@@ -11,6 +11,7 @@ import Table from '../component/Table';
 import RestClient from '../rest/RestClient';
 import GameResult from '../component/GameResult';
 import WebSocketClient from "../rest/WebSocketClient";
+import {getUserName} from "../util/GameRepo";
 
 class GamePage extends React.Component<Props, State> {
 
@@ -193,6 +194,33 @@ class GamePage extends React.Component<Props, State> {
       this.setState({loading: true})
     }
 
+    getTablePlayers(): Array<GamePlayerDto|null> {
+        // hard coded on 4 players
+        if (!this.state.game) {
+            return []
+        }
+        const me = this.state.game.players.find(p => p.name === getUserName())!
+        const players: Array<GamePlayerDto|null> = []
+        var pos = me.position as number
+        var i = 0
+        while (players.length < 3) {
+            if (i >= this.state.game.players.length) {
+                players.push(null)
+                continue
+            }
+            if (this.state.game.players[i].position === pos) {
+                if (this.state.game.players[i] !== me) {
+                    players.push(this.state.game.players[i])
+                }
+                i++
+            } else {
+                players.push(null)
+            }
+            pos = (pos + 1) % 4
+        }
+        return players
+    }
+
     render () {
 
       // No data loaded yet
@@ -212,9 +240,8 @@ class GamePage extends React.Component<Props, State> {
       }
 
       // Not all players joined yet
-      if (this.state.game.players.filter(k => k !== null).length < 4) {
-        return <Runde players={[this.state.game?.players[1] || null, this.state.game?.players[2] || null, 
-                  this.state.game?.players[3] || null]} cards={[]} />
+      if (this.state.game.state === "PENDING") {
+        return <Runde players={this.getTablePlayers()} cards={[]} />
       }
 
       // Undoable
@@ -226,7 +253,7 @@ class GamePage extends React.Component<Props, State> {
       }
 
       // No trumpf set yet
-      if (!this.state.game.trumpf) {
+      if (this.state.game.state === "TRUMPF") {
         return <Fragment>
           {undoBtn}
           <TrumpfSelector onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
@@ -259,12 +286,12 @@ class GamePage extends React.Component<Props, State> {
       
       // Game is over
       if(this.state.game.cards.length === 0 && this.state.game.round?.length === 0) {
+          console.info('Should now render GameResult', this.state.game.weisPoints)
         return <GameResult 
                   players={this.state.game.players.map(p => p as GamePlayerDto)}
                   points={this.state.game.points!}
                   lastStich={this.state.game.lastRound!.cards}
-                  weisPoints={this.state.game.weisPoints ? this.state.game.weisPoints.map(wp => wp.points) : [0, 0]}
-                  stoecke={this.state.game.weisPoints ? this.state.game.weisPoints.map(wp => wp.stoecke) : [false, false]}
+                  weis={this.state.game.weisPoints || []}
                   onNewGame={this.nextGame} />
       }
 
@@ -287,7 +314,7 @@ class GamePage extends React.Component<Props, State> {
       return <Fragment>
         {undoBtn}
         {weisResolve}
-        <Runde players={[this.state.game.players[1], this.state.game.players[2], this.state.game.players[3]]}
+        <Runde players={this.getTablePlayers()}
             roundStartPos={(currentMove! - round!.length + 4) % 4}
             cards={round!}
             lastRound={this.state.game.lastRound}

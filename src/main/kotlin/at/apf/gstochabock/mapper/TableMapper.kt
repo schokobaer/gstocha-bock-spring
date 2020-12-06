@@ -60,7 +60,8 @@ class TableMapper {
                 lastRound,
                 t.history !== null,
                 players,
-                t.players.find { it.playerid == playerid }!!.cards.map { it.toString() }
+                t.players.find { it.playerid == playerid }!!.cards.map { it.toString() },
+                t.state.name
         )
     }
 

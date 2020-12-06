@@ -4,12 +4,13 @@ data class GameDto(
         val currentMove: Int?,
         val trumpf: String?,
         val points: List<Int>?,
-        val weiPoints: List<WeisPoints>?,
+        val weisPoints: List<WeisPoints>?,
         val round: List<String>,
         val lastRound: LastRound?,
         val undoable: Boolean,
         val players: List<GamePlayerDto>,
-        val cards: List<String>
+        val cards: List<String>,
+        val state: String
 )
 
 data class WeisPoints(

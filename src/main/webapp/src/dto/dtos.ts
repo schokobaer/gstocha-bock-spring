@@ -1,11 +1,12 @@
 export type Position = 0 | 1 | 2 | 3
 export type Trumpf = 'E' | 'L' | 'H' | 'S' | 'G' | 'B' | 'KU' | 'KO'
+export type GameState = 'PENDING' | 'TRUMPF' | 'PLAYING' | 'FINISHED'
 
 export interface GamePlayerDto extends TablePlayerDto {
     weis?: Array<string>
 }
 
-interface WeisPoints {
+export interface WeisPoints {
     points: number
     stoecke: boolean
 }
@@ -23,6 +24,7 @@ export interface GameDto {
     undoable: boolean
     players: Array<GamePlayerDto>
     cards: Array<string>
+    state?: GameState
 }
 
 export interface TablePlayerDto {
