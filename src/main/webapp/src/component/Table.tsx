@@ -9,13 +9,7 @@ export default class Table extends React.Component<Props> {
   }
 
   joinTable(pos: Position) {
-    let pw: string | undefined = undefined
-    if (this.props.table.protected) {
-      while (!pw || !pw!.length) {
-        pw = prompt('Passwort:') || undefined
-      }
-    }
-    this.props.onJoin(this.props.table, pos, pw)
+    this.props.onJoin(this.props.table, pos)
   }
 
     getChair(idx: Position) {
@@ -42,5 +36,5 @@ export default class Table extends React.Component<Props> {
 
 interface Props {
     table: TableDto
-    onJoin: (table: TableDto, position: Position, password?: string) => void
+    onJoin: (table: TableDto, position: Position) => void
 }

@@ -5,11 +5,13 @@ import GamePage from './page/GamePage';
 import WebSocketClient from './rest/WebSocketClient'
 import { uuid } from 'uuidv4'
 import {getUserName, setUserId, setUserName} from "./util/GameRepo";
+import NameDialog from "./component/dialog/NameDialog";
 
 class App extends React.Component<Props, State> {
 
   state: State = {
-    tableId: undefined
+    tableId: undefined,
+    userName: getUserName()
   }
 
   ws: WebSocketClient | null = null
@@ -29,19 +31,22 @@ class App extends React.Component<Props, State> {
     window.onhashchange = () => {
       this.setState({tableId: this.getTableId()})
     }
-    if (window.localStorage.name) {
+    if (getUserName()) {
       this.initWebSockets()
     }
   }
 
+  setName(name: string) {
+    if (name.length > 0 && name.length <= 15) {
+      setUserName(name)
+      setUserId(uuid())
+      this.setState({userName: name})
+    }
+  }
+
   render () {
-    while (getUserName() === undefined) {
-      let name = prompt("Name eingeben");
-      if (name !== null && name.length > 0 ){
-        setUserName(name)
-        setUserId(uuid())
-        this.initWebSockets()
-      }
+    if (this.state.userName === null) {
+      return <NameDialog onNameSet={(name: string) => this.setName(name)} />
     }
 
     const howto = <div className="app-logout">
@@ -65,6 +70,7 @@ class App extends React.Component<Props, State> {
 interface Props {}
 interface State {
   tableId?: string
+  userName: string | null
 }
 
 export default App;
