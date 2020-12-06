@@ -25,7 +25,7 @@ export default class WeisResolve extends React.Component<Props, State> {
   getPlayerWeis(weis: WeisObj): JSX.Element {
     return <div>
         <h5>{weis.player}</h5>
-        <div className="weis-bag">
+        <div className="weis-resolve">
             {weis.weis.map(weis => this.weisToCards(weis)).map(w => <div>{w.map(card => <Karte value={card} />)}</div>)}
         </div>
     </div>

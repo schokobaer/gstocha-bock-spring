@@ -23,7 +23,6 @@ class TableService {
         table.round.clear()
         table.lastRound = null
         table.matschable = null
-        table.history = null
         table.trumpf = null
         table.state = TableState.TRUMPF
 

@@ -11,7 +11,7 @@ import Table from '../component/Table';
 import RestClient from '../rest/RestClient';
 import GameResult from '../component/GameResult';
 import WebSocketClient from "../rest/WebSocketClient";
-import {getUserName} from "../util/GameRepo";
+import {getUserId, getUserName} from "../util/GameRepo";
 
 class GamePage extends React.Component<Props, State> {
 
@@ -59,7 +59,7 @@ class GamePage extends React.Component<Props, State> {
     }
 
     loadTable() {
-        this.rest.getTable(this.props.tableId, window.localStorage.playerid).then(data => {
+        this.rest.getTable(this.props.tableId, getUserId()!).then(data => {
           console.info('Loaded table: ', data)
           if (data.id !== undefined) {
             console.info('Was a table')
@@ -107,11 +107,11 @@ class GamePage extends React.Component<Props, State> {
     joinTable(table: TableDto, position: Position, password?: string) {
       console.info('Player joins table on position: ' + position)
       const reqBody: JoinRequestBody = {
-        name: window.localStorage.name,
+        name: getUserName()!,
         position: position,
         password: password
       }
-      this.rest.join(window.localStorage.playerid, this.props.tableId, reqBody)
+      this.rest.join(getUserId()!, this.props.tableId, reqBody)
       .catch(err => console.error('Could not join ', err))
       .finally(() => this.loadTable())
       this.setState({loading: true})
@@ -122,7 +122,7 @@ class GamePage extends React.Component<Props, State> {
       const reqBody: TrumpfRequestBody = {
         trumpf: trumpf
       }
-      this.rest.trumpf(window.localStorage.playerid, this.props.tableId, reqBody)
+      this.rest.trumpf(getUserId()!, this.props.tableId, reqBody)
       .then(() => this.loadTable()).catch(err => console.error('Could not set trumpf ', err))
       this.setState({loading: true})
     }
@@ -138,7 +138,7 @@ class GamePage extends React.Component<Props, State> {
       const reqBody: WeisRequestBody = {
         cards: this.state.weisCards
       }
-      this.rest.weis(window.localStorage.playerid, this.props.tableId, reqBody)
+      this.rest.weis(getUserId()!, this.props.tableId, reqBody)
       .then(() => this.loadTable()).catch(err => console.error('Could set weis ', err))
       this.setState({weising: false, weisCards: []})
     }
@@ -168,7 +168,7 @@ class GamePage extends React.Component<Props, State> {
       if (stoecke === true) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
           console.info('Send stocke YESS')
-          await this.rest.stoecke(window.localStorage.playerid, this.props.tableId)
+          await this.rest.stoecke(getUserId()!, this.props.tableId)
           .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
         } else {
           stoecke = false
@@ -178,18 +178,18 @@ class GamePage extends React.Component<Props, State> {
       const reqBody: PlayRequestBody = {
         card: card
       }
-      this.rest.play(window.localStorage.playerid, this.props.tableId, reqBody)
+      this.rest.play(getUserId()!, this.props.tableId, reqBody)
       .catch(err => console.error('Could not play card ', err))
     }
 
     undo() {
-      this.rest.undo(window.localStorage.playerid, this.props.tableId)
+      this.rest.undo(getUserId()!, this.props.tableId)
       .catch(err => console.error('Could not clean ', err))
       this.setState({loading: true})
     }
 
     nextGame() {
-      this.rest.new(window.localStorage.playerid, this.props.tableId)
+      this.rest.new(getUserId()!, this.props.tableId)
       .catch(err => console.error('Could not init next game ', err))
       this.setState({loading: true})
     }
@@ -200,17 +200,19 @@ class GamePage extends React.Component<Props, State> {
             return []
         }
         const me = this.state.game.players.find(p => p.name === getUserName())!
+        const f = (p: GamePlayerDto) => (p.position + (4 - me.position)) % 4
+        const playersCopy = [...this.state.game.players].sort((a, b) => f(a) - f(b))
         const players: Array<GamePlayerDto|null> = []
         var pos = me.position as number
         var i = 0
         while (players.length < 3) {
-            if (i >= this.state.game.players.length) {
+            if (i >= playersCopy.length) {
                 players.push(null)
                 continue
             }
-            if (this.state.game.players[i].position === pos) {
-                if (this.state.game.players[i] !== me) {
-                    players.push(this.state.game.players[i])
+            if (playersCopy[i].position === pos) {
+                if (playersCopy[i].position !== me.position) {
+                    players.push(playersCopy[i])
                 }
                 i++
             } else {
@@ -235,6 +237,7 @@ class GamePage extends React.Component<Props, State> {
         </div>
       }
 
+      // Assert thta we have a game
       if (!this.state.game) {
         return <div>Error</div>
       }
@@ -280,12 +283,12 @@ class GamePage extends React.Component<Props, State> {
       // All cards in round are set and a weis is available
       let weisResolve
       if (this.state.weisResult) {
-        const weisingPlayers = this.state.game.players.filter(p => p?.weis?.length || 0 > 0).map(p => p!.name)
+        //const weisingPlayers = this.state.game.players.filter(p => p?.weis?.length || 0 > 0).map(p => p!.name) // TODO: What is this? does it work?
         weisResolve = <WeisResolve weises={this.state.weisResult} onClose={() => this.setState({weisResult: undefined})} />
       }
       
       // Game is over
-      if(this.state.game.cards.length === 0 && this.state.game.round?.length === 0) {
+      if(this.state.game.state === "FINISHED") {
           console.info('Should now render GameResult', this.state.game.weisPoints)
         return <GameResult 
                   players={this.state.game.players.map(p => p as GamePlayerDto)}

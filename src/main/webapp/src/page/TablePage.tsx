@@ -68,7 +68,7 @@ class TablePage extends React.Component<Props, State> {
       name: getUserName() as string,
       position: position
     }
-    this.rest.join(window.localStorage.playerid, table.id, reqBody)
+    this.rest.join(getUserId()!, table.id, reqBody)
     .then(() => window.location.hash = `#${table.id}`)
     .catch(err => console.error('Could not join ', err))
     this.setState({loading: true, joinRequest: undefined})

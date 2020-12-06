@@ -12,17 +12,17 @@
     background-image: url(../texture/diagmonds.png);
 }
 
-.weis-bag {
+.weis-resolve {
     display: flex;
     flex-direction: row;
 }
 
-.weis-bag > div {
+.weis-resolve > div {
     margin-right: 50px;
     display: flex;
     flex-direction: row;
 }
 
-.weis-bag > div > div {
-    margin-right: -30px;
+.weis-resolve > div > div {
+    margin-right: -25px;
 }

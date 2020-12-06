@@ -15,8 +15,11 @@ export default class Karte extends React.Component<Props> {
       zidx = {zIndex: this.props.zIndex + 1100}
     }
     return <div className={`karte ${this.props.disabled ? "disabled" : ""}`} style={zidx || {}}>
-      <img src={`img/cards/${this.props.value}.jpg`} alt={this.props.value}
-        onClick={() => this.props.onClick && this.props.disabled !== true ? this.props.onClick(this.props.value!) : undefined } />
+        <div>
+            <img src={`img/cards/${this.props.value}.jpg`}
+                 alt={this.props.value}
+                 onClick={() => this.props.onClick && this.props.disabled !== true ? this.props.onClick(this.props.value!) : undefined } />
+        </div>
     </div>
   }
 }
