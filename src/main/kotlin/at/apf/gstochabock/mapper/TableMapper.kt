@@ -51,6 +51,8 @@ class TableMapper {
             players.add(GamePlayerDto(it.name, it.position, weis))
         }
 
+        val player = t.players.find { it.playerid == playerid }!!
+
         return GameDto(
                 t.currentMove,
                 t.trumpf?.value,
@@ -60,7 +62,8 @@ class TableMapper {
                 lastRound,
                 t.history !== null,
                 players,
-                t.players.find { it.playerid == playerid }!!.cards.map { it.toString() },
+                player.cards.map { it.toString() },
+                if (t.state === TableState.PLAYING) player.stoeckeable === false else null,
                 t.state.name
         )
     }

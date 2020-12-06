@@ -24,6 +24,7 @@ export interface GameDto {
     undoable: boolean
     players: Array<GamePlayerDto>
     cards: Array<string>
+    stoeckeable: boolean | null
     state?: GameState
 }
 

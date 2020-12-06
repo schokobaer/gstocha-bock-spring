@@ -10,6 +10,7 @@ data class GameDto(
         val undoable: Boolean,
         val players: List<GamePlayerDto>,
         val cards: List<String>,
+        val stoeckeable: Boolean?, // player.stoeckeable === false ->
         val state: String
 )
 

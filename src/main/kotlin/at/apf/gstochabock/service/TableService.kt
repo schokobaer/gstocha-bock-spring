@@ -36,6 +36,8 @@ class TableService {
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
             table.players[i].cards = table.logic.sort(playercards[i]).toMutableList()
+            table.players[i].stoeckeable = null
+            table.players[i].weises = mutableListOf()
         }
     }
 
@@ -171,10 +173,10 @@ class TableService {
                 }
             }
             if (bestWeisIdx !== null) {
+                // THERE ARE SOME WEISES
                 // remove the weises from the opponents and calculate the weis points to the winners
                 for (i in table.players.indices) {
-                    if (bestWeisIdx % 2 === 0 && i % 2 === 1
-                            || bestWeisIdx % 2 === 1 && i % 2 === 0) {
+                    if (bestWeisIdx % table.logic.amountTeams() !== i % table.logic.amountTeams()) {
                         table.players[i].weises.clear()
                     }
 

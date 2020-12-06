@@ -17,6 +17,7 @@ class GamePage extends React.Component<Props, State> {
 
     state: State = {
       loading: true,
+      stoecke: false,
       game: undefined,
       table: undefined,
       weising: false,
@@ -81,21 +82,12 @@ class GamePage extends React.Component<Props, State> {
               }
               console.info('There was a weis: ', weisResult)
             }
-            // stoeckable
-            let stoecke = this.state.stoecke
-            if (game.cards.length === 9 && game.trumpf) {
-              if (game.cards.indexOf(game.trumpf + "O") >= 0 && game.cards.indexOf(game.trumpf + "K") >= 0) {
-                stoecke = false
-              } else {
-                stoecke = undefined
-              }
-            }
             // showLastStich
             let showLastStich = this.state.showLastStich
             if (game.round.length === 0 && game.lastRound) {
               showLastStich = true
             }
-            this.setState({game: data as GameDto, weisResult: weisResult, stoecke: stoecke, table: undefined, loading: false, showLastStich: showLastStich})
+            this.setState({game: data as GameDto, weisResult: weisResult, stoecke: false, table: undefined, loading: false, showLastStich: showLastStich})
           }
         })
         .catch(err => {
@@ -164,17 +156,14 @@ class GamePage extends React.Component<Props, State> {
       table.cards.splice(table.cards.indexOf(card), 1)
       table.currentMove!++
       table.undoable = false
-      let stoecke = this.state.stoecke
-      if (stoecke === true) {
+      if (this.state.stoecke) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
           console.info('Send stocke YESS')
           await this.rest.stoecke(getUserId()!, this.props.tableId)
           .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
-        } else {
-          stoecke = false
         }
       }
-      this.setState({game: table, weisResult: undefined, stoecke: stoecke})
+      this.setState({game: table, weisResult: undefined, stoecke: false})
       const reqBody: PlayRequestBody = {
         card: card
       }
@@ -307,13 +296,16 @@ class GamePage extends React.Component<Props, State> {
         currentMove = this.state.game.lastRound.startPosition
         setTimeout(() => this.setState({showLastStich: false}), 2000)
       }
+
       // Stoecke Button
       let stoeckeBtn
-      if (this.state.stoecke === false && 
+      if (this.state.stoecke === false && this.state.game.stoeckeable === true &&
         this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O" ||
         c === this.state.game?.trumpf + "K").length === 1 && this.state.game.currentMove === this.state.game.players[0].position) {
           stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
       }
+
+
       return <Fragment>
         {undoBtn}
         {weisResolve}
@@ -340,7 +332,7 @@ class GamePage extends React.Component<Props, State> {
     websocket: WebSocketClient
   }
   interface State {
-    stoecke?: boolean // undefined -> not able; false -> able to but not done; true -> indicated stoecke
+    stoecke: boolean // clicked on stoecke button
     loading: boolean
     game?: GameDto
     table?: TableDto

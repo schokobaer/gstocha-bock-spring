@@ -30,7 +30,8 @@ class BaseJassLogic : JassLogic {
         for (i in 1..amountPlayers()) {
             val cards: MutableList<Card> = mutableListOf()
             for (j in 1..amountCards()) {
-                val r = rnd.nextInt(allCards.size)
+                //val r = rnd.nextInt(allCards.size)
+                val r = 0 // TODO: Remove me
                 cards.add(allCards[r])
                 allCards.removeAt(r)
             }
@@ -137,7 +138,7 @@ class BaseJassLogic : JassLogic {
                 cards.add(Card(c, weis.value))
             }
         } else {
-            for (i in (weis.rank.value.toInt() - 1).rangeTo(0)) {
+            for (i in (0) until weis.rank.value.toInt()) {
                 val v: CardValue = CardValue.values().find { it.ordinal === weis.value.ordinal - i }!!
                 cards.add(Card(weis.color!!, v))
             }
