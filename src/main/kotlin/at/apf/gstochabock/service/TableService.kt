@@ -109,7 +109,7 @@ class TableService {
             throw RuntimeException("Only cards on the hand can be weised")
         }
 
-        player.weises = table.logic.cardsToWeis(cards).toMutableList()
+        player.weises = table.logic.cardsToWeis(cards, table.trumpf!!).toMutableList()
 
         gameRepo.writeBack(table)
     }
