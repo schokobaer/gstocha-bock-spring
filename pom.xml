@@ -142,6 +142,7 @@
             </plugin>-->
 
 
+            <!-- Copy webapp into target -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>

@@ -25,6 +25,12 @@ export default class WebSocketClient {
                 console.info("Received a websocket message for lounge")
                 that.loungeBCC.postMessage("update")
             });
+        }, function (err: any) {
+            console.error("Error in WebSocket Connection", err)
+            console.info("Trying to reconnect to WebSocketEndpoint")
+            that.establieshed = false
+            that.connectionCalls = []
+            that.connect()
         });
     }
 
@@ -37,7 +43,7 @@ export default class WebSocketClient {
     }
 
 
-    subscribe(path: string, msgHandler: Function) {
+    private subscribe(path: string, msgHandler: Function) {
         const f = () => {
             let sub = this.client.subscribe(path, msgHandler);
             console.info("Subscribing for topic " + path)
