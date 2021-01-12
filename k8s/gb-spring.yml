@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gbspring
+  labels:
+    app: gbspring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gbspring
+  template:
+    metadata:
+      labels:
+        app: gbspring
+    spec:
+      containers:
+        - name: gbspring
+          image: gcr.io/gstochabock/gstochabock-spring
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+                
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gbspring
+  labels:
+    app: gbspring
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    app: gbspring
+  #loadBalancerIP: 35.226.69.126

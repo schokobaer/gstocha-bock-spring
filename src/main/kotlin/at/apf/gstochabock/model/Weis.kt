@@ -30,7 +30,7 @@ class Weis  {
     }
 
     override fun toString(): String {
-        return rank.value + color?.value + value.value
+        return rank.value + (if (color !== null) color.value else "") + value.value
     }
 
 }

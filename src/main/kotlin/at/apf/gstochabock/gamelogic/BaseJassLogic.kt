@@ -41,6 +41,14 @@ class BaseJassLogic : JassLogic {
             players.add(cards)
         }
 
+        // DEBUG: Setting player1 specific cards
+        /*
+        players[0][0] = Card(CardColor.Eichel, CardValue.Zehn)
+        players[0][1] = Card(CardColor.Laub, CardValue.Zehn)
+        players[0][2] = Card(CardColor.Herz, CardValue.Zehn)
+        players[0][3] = Card(CardColor.Schell, CardValue.Zehn)
+        */
+
         return players
     }
 
