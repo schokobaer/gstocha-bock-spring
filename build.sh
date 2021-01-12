@@ -7,12 +7,12 @@ cd ../../..
 ./mvnw clean package
 
 # build docker
-docker build --tag=gstochabock .
+docker build --tag=gstocha-bock .
 
 # release docker image
-docker tag gstochabock:latest fundreas/gstochabock:latest
-docker push fundreas/gstochabock:latest
+docker tag gstocha-bock:latest fundreas/gstocha-bock:latest
+docker push fundreas/gstocha-bock:latest
 
 # deploy on google cloud
-docker tag gstochabock:latest gcr.io/gstochabock/gstochabock-spring:latest
+docker tag gstocha-bock:latest gcr.io/gstochabock/gstochabock-spring:latest
 docker push gcr.io/gstochabock/gstochabock-spring:latest
