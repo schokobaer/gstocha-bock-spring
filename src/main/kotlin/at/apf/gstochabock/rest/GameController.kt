@@ -1,8 +1,10 @@
 package at.apf.gstochabock.rest
 
 import at.apf.gstochabock.dto.*
+import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.mapper.TableMapper
 import at.apf.gstochabock.model.Card
+import at.apf.gstochabock.model.TableState
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.service.TableService
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +18,9 @@ class GameController {
 
     @Autowired
     lateinit var tableMapper: TableMapper
+
+    @Autowired
+    lateinit var logger: GameEventLogger
 
     @GetMapping("/api/table/{id}")
     fun getGame(@PathVariable id: String, @RequestHeader playerid: String): Any {
@@ -55,6 +60,14 @@ class GameController {
     @PostMapping("/api/table/{id}/new")
     fun newGame(@PathVariable id: String, @RequestHeader playerid: String) {
         tableService.newGame(id, playerid)
+    }
+
+    @GetMapping("/api/table/{id}/log")
+    fun getLog(@PathVariable id: String): String {
+        val game = tableService.getGameTable(id)
+        if (game.state === TableState.FINISHED)
+            return logger.export(id)
+        return "Game not finished"
     }
 
 }

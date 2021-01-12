@@ -1,11 +1,13 @@
 package at.apf.gstochabock.service
 
+import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
+import java.util.stream.Collectors
 
 @Service
 class TableService {
@@ -15,6 +17,9 @@ class TableService {
 
     @Autowired
     lateinit var notifyService: WebSocketNotifyService
+
+    @Autowired
+    lateinit var logger: GameEventLogger
 
     fun nextGame(table: Table) {
         table.currentMove = null
@@ -62,26 +67,33 @@ class TableService {
 
     fun setTrumpf(tableid: String, startingPlayerid: String, trumpf: Trumpf) {
         val table = gameRepo.lockedRead(tableid)
+        val player = getPlayer(table, startingPlayerid)
+
         if (table.state !== TableState.TRUMPF) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "setTrumpf", "tried to set trumpf in state ${table.state}")
             throw RuntimeException("Trumpf not allowed")
         }
         if (!table.logic.allowedTrumpfs().contains(trumpf)) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "setTrumpf", "tried to set unallowed trumpf $trumpf")
             throw RuntimeException("Trumpf not allowed")
         }
-        val player = getPlayer(table, startingPlayerid)
 
         addHistory(table)
 
         table.trumpf = trumpf
+        logger.info(tableid, player.name, "setTrumpf", "set trumpf to $trumpf")
         table.currentMove = player.position
+        logger.info(tableid, player.name, "setTrumpf", "set starting player to ${player.position}")
         table.state = TableState.PLAYING
+        logger.info(tableid, player.name, "setTrumpf", "changed state to PLAYING")
 
         // search for stoeckable player
         table.players.forEach {
             if (table.logic.hasStoecke(it.cards, trumpf)) {
                 it.stoeckeable = false
+                logger.info(tableid, player.name, "setTrumpf", "player ${it.name} is stockeable")
             }
         }
 
@@ -91,35 +103,43 @@ class TableService {
 
     fun weis(tableid: String, playerid: String, cards: List<Card>) {
         val table = gameRepo.lockedRead(tableid)
+        val player = getPlayer(table, playerid)
+
+        logger.info(tableid, player.name, "weis", "wants to weis the cards ${cards.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
         if (table.state !== TableState.PLAYING) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "weis", "tried to weis in state ${table.state}")
             throw RuntimeException("Weis no possible at this time")
         }
 
-        val player = getPlayer(table, playerid)
         if (player!!.cards.size !== table.logic.amountCards()) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "weis", "tried to weis but with ${player!!.cards.size}/${table.logic.amountCards()} cards")
             throw RuntimeException("Weis only possible if the player hasnt played any card yet")
         }
 
         // Check if the given weis cards are on the hand
         if (!cards.all { player.cards.contains(it) }) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "weis", "tried to weis with not his own cards")
             throw RuntimeException("Only cards on the hand can be weised")
         }
 
         player.weises = table.logic.cardsToWeis(cards, table.trumpf!!).toMutableList()
+        logger.info(tableid, player.name, "weis", "weising: ${player.weises.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
         gameRepo.writeBack(table)
     }
 
     fun stoecke(tableid: String, playerid: String) {
         val table = gameRepo.lockedRead(tableid)
-
         val player = getPlayer(table, playerid)
+
+        logger.info(tableid, player.name, "stoecke", "wants to call out stoecke")
         if (player.stoeckeable === false) {
             player.stoeckeable = true
+            logger.info(tableid, player.name, "stoecke", "successfully called out stoecke")
         }
 
         gameRepo.writeBack(table)
@@ -239,13 +259,16 @@ class TableService {
     fun undo(tableid: String, playerid: String) {
         var table = gameRepo.lockedRead(tableid)
 
-        getPlayer(table, playerid)
+        val player = getPlayer(table, playerid)
 
+        logger.info(tableid, player.name, "undo", "wants to undo")
         if (table.state === TableState.TRUMPF) {
-           table = table.history!!
+            table = table.history!!
+            logger.info(tableid, player.name, "undo", "undo and back to the last game")
         } else if (table.state === TableState.PLAYING && table.players.all { it.cards.size === table.logic.amountCards() }) {
             // no cards played yet
             table = table.history!!
+            logger.info(tableid, player.name, "undo", "undo the trumpf selection")
         }
 
         gameRepo.writeBack(table)
@@ -255,15 +278,18 @@ class TableService {
     fun newGame(tableid: String, playerid: String) {
         val table = gameRepo.lockedRead(tableid)
 
-        getPlayer(table, playerid)
+        val player = getPlayer(table, playerid)
 
         if (table.state !== TableState.FINISHED) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "newGame", "wants to start a new game in state ${table.state}")
             throw RuntimeException("Wrong state for new game")
         }
 
         addHistory(table)
         nextGame(table)
+        logger.info(tableid, player.name, "newGame", "started new Game")
+        table.players.forEach { logger.info(tableid, it.name, "handCards", it.cards.map { c -> c.toString() }.stream().collect(Collectors.joining(","))) }
 
         gameRepo.writeBack(table)
         notifyService.gameUpdate(table)
