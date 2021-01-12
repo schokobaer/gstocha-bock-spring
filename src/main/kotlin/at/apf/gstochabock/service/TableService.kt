@@ -154,16 +154,19 @@ class TableService {
 
         if (table.state !== TableState.PLAYING) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "play", "wanted to play in state ${table.state}")
             throw RuntimeException("Wrong table state")
         }
 
         if (table.currentMove !== player.position) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "play", "not in charge of playing")
             throw RuntimeException("Wrong order in playing")
         }
 
         if (!table.logic.cardAllowed(table.round, card, player.cards, table.trumpf!!)) {
             gameRepo.unlock(tableid)
+            logger.warn(tableid, player.name, "play", "not allowed to play ${card}")
             throw RuntimeException("Card not allowed to play")
         }
 
@@ -171,15 +174,18 @@ class TableService {
         if (table.players.count { it.cards.size === table.logic.amountCards() - 1 } === table.players.size - 1
                 && table.players.count { it.cards.size === table.logic.amountCards() - 2 } === 1) {
             table.players.forEach { it.weises.clear() }
+            logger.info(tableid, player.name, "play", "first card of second round played. Reseting all weises")
         }
 
         table.round.add(card)
         player.cards.remove(card)
+        logger.info(tableid, player.name, "play", "played card $card")
         table.currentMove = (table.currentMove!! + 1) % table.logic.amountPlayers()
 
 
         // Last card of round
         if (table.round.size === table.logic.amountPlayers()) {
+            logger.info(tableid, player.name, "play", "it was the last card of the round")
             // if it was the last card of the first round, find the best weis, remove the others, calc weis points and remove a possible Stoecke
             var bestWeisIdx: Int? = null
             for(i in table.players.indices) {
@@ -187,13 +193,16 @@ class TableService {
                 if (table.players[realIdx].weises.isNotEmpty()) {
                     if (bestWeisIdx === null) {
                         bestWeisIdx = realIdx
+                        logger.info(tableid, player.name, "play", "${table.players.find{ it.position === realIdx }!!.name} has the first weis")
                     } else if (table.logic.compareWeis(table.players[realIdx].weises, table.players[bestWeisIdx].weises, table.trumpf!!) > 0) {
                         bestWeisIdx = realIdx
+                        logger.info(tableid, player.name, "play", "${table.players.find{ it.position === realIdx }!!.name} has a better weis")
                     }
                 }
             }
             if (bestWeisIdx !== null) {
                 // THERE ARE SOME WEISES
+                logger.info(tableid, player.name, "play", "there was a weis detected")
                 // remove the weises from the opponents and calculate the weis points to the winners
                 for (i in table.players.indices) {
                     if (bestWeisIdx % table.logic.amountTeams() !== i % table.logic.amountTeams()) {
@@ -202,12 +211,14 @@ class TableService {
 
                     // calc weis points for each player
                     var points = table.logic.calcWeissPoints(table.players[i].weises)
+                    logger.info(tableid, player.name, "play", "$points calculated for the weis: ${table.players[i].weises.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
                     // Check if there are stoecke in the weis
                     val weisCards = table.logic.weisToCards(table.players[i].weises)
                     if (table.logic.hasStoecke(weisCards, table.trumpf!!)) {
                         points += 20
                         table.players[i].stoeckeable = true
+                        logger.info(tableid, player.name, "play", "stoecke detected in the weis")
                     }
 
                     table.weisPoints[i % table.logic.amountTeams()] += points
@@ -217,12 +228,15 @@ class TableService {
             // round calculations
             val nextMove = (table.currentMove!! + table.logic.roundWinner(table.round, table.trumpf!!)) % table.players.size
             var points = table.logic.calcPoints(table.round, table.trumpf!!)
+            logger.info(tableid, player.name, "play", "$points calculated for the round with the cards: ${table.round.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
             // check matschable
             if (table.matschable === null) {
                 table.matschable = true
+                logger.info(tableid, player.name, "play", "matschable=true")
             } else if (table.matschable === true && (nextMove % 2) === 1) {
                 table.matschable = false
+                logger.info(tableid, player.name, "play", "matschable=false")
             }
 
             // store last round
@@ -231,23 +245,30 @@ class TableService {
             // last round
             if (table.players.all { it.cards.isEmpty() }) {
                 points += 5
+                logger.info(tableid, player.name, "play", "last round, adding 5 points -> $points")
                 if (table.matschable === true) {
                     points += 100
+                    logger.info(tableid, player.name, "play", "matsch round, adding 100 points -> $points")
                 }
                 table.state = TableState.FINISHED
+                logger.info(tableid, player.name, "play", "changed state to FINISHED")
             }
 
             // assign points
             table.points[nextMove % table.logic.amountTeams()] += points
+            logger.info(tableid, player.name, "play", "adding points to team ${nextMove % table.logic.amountTeams()} -> in total ${table.points[nextMove % table.logic.amountTeams()]}")
 
             table.currentMove = nextMove
             table.round.clear()
+            logger.info(tableid, player.name, "play", "next round starts with position $nextMove")
 
             // flip kulmi
             if (table.trumpf === Trumpf.KulmiUnten) {
                 table.trumpf = Trumpf.KulmiOben
+                logger.info(tableid, player.name, "play", "flipped kulmi to oben")
             } else if (table.trumpf === Trumpf.KulmiOben) {
                 table.trumpf = Trumpf.KulmiUnten
+                logger.info(tableid, player.name, "play", "flipped kulmi to unten")
             }
         }
 
@@ -285,6 +306,9 @@ class TableService {
             logger.warn(tableid, player.name, "newGame", "wants to start a new game in state ${table.state}")
             throw RuntimeException("Wrong state for new game")
         }
+
+        logger.info(tableid, player.name, "newGame", "clearing log buffer now...")
+        logger.clean(tableid)
 
         addHistory(table)
         nextGame(table)

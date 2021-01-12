@@ -8,6 +8,7 @@ import at.apf.gstochabock.model.TableState
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.service.TableService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -62,7 +63,7 @@ class GameController {
         tableService.newGame(id, playerid)
     }
 
-    @GetMapping("/api/table/{id}/log")
+    @GetMapping("/api/table/{id}/log", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun getLog(@PathVariable id: String): String {
         val game = tableService.getGameTable(id)
         if (game.state === TableState.FINISHED)

@@ -49,6 +49,10 @@ class GameEventLogger {
         log("ERROR", tableid, player, action, msg)
     }
 
+    fun clean(tableid: String) {
+        logRepo.get(tableid).clear()
+    }
+
     fun export(tableid: String): String {
         return logRepo.get(tableid).stream().collect(Collectors.joining("\n"))
     }
