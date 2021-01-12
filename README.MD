@@ -33,6 +33,7 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
   - Exception handling on server
   - wait after the last round 2 seconds to show the game result
   - display all rounds of the game, grouped by the teams, on the game result page
+  - shorter ids or usage of terms of a dictionary
 
 ## Bugs:
   
