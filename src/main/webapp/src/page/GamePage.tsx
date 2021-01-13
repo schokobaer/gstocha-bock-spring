@@ -156,6 +156,7 @@ class GamePage extends React.Component<Props, State> {
       table.cards.splice(table.cards.indexOf(card), 1)
       table.currentMove!++
       table.undoable = false
+      const callLay = table.round.length === 4 && table.cards.length === 1
       if (this.state.stoecke) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
           console.info('Send stocke YESS')
@@ -169,6 +170,14 @@ class GamePage extends React.Component<Props, State> {
       }
       this.rest.play(getUserId()!, this.props.tableId, reqBody)
       .catch(err => console.error('Could not play card ', err))
+      .finally( () => {
+          if (callLay) {
+              setTimeout(() => {
+                  this.rest.lay(getUserId()!, this.props.tableId)
+                      .catch(err => console.warn(`Cound not lay last round: ${err}`))
+              }, 2000)
+          }
+      })
     }
 
     undo() {

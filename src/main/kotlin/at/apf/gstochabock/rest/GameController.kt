@@ -53,6 +53,11 @@ class GameController {
         tableService.play(id, playerid, Card(req.card))
     }
 
+    @PostMapping("/api/table/{id}/lay")
+    fun lay(@PathVariable id: String, @RequestHeader playerid: String) {
+        tableService.lay(id, playerid)
+    }
+
     @PostMapping("/api/table/{id}/undo")
     fun undo(@PathVariable id: String, @RequestHeader playerid: String) {
         tableService.undo(id, playerid)

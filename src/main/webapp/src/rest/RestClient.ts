@@ -85,6 +85,10 @@ export default class RestClient {
         return this.sendPost(`${api}/${id}/play`, req, playerid)
     }
 
+    lay(playerid: string, id: string): Promise<any> {
+        return this.sendPost(`${api}/${id}/lay`, {}, playerid)
+    }
+
     undo(playerid: string, id: string): Promise<any> {
         return this.sendPost(`${api}/${id}/undo`, {}, playerid)
     }
