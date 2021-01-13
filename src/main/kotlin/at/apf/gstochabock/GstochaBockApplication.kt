@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
 @Bean
 fun bla(gameRepository: GameRepository): CommandLineRunner {
     return CommandLineRunner {
-        val id = gameRepository.create(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), null, null,
+        val id = gameRepository.create(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), mutableListOf(), null,
                 mutableListOf(), null, BaseJassLogic()))
         val t = gameRepository.lockedRead(id)
         t.id = "t"

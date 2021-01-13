@@ -26,7 +26,7 @@ class TableService {
         table.points.clear()
         table.weisPoints.clear()
         table.round.clear()
-        table.lastRound = null
+        table.roundHistory.clear()
         table.matschable = null
         table.trumpf = null
         table.state = TableState.TRUMPF
@@ -48,7 +48,7 @@ class TableService {
 
     fun addHistory(table: Table) {
         val t2 = Table(table.id, table.password, table.points.toMutableList(), table.weisPoints.toMutableList(), table.currentMove,
-                table.trumpf, table.round.toMutableList(), null, table.matschable, table.players.toMutableList(), null, table.logic, table.state)
+                table.trumpf, table.round.toMutableList(), mutableListOf(), table.matschable, table.players.toMutableList(), null, table.logic, table.state)
         table.history = t2
     }
 
@@ -186,6 +186,7 @@ class TableService {
         // Last card of round
         if (table.round.size === table.logic.amountPlayers()) {
             logger.info(tableid, player.name, "play", "it was the last card of the round")
+
             // if it was the last card of the first round, find the best weis, remove the others, calc weis points and remove a possible Stoecke
             var bestWeisIdx: Int? = null
             for(i in table.players.indices) {
@@ -228,6 +229,7 @@ class TableService {
             // round calculations
             val nextMove = (table.currentMove!! + table.logic.roundWinner(table.round, table.trumpf!!)) % table.players.size
             var points = table.logic.calcPoints(table.round, table.trumpf!!)
+            val winningTeamIndex = nextMove % table.logic.amountTeams()
             logger.info(tableid, player.name, "play", "$points calculated for the round with the cards: ${table.round.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
             // check matschable
@@ -240,7 +242,7 @@ class TableService {
             }
 
             // store last round
-            table.lastRound = RoundHistory(table.currentMove!!, table.round.toList(), nextMove)
+            table.roundHistory.add(RoundHistory(table.currentMove!!, table.round.toList(), nextMove, winningTeamIndex))
 
             // last round
             if (table.players.all { it.cards.isEmpty() }) {
@@ -255,7 +257,7 @@ class TableService {
             }
 
             // assign points
-            table.points[nextMove % table.logic.amountTeams()] += points
+            table.points[winningTeamIndex] += points
             logger.info(tableid, player.name, "play", "adding points to team ${nextMove % table.logic.amountTeams()} -> in total ${table.points[nextMove % table.logic.amountTeams()]}")
 
             table.currentMove = nextMove

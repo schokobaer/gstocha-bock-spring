@@ -6,7 +6,7 @@ data class GameDto(
         val points: List<Int>?,
         val weisPoints: List<WeisPoints>?,
         val round: List<String>,
-        val lastRound: LastRound?,
+        val roundHistory: MutableList<GameRoundDto>,
         val undoable: Boolean,
         val players: List<GamePlayerDto>,
         val cards: List<String>,
@@ -19,7 +19,8 @@ data class WeisPoints(
         val stoecke: Boolean
 )
 
-data class LastRound(
+data class GameRoundDto(
         val startPosition: Int,
-        val cards: List<String>
+        val cards: List<String>,
+        val teamIndex: Int
 )

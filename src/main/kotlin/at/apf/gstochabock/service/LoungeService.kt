@@ -32,13 +32,13 @@ class LoungeService {
     }
 
     fun createTestTableT() {
-        gameRepo.createTestTable(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), null, null,
+        gameRepo.createTestTable(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), mutableListOf(), null,
                 mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), null)), null, BaseJassLogic()))
     }
 
     fun createTable(playerid: String, playername: String, password: String?): Table {
         val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
-                mutableListOf(), null, null, mutableListOf(), null, BaseJassLogic())
+                mutableListOf(), mutableListOf(), null, mutableListOf(), null, BaseJassLogic())
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), null))
         gameRepo.create(table)
         logger.info(table.id, playername, "createTable", "created table")

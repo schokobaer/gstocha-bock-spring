@@ -17,17 +17,24 @@ class TableMapper {
     }
 
     fun toGameDto(t: Table, playerid: String): GameDto {
-        var lastRound: LastRound? = null
+        var roundHistory: MutableList<GameRoundDto> = mutableListOf()
         var weisPoints: MutableList<WeisPoints>? = null
         val players: MutableList<GamePlayerDto> = mutableListOf()
 
         // last round
-        if (t.lastRound !== null) {
-            lastRound = LastRound(t.lastRound!!.startPosition, t.lastRound!!.cards.map { it.toString() })
+        if (t.roundHistory.isNotEmpty()) {
+            roundHistory.add(
+                    GameRoundDto(
+                        t.roundHistory.last().startPosition,
+                        t.roundHistory.last().cards.map { it.toString() },
+                        t.roundHistory.last().teamIndex
+                    )
+            )
         }
 
-        // weisPoints
         if (t.state === TableState.FINISHED) {
+
+            // weisPoints
             weisPoints = mutableListOf()
             for (i in t.weisPoints.indices) {
                 var hasStoecke = false
@@ -38,6 +45,10 @@ class TableMapper {
                 }
                 weisPoints.add(WeisPoints(t.weisPoints[i], hasStoecke))
             }
+
+            // round history
+            roundHistory.clear()
+            roundHistory.addAll(t.roundHistory.map { GameRoundDto(it.startPosition, it.cards.map { c -> c.toString() }, it.teamIndex) })
         }
 
         // players
@@ -67,7 +78,7 @@ class TableMapper {
                 if (t.state === TableState.FINISHED) t.points else null,
                 weisPoints,
                 t.round.map { it.toString() },
-                lastRound,
+                roundHistory,
                 t.history !== null,
                 players,
                 player.cards.map { it.toString() },

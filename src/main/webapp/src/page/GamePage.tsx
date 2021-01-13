@@ -84,7 +84,7 @@ class GamePage extends React.Component<Props, State> {
             }
             // showLastStich
             let showLastStich = this.state.showLastStich
-            if (game.round.length === 0 && game.lastRound) {
+            if (game.round.length === 0 && game.roundHistory.length > 0) {
               showLastStich = true
             }
             this.setState({game: data as GameDto, weisResult: weisResult, stoecke: false, table: undefined, loading: false, showLastStich: showLastStich})
@@ -282,7 +282,7 @@ class GamePage extends React.Component<Props, State> {
         return <GameResult 
                   players={this.state.game.players.map(p => p as GamePlayerDto)}
                   points={this.state.game.points!}
-                  lastStich={this.state.game.lastRound!.cards}
+                  roundHistory={this.state.game.roundHistory}
                   weis={this.state.game.weisPoints || []}
                   onNewGame={this.nextGame} />
       }
@@ -291,9 +291,9 @@ class GamePage extends React.Component<Props, State> {
       // if round is empty and lastRound is set -> lastRound, otherwise round
       let round = this.state.game.round
       let currentMove = this.state.game.currentMove
-      if (this.state.game.round.length === 0 && this.state.game.lastRound && this.state.showLastStich) {
-        round = this.state.game.lastRound.cards
-        currentMove = this.state.game.lastRound.startPosition
+      if (this.state.game.round.length === 0 && this.state.game.roundHistory.length > 0 && this.state.showLastStich) {
+        round = this.state.game.roundHistory[this.state.game.roundHistory.length - 1].cards
+        currentMove = this.state.game.roundHistory[this.state.game.roundHistory.length - 1].startPosition
         setTimeout(() => this.setState({showLastStich: false}), 2000)
       }
 
@@ -312,7 +312,7 @@ class GamePage extends React.Component<Props, State> {
         <Runde players={this.getTablePlayers()}
             roundStartPos={(currentMove! - round!.length + 4) % 4}
             cards={round!}
-            lastRound={this.state.game.lastRound}
+            lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
             trumpf={this.state.game.trumpf} />
         {stoeckeBtn}
         <Hand weisingAllowed={this.state.game.cards.length === 9}

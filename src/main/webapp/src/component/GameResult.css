@@ -9,6 +9,10 @@
 
     background-color: #67d1eb;
     background-image: url(../texture/diagmonds.png);
+
+    -webkit-box-shadow: 0px 0px 25px 10px rgba(68,68,68,0.7);
+    -moz-box-shadow: 0px 0px 25px 10px rgba(68,68,68,0.7);
+    box-shadow: 0px 0px 25px 10px rgba(68,68,68,0.7);
 }
 
 .result-window button {
@@ -30,4 +34,12 @@
 .last-stich > div {
     display: inline;
     margin-right: 5px !important;
+}
+
+.history-stich > div {
+    display: inline;
+    margin-right: -25px;
+}
+
+.history-stich > div > div {
 }

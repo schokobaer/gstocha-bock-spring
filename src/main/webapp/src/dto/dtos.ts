@@ -18,15 +18,18 @@ export interface GameDto {
     points?: Array<number>
     weisPoints?: Array<WeisPoints>
     round: Array<string>
-    lastRound?: {
-        startPosition: number
-        cards: Array<string>
-    }
+    roundHistory: Array<GameRoundDto>
     undoable: boolean
     players: Array<GamePlayerDto>
     cards: Array<string>
     stoeckeable: boolean | null
     state?: GameState
+}
+
+export interface GameRoundDto {
+    startPosition: number
+    cards: Array<string>
+    teamIndex: number
 }
 
 export interface TablePlayerDto {
