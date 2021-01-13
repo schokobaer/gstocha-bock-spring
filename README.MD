@@ -33,6 +33,7 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
   - Exception handling on server
   - wait after the last round 2 seconds to show the game result
   - shorter ids or usage of terms of a dictionary
+  - play last round outomatically, as every one has just one card left, and it does not make sense to click on it
 
 ## Bugs:
   
