@@ -34,8 +34,10 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
   - Dornbirn Config
   - Display starter from last round on lastRoundHover
   - Exception handling on server
-  - wait after the last round 2 seconds to show the game result
+  - real logging on the server
   - shorter ids or usage of terms of a dictionary
+  - remove the game-fetch-calls after executing an action -> should not be needed anymore, as the game is pushed via websockets
+  
 
 ## Bugs:
   

@@ -128,7 +128,7 @@ class GamePage extends React.Component<Props, State> {
             trumpf: trumpf
         }
         this.rest.trumpf(getUserId()!, this.props.tableId, reqBody)
-            .then(() => this.loadTable()).catch(err => console.error('Could not set trumpf ', err))
+            .catch(err => console.error('Could not set trumpf ', err))
         this.setState({loading: true})
     }
 
@@ -145,7 +145,6 @@ class GamePage extends React.Component<Props, State> {
         }
         this.rest.weis(getUserId()!, this.props.tableId, reqBody)
             .then((resp: WeisResponseBody) => {
-                this.loadTable() // TODO: Is this needed? should get updated by websocket -> delete those lines on all requests
                 const text = 'Gewiesen: ' + resp.weises.map(w => weisToText(w)).join(', ')
                 this.setState({weisResponse: text})
             }).catch(err => console.error('Could set weis ', err))

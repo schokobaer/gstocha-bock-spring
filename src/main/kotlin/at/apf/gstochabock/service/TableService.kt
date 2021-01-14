@@ -333,14 +333,14 @@ class TableService {
         val player = table.players.find { it.playerid == playerid }
         logger.info(tableid, "system", "lay", "wants to lay all cards")
 
-        if (player === null || table.state !== TableState.PLAYING || !table.players.all { it.cards.size === 1 }) {
+        if (player === null || table.state !== TableState.PLAYING || !table.players.all { it.cards.size <= 1 }) {
             logger.warn(tableid, "system", "lay", "not able to lay")
             return
         }
 
         table.players.forEach {
             val player = table.players.find { it.position == table.currentMove }
-            if (player !== null) {
+            if (player !== null && player.cards.isNotEmpty()) {
                 if (player.stoeckeable === false) {
                     stoecke(tableid, player.playerid)
                 }
