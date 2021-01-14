@@ -1,4 +1,13 @@
-import { TableDto, JoinRequestBody, TrumpfRequestBody, WeisRequestBody, PlayRequestBody, CreateRequestBody, CreateResponseBody } from '../dto/dtos'
+import {
+    TableDto,
+    JoinRequestBody,
+    TrumpfRequestBody,
+    WeisRequestBody,
+    PlayRequestBody,
+    CreateRequestBody,
+    CreateResponseBody,
+    WeisResponseBody
+} from '../dto/dtos'
 
 const api = '/api/table'
 export default class RestClient {
@@ -73,8 +82,13 @@ export default class RestClient {
         return this.sendPost(`${api}/${id}/trumpf`, req, playerid)
     }
 
-    weis(playerid: string, id: string, req: WeisRequestBody): Promise<any> {
+    weis(playerid: string, id: string, req: WeisRequestBody): Promise<WeisResponseBody> {
         return this.sendPost(`${api}/${id}/weis`, req, playerid)
+            .then(resp => {
+                return resp.json().then(data => {
+                    return data as WeisResponseBody
+                })
+            })
     }
 
     stoecke(playerid: string, id: string): Promise<any> {

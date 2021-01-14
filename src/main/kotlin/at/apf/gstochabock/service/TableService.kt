@@ -101,7 +101,7 @@ class TableService {
         notifyService.gameUpdate(table)
     }
 
-    fun weis(tableid: String, playerid: String, cards: List<Card>) {
+    fun weis(tableid: String, playerid: String, cards: List<Card>): List<Weis> {
         val table = gameRepo.lockedRead(tableid)
         val player = getPlayer(table, playerid)
 
@@ -126,10 +126,13 @@ class TableService {
             throw RuntimeException("Only cards on the hand can be weised")
         }
 
-        player.weises = table.logic.cardsToWeis(cards, table.trumpf!!).toMutableList()
+        val weises = table.logic.cardsToWeis(cards, table.trumpf!!).toMutableList()
+        player.weises = weises
         logger.info(tableid, player.name, "weis", "weising: ${player.weises.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
         gameRepo.writeBack(table)
+
+        return weises
     }
 
     fun stoecke(tableid: String, playerid: String) {

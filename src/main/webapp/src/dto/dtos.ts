@@ -66,6 +66,10 @@ export interface WeisRequestBody {
     cards: Array<string>
 }
 
+export interface WeisResponseBody {
+    weises: Array<string>
+}
+
 
 export interface PlayRequestBody {
     card: string

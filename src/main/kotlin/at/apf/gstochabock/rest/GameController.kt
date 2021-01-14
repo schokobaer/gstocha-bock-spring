@@ -39,8 +39,9 @@ class GameController {
     }
 
     @PostMapping("/api/table/{id}/weis")
-    fun weis(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: WeisRequestBody) {
-        tableService.weis(id, playerid, req.cards.map { Card(it) })
+    fun weis(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: WeisRequestBody): WeisResponseBody {
+        val weises = tableService.weis(id, playerid, req.cards.map { Card(it) })
+        return WeisResponseBody(weises.map { it.toString() })
     }
 
     @PostMapping("/api/table/{id}/stoecke")

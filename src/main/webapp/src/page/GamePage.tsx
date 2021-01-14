@@ -1,5 +1,16 @@
 import React, { Fragment } from 'react'
-import { GameDto, TrumpfRequestBody, Trumpf, WeisRequestBody, PlayRequestBody, TableDto, Position, JoinRequestBody, GamePlayerDto } from '../dto/dtos'
+import {
+    GameDto,
+    TrumpfRequestBody,
+    Trumpf,
+    WeisRequestBody,
+    PlayRequestBody,
+    TableDto,
+    Position,
+    JoinRequestBody,
+    GamePlayerDto,
+    WeisResponseBody
+} from '../dto/dtos'
 import '../App.css';
 import Hand from '../component/Hand';
 import Runde from '../component/Runde';
@@ -12,17 +23,19 @@ import RestClient from '../rest/RestClient';
 import GameResult from '../component/GameResult';
 import WebSocketClient from "../rest/WebSocketClient";
 import {getUserId, getUserName} from "../util/GameRepo";
+import {weisToText} from "../util/CardUtils";
 
 class GamePage extends React.Component<Props, State> {
 
     state: State = {
-      loading: true,
-      stoecke: false,
-      game: undefined,
-      table: undefined,
-      weising: false,
-      weisCards: [],
-      showLastStich: false
+        loading: true,
+        stoecke: false,
+        game: undefined,
+        table: undefined,
+        weising: false,
+        weisCards: [],
+        weisResponse: '',
+        showLastStich: false
     }
 
     rest: RestClient = new RestClient()
@@ -97,54 +110,58 @@ class GamePage extends React.Component<Props, State> {
     }
 
     joinTable(table: TableDto, position: Position, password?: string) {
-      console.info('Player joins table on position: ' + position)
-      const reqBody: JoinRequestBody = {
-        name: getUserName()!,
-        position: position,
-        password: password
-      }
-      this.rest.join(getUserId()!, this.props.tableId, reqBody)
-      .catch(err => console.error('Could not join ', err))
-      .finally(() => this.loadTable())
-      this.setState({loading: true})
+        console.info('Player joins table on position: ' + position)
+        const reqBody: JoinRequestBody = {
+            name: getUserName()!,
+            position: position,
+            password: password
+        }
+        this.rest.join(getUserId()!, this.props.tableId, reqBody)
+            .catch(err => console.error('Could not join ', err))
+            .finally(() => this.loadTable())
+        this.setState({loading: true})
     }
 
     trumpfSelected(trumpf: Trumpf) {
-      console.info('Player selected trumpf: ' + trumpf)
-      const reqBody: TrumpfRequestBody = {
-        trumpf: trumpf
-      }
-      this.rest.trumpf(getUserId()!, this.props.tableId, reqBody)
-      .then(() => this.loadTable()).catch(err => console.error('Could not set trumpf ', err))
-      this.setState({loading: true})
+        console.info('Player selected trumpf: ' + trumpf)
+        const reqBody: TrumpfRequestBody = {
+            trumpf: trumpf
+        }
+        this.rest.trumpf(getUserId()!, this.props.tableId, reqBody)
+            .then(() => this.loadTable()).catch(err => console.error('Could not set trumpf ', err))
+        this.setState({loading: true})
     }
 
     removeWeisCard(card: string) {
-      const weisCards = [...this.state.weisCards]
-      weisCards.splice(weisCards.indexOf(card), 1)
-      this.setState({weisCards: weisCards})
+        const weisCards = [...this.state.weisCards]
+        weisCards.splice(weisCards.indexOf(card), 1)
+        this.setState({weisCards: weisCards})
     }
 
     makeWeis() {
-      console.info('Player makes the weis ' + this.state.weisCards)
-      const reqBody: WeisRequestBody = {
-        cards: this.state.weisCards
-      }
-      this.rest.weis(getUserId()!, this.props.tableId, reqBody)
-      .then(() => this.loadTable()).catch(err => console.error('Could set weis ', err))
-      this.setState({weising: false, weisCards: []})
+        console.info('Player makes the weis ' + this.state.weisCards)
+        const reqBody: WeisRequestBody = {
+            cards: this.state.weisCards
+        }
+        this.rest.weis(getUserId()!, this.props.tableId, reqBody)
+            .then((resp: WeisResponseBody) => {
+                this.loadTable() // TODO: Is this needed? should get updated by websocket -> delete those lines on all requests
+                const text = 'Gewiesen: ' + resp.weises.map(w => weisToText(w)).join(', ')
+                this.setState({weisResponse: text})
+            }).catch(err => console.error('Could set weis ', err))
+        this.setState({weising: false, weisCards: []})
     }
 
     cardClicked(card: string) {
-      if (this.state.weising) {
-        if (this.state.weisCards.indexOf(card) < 0) {
-          const weisCards = [...this.state.weisCards]
-          weisCards.push(card)
-          this.setState({weisCards: weisCards})
+        if (this.state.weising) {
+            if (this.state.weisCards.indexOf(card) < 0) {
+                const weisCards = [...this.state.weisCards]
+                weisCards.push(card)
+                this.setState({weisCards: weisCards})
+            }
+        } else if (this.state.game?.currentMove === this.state.game?.players[0]?.position) {
+            this.playCard(card)
         }
-      } else if (this.state.game?.currentMove === this.state.game?.players[0]?.position) {
-        this.playCard(card)
-      }
     }
 
     async playCard(card: string) {
@@ -164,7 +181,7 @@ class GamePage extends React.Component<Props, State> {
           .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
         }
       }
-      this.setState({game: table, weisResult: undefined, stoecke: false})
+      this.setState({game: table, weisResponse: '', weisResult: undefined, stoecke: false})
       const reqBody: PlayRequestBody = {
         card: card
       }
@@ -181,15 +198,15 @@ class GamePage extends React.Component<Props, State> {
     }
 
     undo() {
-      this.rest.undo(getUserId()!, this.props.tableId)
-      .catch(err => console.error('Could not clean ', err))
-      this.setState({loading: true})
+        this.rest.undo(getUserId()!, this.props.tableId)
+            .catch(err => console.error('Could not clean ', err))
+        this.setState({loading: true})
     }
 
     nextGame() {
-      this.rest.new(getUserId()!, this.props.tableId)
-      .catch(err => console.error('Could not init next game ', err))
-      this.setState({loading: true})
+        this.rest.new(getUserId()!, this.props.tableId)
+            .catch(err => console.error('Could not init next game ', err))
+        this.setState({loading: true})
     }
 
     getTablePlayers(): Array<GamePlayerDto|null> {
@@ -219,6 +236,10 @@ class GamePage extends React.Component<Props, State> {
             pos = (pos + 1) % 4
         }
         return players
+    }
+
+    weisingAllowed(): boolean {
+        return this.state.game?.cards.length === 9
     }
 
     render () {
@@ -258,7 +279,7 @@ class GamePage extends React.Component<Props, State> {
         return <Fragment>
           {undoBtn}
           <TrumpfSelector onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
-          <Hand weisingAllowed={false} cards={this.state.game ? this.state.game.cards : []} />
+          <Hand cards={this.state.game ? this.state.game.cards : []} />
         </Fragment>
       }
 
@@ -270,11 +291,9 @@ class GamePage extends React.Component<Props, State> {
               onCardClick={this.removeWeisCard} 
               onWeis={this.makeWeis} 
               onCancel={() => this.setState({weising: false, weisCards: []})}/>
-          <Hand 
-              weisingAllowed={false}
+          <Hand
               cards={this.state.game.cards}
-              onCardClick={card => this.cardClicked(card)}
-              onStartWeising={() => this.setState({weising: true})} />
+              onCardClick={card => this.cardClicked(card)} />
         </Fragment>
       }
 
@@ -314,6 +333,10 @@ class GamePage extends React.Component<Props, State> {
           stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
       }
 
+      // Weis Button
+        const weisBtn = <div className="jass-btn" style={{marginTop: '30px', visibility: (this.weisingAllowed() ? "visible" : "hidden") }} onClick={() => this.setState({weising: true})}>Weisen</div>
+
+
 
       return <Fragment>
         {undoBtn}
@@ -323,35 +346,36 @@ class GamePage extends React.Component<Props, State> {
             cards={round!}
             lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
             trumpf={this.state.game.trumpf} />
-        {stoeckeBtn}
-        <Hand weisingAllowed={this.state.game.cards.length === 9}
+        {weisBtn} {stoeckeBtn}
+          <span>{this.state.weisResponse}</span>
+        <Hand
               cards={this.state.game.cards}
               round={this.state.game.round}
               trumpf={this.state.game.trumpf}
               inMove={this.state.game.currentMove === this.state.game.players[0]!.position}
-              onCardClick={card => this.cardClicked(card)}
-              onStartWeising={() => this.setState({weising: true})} />
+              onCardClick={card => this.cardClicked(card)} />
       </Fragment>
       
     }
-  }
+}
   
-  interface Props {
+interface Props {
     tableId: string
     websocket: WebSocketClient
-  }
-  interface State {
+}
+interface State {
     stoecke: boolean // clicked on stoecke button
     loading: boolean
     game?: GameDto
     table?: TableDto
     weising: boolean // If the weis popup should be displayed
     weisCards: Array<string>
+    weisResponse: string
     showLastStich: boolean
     weisResult?: Array<{
       player: string
       weis: Array<string>
     }>
-  }
+}
   
   export default GamePage;

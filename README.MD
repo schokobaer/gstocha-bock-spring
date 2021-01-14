@@ -31,7 +31,6 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
 ```
 
 ## TODO:
-  - Feedback vom Weisen
   - Dornbirn Config
   - Display starter from last round on lastRoundHover
   - Exception handling on server

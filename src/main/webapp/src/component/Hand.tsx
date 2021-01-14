@@ -36,7 +36,6 @@ export default class Hand extends React.Component<Props, State> {
 
   render() {
     return <Fragment>
-      <div className="jass-btn" style={{marginTop: '30px', visibility: (this.props.weisingAllowed ? "visible" : "hidden") }} onClick={() => this.props.onStartWeising!()}>Weisen</div>
       <div className="hand-ct">
         <div className="hand-card-ct">{this.props.cards.map((c, i) => <Karte zIndex={i} disabled={this.isCardDisabled(c)} value={c} key={c} onClick={card => this.cardClicked(card)} />)}</div>
       </div>
@@ -46,9 +45,7 @@ export default class Hand extends React.Component<Props, State> {
 
 interface Props {
   cards: Array<string>
-  weisingAllowed: boolean // if it is ok to show the weising button
   onCardClick?: (card: string) => void
-  onStartWeising?: () => void
   round?: Array<string>
   trumpf?: Trumpf
   inMove?: boolean
