@@ -36,7 +36,10 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
   - Exception handling on server
   - real logging on the server
   - shorter ids or usage of terms of a dictionary
-  - remove the game-fetch-calls after executing an action -> should not be needed anymore, as the game is pushed via websockets
+  - improve 'undo'
+  - last stich as table, not as list
+  - never count stoeke into weisPoints
+  - integrate writer into game, to count the game points automatically
   
 
 ## Bugs:

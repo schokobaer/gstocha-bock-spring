@@ -27,7 +27,6 @@ class TableService {
         table.weisPoints.clear()
         table.round.clear()
         table.roundHistory.clear()
-        table.matschable = null
         table.trumpf = null
         table.state = TableState.TRUMPF
 
@@ -48,7 +47,7 @@ class TableService {
 
     fun addHistory(table: Table) {
         val t2 = Table(table.id, table.password, table.points.toMutableList(), table.weisPoints.toMutableList(), table.currentMove,
-                table.trumpf, table.round.toMutableList(), mutableListOf(), table.matschable, table.players.toMutableList(), null, table.logic, table.state)
+                table.trumpf, table.round.toMutableList(), mutableListOf(), table.players.toMutableList(), null, table.logic, table.state)
         table.history = t2
     }
 
@@ -235,15 +234,6 @@ class TableService {
             val winningTeamIndex = nextMove % table.logic.amountTeams()
             logger.info(tableid, player.name, "play", "$points calculated for the round with the cards: ${table.round.map { it.toString() }.stream().collect(Collectors.joining(", "))}")
 
-            // check matschable
-            if (table.matschable === null) {
-                table.matschable = true
-                logger.info(tableid, player.name, "play", "matschable=true")
-            } else if (table.matschable === true && (nextMove % 2) === 1) {
-                table.matschable = false
-                logger.info(tableid, player.name, "play", "matschable=false")
-            }
-
             // store last round
             table.roundHistory.add(RoundHistory(table.currentMove!!, table.round.toList(), nextMove, winningTeamIndex))
 
@@ -251,7 +241,7 @@ class TableService {
             if (table.players.all { it.cards.isEmpty() }) {
                 points += 5
                 logger.info(tableid, player.name, "play", "last round, adding 5 points -> $points")
-                if (table.matschable === true) {
+                if (table.roundHistory.all { it.teamIndex === winningTeamIndex }) {
                     points += 100
                     logger.info(tableid, player.name, "play", "matsch round, adding 100 points -> $points")
                 }
