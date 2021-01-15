@@ -172,7 +172,8 @@ class GamePage extends React.Component<Props, State> {
       table.cards.splice(table.cards.indexOf(card), 1)
       table.currentMove!++
       table.undoable = false
-      const callLay = table.round.length === 4 && table.cards.length === 1
+      //const callLay = table.round.length === 4 && table.cards.length === 1
+      const callLay = false
       if (this.state.stoecke) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
           console.info('Send stocke YESS')
