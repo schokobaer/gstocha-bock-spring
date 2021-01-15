@@ -61,3 +61,9 @@ enum class Trumpf(val value: String) {
         }
     }
 }
+
+enum class Stoeckability {
+    None,
+    Callable,
+    Called
+}

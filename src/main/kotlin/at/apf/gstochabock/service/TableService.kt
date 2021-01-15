@@ -40,7 +40,7 @@ class TableService {
         val playercards: List<List<Card>> = table.logic.assignCards()
         for (i in playercards.indices) {
             table.players[i].cards = table.logic.sort(playercards[i]).toMutableList()
-            table.players[i].stoeckeable = null
+            table.players[i].stoecke = Stoeckability.None
             table.players[i].weises = mutableListOf()
         }
     }
@@ -91,7 +91,7 @@ class TableService {
         // search for stoeckable player
         table.players.forEach {
             if (table.logic.hasStoecke(it.cards, trumpf)) {
-                it.stoeckeable = false
+                it.stoecke = Stoeckability.Callable
                 logger.info(tableid, player.name, "setTrumpf", "player ${it.name} is stockeable")
             }
         }
@@ -139,8 +139,8 @@ class TableService {
         val player = getPlayer(table, playerid)
 
         logger.info(tableid, player.name, "stoecke", "wants to call out stoecke")
-        if (player.stoeckeable === false) {
-            player.stoeckeable = true
+        if (player.stoecke === Stoeckability.Callable) {
+            player.stoecke = Stoeckability.Called
             logger.info(tableid, player.name, "stoecke", "successfully called out stoecke")
         }
 
@@ -219,8 +219,7 @@ class TableService {
                     // Check if there are stoecke in the weis
                     val weisCards = table.logic.weisToCards(table.players[i].weises)
                     if (table.logic.hasStoecke(weisCards, table.trumpf!!)) {
-                        points += 20
-                        table.players[i].stoeckeable = true
+                        table.players[i].stoecke = Stoeckability.Called
                         logger.info(tableid, player.name, "play", "stoecke detected in the weis")
                     }
 
@@ -331,7 +330,7 @@ class TableService {
         table.players.forEach {
             val player = table.players.find { it.position == table.currentMove }
             if (player !== null && player.cards.isNotEmpty()) {
-                if (player.stoeckeable === false) {
+                if (player.stoecke === Stoeckability.Callable) {
                     stoecke(tableid, player.playerid)
                 }
                 play(tableid, player.playerid, player.cards.first())

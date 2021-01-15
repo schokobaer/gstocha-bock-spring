@@ -1,5 +1,7 @@
 package at.apf.gstochabock.dto
 
+import at.apf.gstochabock.model.Stoeckability
+
 data class GameDto(
         val currentMove: Int?,
         val trumpf: String?,
@@ -10,7 +12,7 @@ data class GameDto(
         val undoable: Boolean,
         val players: List<GamePlayerDto>,
         val cards: List<String>,
-        val stoeckeable: Boolean?, // player.stoeckeable === false ->
+        val stoecke: String,
         val state: String
 )
 

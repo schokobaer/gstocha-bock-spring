@@ -38,7 +38,6 @@ docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
   - shorter ids or usage of terms of a dictionary
   - improve 'undo'
   - last stich as table, not as list
-  - never count stoeke into weisPoints
   - integrate writer into game, to count the game points automatically
   
 

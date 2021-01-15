@@ -2,10 +2,7 @@ package at.apf.gstochabock.service
 
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.log.GameEventLogger
-import at.apf.gstochabock.model.MutablePair
-import at.apf.gstochabock.model.Player
-import at.apf.gstochabock.model.Table
-import at.apf.gstochabock.model.TableState
+import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -33,13 +30,13 @@ class LoungeService {
 
     fun createTestTableT() {
         gameRepo.createTestTable(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), mutableListOf(),
-                mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), null)), null, BaseJassLogic()))
+                mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), Stoeckability.None)), null, BaseJassLogic()))
     }
 
     fun createTable(playerid: String, playername: String, password: String?): Table {
         val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
                 mutableListOf(), mutableListOf(), mutableListOf(), null, BaseJassLogic())
-        table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), null))
+        table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
         logger.info(table.id, playername, "createTable", "created table")
         notifyService.loungeUpadte()
@@ -75,7 +72,7 @@ class LoungeService {
             logger.warn(tableid, playername, "joinTable", "tried to join a table on an already set position")
             throw RuntimeException("Table position already set")
         }
-        table.players.add(Player(playerid, playername, position, mutableListOf(), mutableListOf(), null))
+        table.players.add(Player(playerid, playername, position, mutableListOf(), mutableListOf(), Stoeckability.None))
         table.players.sortBy { it.position }
         logger.info(tableid, playername, "joinTable", "player joined table")
 

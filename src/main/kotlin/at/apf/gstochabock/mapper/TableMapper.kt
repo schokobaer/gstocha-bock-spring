@@ -1,6 +1,7 @@
 package at.apf.gstochabock.mapper
 
 import at.apf.gstochabock.dto.*
+import at.apf.gstochabock.model.Stoeckability
 import at.apf.gstochabock.model.Table
 import at.apf.gstochabock.model.TableState
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +22,7 @@ class TableMapper {
         var weisPoints: MutableList<WeisPoints>? = null
         val players: MutableList<GamePlayerDto> = mutableListOf()
 
-        // last round
+        // not first round
         if (t.roundHistory.isNotEmpty()) {
             roundHistory.add(
                     GameRoundDto(
@@ -39,7 +40,7 @@ class TableMapper {
             for (i in t.weisPoints.indices) {
                 var hasStoecke = false
                 for (j in t.players.indices) {
-                    if (j % t.logic.amountTeams() === i && t.players[j].stoeckeable === true) {
+                    if (j % t.logic.amountTeams() === i && t.players[j].stoecke === Stoeckability.Called) {
                         hasStoecke = true
                     }
                 }
@@ -82,7 +83,7 @@ class TableMapper {
                 t.history !== null,
                 players,
                 player.cards.map { it.toString() },
-                if (t.state === TableState.PLAYING) player.stoeckeable === false else null,
+                player.stoecke.name,
                 t.state.name
         )
     }

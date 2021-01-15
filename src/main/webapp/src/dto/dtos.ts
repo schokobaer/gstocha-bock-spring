@@ -1,6 +1,7 @@
 export type Position = 0 | 1 | 2 | 3
 export type Trumpf = 'E' | 'L' | 'H' | 'S' | 'G' | 'B' | 'KU' | 'KO'
 export type GameState = 'PENDING' | 'TRUMPF' | 'PLAYING' | 'FINISHED'
+export type Stoeckability = 'None' | 'Callable' | 'Called'
 
 export interface GamePlayerDto extends TablePlayerDto {
     weis?: Array<string>
@@ -22,7 +23,7 @@ export interface GameDto {
     undoable: boolean
     players: Array<GamePlayerDto>
     cards: Array<string>
-    stoeckeable: boolean | null
+    stoecke: Stoeckability
     state?: GameState
 }
 

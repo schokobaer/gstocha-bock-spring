@@ -327,7 +327,7 @@ class GamePage extends React.Component<Props, State> {
 
       // Stoecke Button
       let stoeckeBtn
-      if (this.state.stoecke === false && this.state.game.stoeckeable === true &&
+      if (this.state.stoecke === false && this.state.game.stoecke === 'Callable' &&
         this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O" ||
         c === this.state.game?.trumpf + "K").length === 1 && this.state.game.currentMove === this.state.game.players[0].position) {
           stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
