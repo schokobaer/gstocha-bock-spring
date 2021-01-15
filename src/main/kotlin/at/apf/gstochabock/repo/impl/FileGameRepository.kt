@@ -29,8 +29,16 @@ class FileGameRepository : GameRepository {
     @Autowired
     private lateinit var serDes: TableSerDes
 
-    @Value("game.directory")
     private lateinit var directory: String
+
+    @Value("\${game.directory}")
+    fun setDirectory(directory: String) {
+        this.directory = directory
+        val file = File(directory)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+    }
 
     override fun createTestTable(table: Table) {
         TODO("Not yet implemented")
@@ -52,7 +60,7 @@ class FileGameRepository : GameRepository {
 
     override fun list(pred: (Table) -> Boolean): List<Table> {
         return File(directory).listFiles()
-                .filter { it.endsWith(".json") && it.isFile }
+                .filter { it.extension == "json" && it.isFile }
                 .map { it.name.removeSuffix(".json") }
                 .map { readFile(it) }
     }
@@ -94,13 +102,18 @@ class FileGameRepository : GameRepository {
         }
     }
 
+    private fun getFile(tableid: String): File {
+        var f = File(directory)
+        return File(f.normalize().path + '/' + tableid + ".json")
+    }
+
     private fun writeFile(table: Table) {
         val json = serDes.toText(table)
-        FileUtils.write(File(directory + table.id + ".json"), json, "UTF-8")
+        FileUtils.write(getFile(table.id), json, "UTF-8")
     }
 
     private fun readFile(tableid: String): Table {
-        val json = FileUtils.readFileToString(File(directory + tableid + ".json"), "UTF-8")
+        val json = FileUtils.readFileToString(getFile(tableid), "UTF-8")
         val table = serDes.fromText(json)
         table.id = tableid
         if (table.history !== null) {

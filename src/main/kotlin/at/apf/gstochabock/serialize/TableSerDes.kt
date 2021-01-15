@@ -23,7 +23,7 @@ class TableSerDes {
     }
 
     fun fromText(text: String): Table {
-        val tdo = gson.fromJson<TableDO>(text, Table::class.java)
+        val tdo = gson.fromJson<TableDO>(text, TableDO::class.java)
         val logic = BaseJassLogic()
         val table = Table("", tdo.password, tdo.points, tdo.weisPoints, tdo.currentMove, tdo.trumpf, tdo.round, tdo.roundHistory, tdo.players, null, logic, tdo.state)
         val h = tdo.history
