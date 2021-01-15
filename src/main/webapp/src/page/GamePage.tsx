@@ -347,7 +347,7 @@ class GamePage extends React.Component<Props, State> {
             lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
             trumpf={this.state.game.trumpf} />
         {weisBtn} {stoeckeBtn}
-          <span>{this.state.weisResponse}</span>
+          <span style={{marginLeft: '10px'}}>{this.state.weisResponse}</span>
         <Hand
               cards={this.state.game.cards}
               round={this.state.game.round}
