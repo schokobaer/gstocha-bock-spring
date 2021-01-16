@@ -17,8 +17,6 @@ import java.nio.file.Files
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-@Repository
-@Primary
 class FileGameRepository : GameRepository {
 
     private val locks: MutableMap<String, Lock> = mutableMapOf()

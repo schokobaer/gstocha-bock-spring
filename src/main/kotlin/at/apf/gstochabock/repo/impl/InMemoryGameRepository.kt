@@ -9,7 +9,6 @@ import java.util.*
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-@Repository
 class InMemoryGameRepository : GameRepository {
 
     private val gameStore: MutableMap<String, MutablePair<Table, Lock>> = mutableMapOf()
