@@ -47,6 +47,7 @@ export interface TableDto {
 export interface CreateRequestBody {
     name: string
     password?: string
+    logic: string
 }
 
 export interface CreateResponseBody {

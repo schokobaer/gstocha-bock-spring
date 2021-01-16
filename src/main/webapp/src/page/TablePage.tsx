@@ -49,7 +49,8 @@ class TablePage extends React.Component<Props, State> {
   create(data: CreateTableData) {
     const reqBody: CreateRequestBody = {
       name: getUserName() as string,
-      password: data.password
+      password: data.password,
+      logic: data.logic
     }
     this.rest.create(getUserId()!, reqBody).then(resp => {
       window.location.hash = `#${resp.id}`

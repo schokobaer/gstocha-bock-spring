@@ -1,6 +1,7 @@
 package at.apf.gstochabock.serialize
 
 import at.apf.gstochabock.gamelogic.BaseJassLogic
+import at.apf.gstochabock.gamelogic.DornbirnJassLogic
 import at.apf.gstochabock.gamelogic.JassLogic
 import at.apf.gstochabock.model.*
 import com.google.gson.Gson
@@ -24,7 +25,7 @@ class TableSerDes {
 
     fun fromText(text: String): Table {
         val tdo = gson.fromJson<TableDO>(text, TableDO::class.java)
-        val logic = BaseJassLogic()
+        val logic = if (tdo.logic.equals("base")) BaseJassLogic() else DornbirnJassLogic()
         val table = Table("", tdo.password, tdo.points, tdo.weisPoints, tdo.currentMove, tdo.trumpf, tdo.round, tdo.roundHistory, tdo.players, null, logic, tdo.state)
         val h = tdo.history
         if (h !== null) {

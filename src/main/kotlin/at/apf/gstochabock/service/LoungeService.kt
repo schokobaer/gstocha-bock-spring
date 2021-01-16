@@ -1,6 +1,7 @@
 package at.apf.gstochabock.service
 
 import at.apf.gstochabock.gamelogic.BaseJassLogic
+import at.apf.gstochabock.gamelogic.DornbirnJassLogic
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
@@ -33,9 +34,10 @@ class LoungeService {
                 mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), Stoeckability.None)), null, BaseJassLogic()))
     }
 
-    fun createTable(playerid: String, playername: String, password: String?): Table {
+    fun createTable(playerid: String, playername: String, password: String?, logicString: String): Table {
+        val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
         val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
-                mutableListOf(), mutableListOf(), mutableListOf(), null, BaseJassLogic())
+                mutableListOf(), mutableListOf(), mutableListOf(), null, logic)
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
         logger.info(table.id, playername, "createTable", "created table")

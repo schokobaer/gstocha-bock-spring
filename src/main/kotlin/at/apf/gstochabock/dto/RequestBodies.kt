@@ -1,8 +1,16 @@
 package at.apf.gstochabock.dto
 
-class CreateRequestBody(val name: String, val password: String? = null)
+class CreateRequestBody(
+        val name: String,
+        val password: String? = null,
+        val logic: String = "base"
+)
 
-data class JoinRequestBody(val name: String, val position: Int, val password: String? = null)
+data class JoinRequestBody(
+        val name: String,
+        val position: Int,
+        val password: String? = null
+)
 
 
 data class TrumpfRequestBody(val trumpf: String)
