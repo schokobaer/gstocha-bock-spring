@@ -46,8 +46,29 @@ class TableService {
     }
 
     fun addHistory(table: Table) {
-        val t2 = Table(table.id, table.password, table.points.toMutableList(), table.weisPoints.toMutableList(), table.currentMove,
-                table.trumpf, table.round.toMutableList(), mutableListOf(), table.players.toMutableList(), null, table.logic, table.state)
+        val t2 = Table(
+                table.id,
+                table.password,
+                table.points.toMutableList(),
+                table.weisPoints.toMutableList(),
+                table.currentMove,
+                table.trumpf,
+                table.round.toMutableList(),
+                table.roundHistory.toMutableList(),
+                table.players.map {
+                    Player(
+                            it.playerid,
+                            it.name,
+                            it.position,
+                            it.weises.toMutableList(),
+                            it.cards.toMutableList(),
+                            it.stoecke
+                    )
+                }.toMutableList(),
+                null,
+                table.logic,
+                table.state
+        )
         table.history = t2
     }
 

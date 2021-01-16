@@ -63,6 +63,7 @@ class FileGameRepository : GameRepository {
                 .filter { it.extension == "json" && it.isFile }
                 .map { it.name.removeSuffix(".json") }
                 .map { readFile(it) }
+                .filter(pred)
     }
 
     override fun read(id: String): Table {
@@ -72,7 +73,10 @@ class FileGameRepository : GameRepository {
     override fun lockedRead(id: String): Table {
         synchronized(locks) {
             if (!locks.containsKey(id)) {
-                throw RuntimeException("No table with id $id")
+                if (!getFile(id).exists()) {
+                    throw RuntimeException("No table with id $id")
+                }
+                locks[id] = ReentrantLock()
             }
             locks[id]!!.lock()
         }
