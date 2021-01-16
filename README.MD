@@ -38,6 +38,7 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - improve 'undo'
   - last stich as table, not as list
   - integrate writer into game, to count the game points automatically
+  - cleanup service
   
 
 ## Bugs:
