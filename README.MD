@@ -27,7 +27,7 @@ java -jar gstocha-bock-0.0.1-SNAPSHOT.jar
 
 ### Docker
 ```
-docker run -d -p 8080:8080 -v tmp:/tmp --name=gstochabock gstochabock-spring
+docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=gstochabock gstocha-bock
 ```
 
 ## TODO:
