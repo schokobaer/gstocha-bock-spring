@@ -15,6 +15,7 @@ class GameEventLogger {
     private lateinit var logRepo: LogRepo
 
     private val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+    private val logSize = 200
 
     private fun fill(str: String, n: Int, left: Boolean = true): String {
         var s = str
@@ -30,7 +31,11 @@ class GameEventLogger {
         val tbid = fill(tableid.substring(0, 8), 8)
         val timestamp = sdf.format(now)
         val log = "[$timestamp] ${fill(lvl, 5)} --- $tbid/${fill(player, 15, false)} [${fill(action, 15)}]: $msg"
-        logRepo.get(tableid).add(log)
+        val store = logRepo.get(tableid)
+        store.add(log)
+        while (store.size > logSize) {
+            store.removeAt(0)
+        }
     }
 
     fun debug(tableid: String, player: String, action: String, msg: String) {
@@ -50,7 +55,7 @@ class GameEventLogger {
     }
 
     fun clean(tableid: String) {
-        logRepo.get(tableid).clear()
+        //logRepo.get(tableid).clear()
     }
 
     fun export(tableid: String): String {
