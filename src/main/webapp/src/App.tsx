@@ -4,14 +4,14 @@ import TablePage from './page/TablePage';
 import GamePage from './page/GamePage';
 import WebSocketClient from './rest/WebSocketClient'
 import { uuid } from 'uuidv4'
-import {getUserName, setUserId, setUserName} from "./util/GameRepo";
+import {getUserId, getUserName, setUserId, setUserName} from "./util/GameRepo";
 import NameDialog from "./component/dialog/NameDialog";
 
 class App extends React.Component<Props, State> {
 
   state: State = {
     tableId: undefined,
-    userName: getUserName()
+    setup: true
   }
 
   ws: WebSocketClient | null = null
@@ -31,7 +31,9 @@ class App extends React.Component<Props, State> {
     window.onhashchange = () => {
       this.setState({tableId: this.getTableId()})
     }
-    if (getUserName()) {
+
+    if (getUserName() && getUserId()) {
+      this.setState({setup: false})
       this.initWebSockets()
     }
   }
@@ -40,12 +42,12 @@ class App extends React.Component<Props, State> {
     if (name.length > 0 && name.length <= 15) {
       setUserName(name)
       setUserId(uuid())
-      this.setState({userName: name})
+      this.setState({setup: false})
     }
   }
 
   render () {
-    if (this.state.userName === null) {
+    if (this.state.setup === true) {
       return <NameDialog onNameSet={(name: string) => this.setName(name)} />
     }
 
@@ -70,7 +72,7 @@ class App extends React.Component<Props, State> {
 interface Props {}
 interface State {
   tableId?: string
-  userName: string | null
+  setup: boolean
 }
 
 export default App;
