@@ -29,9 +29,8 @@ class LoungeService {
         return gameRepo.list { it.players.size < it.logic.amountPlayers() }
     }
 
-    fun createTestTableT() {
-        gameRepo.createTestTable(Table("t", null, mutableListOf(0, 0), mutableListOf(0, 0), null, null, mutableListOf(), mutableListOf(),
-                mutableListOf(Player("a", "AF", 0, mutableListOf(), mutableListOf(), Stoeckability.None)), null, BaseJassLogic()))
+    fun getRunningTables(playerid: String): List<Table> {
+        return gameRepo.list { it.players.find { p -> p.playerid == playerid } !== null }
     }
 
     fun createTable(playerid: String, playername: String, password: String?, logicString: String): Table {

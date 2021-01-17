@@ -9,13 +9,15 @@ export default class Table extends React.Component<Props> {
   }
 
   joinTable(pos: Position) {
-    this.props.onJoin(this.props.table, pos)
+    this.props.onJoin!(this.props.table, pos)
   }
 
     getChair(idx: Position) {
         const player = this.props.table.players.find(p => p.position === idx)
         if (player) {
             return player.name
+        } else if (this.props.onJoin === undefined) {
+            return '?'
         }
         return <button className="jass-btn" onClick={() => this.joinTable(idx)}>Join</button>
     }
@@ -36,5 +38,5 @@ export default class Table extends React.Component<Props> {
 
 interface Props {
     table: TableDto
-    onJoin: (table: TableDto, position: Position) => void
+    onJoin?: (table: TableDto, position: Position) => void
 }

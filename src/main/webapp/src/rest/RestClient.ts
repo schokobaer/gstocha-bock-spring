@@ -29,6 +29,24 @@ export default class RestClient {
         })
     }
 
+    listRunningTables(playerid: string): Promise<Array<TableDto>>{
+        return fetch(`${api}/`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'playerid': playerid
+            },
+            cache: 'no-cache'
+        }).then(resp => {
+            if (resp.ok) {
+                return resp.json().then(data => {
+                    return data as Array<TableDto>
+                })
+            }
+            throw 'Could not load tables'
+        })
+    }
+
     getTable(tableId: string, playerid: string): Promise<any> {
         return fetch(`${api}/${tableId}`, {
             method: 'GET',

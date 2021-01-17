@@ -9,127 +9,164 @@ import PasswordDialog from "../component/dialog/PasswordDialog";
 
 class TablePage extends React.Component<Props, State> {
 
-  state: State = {
-    loading: true,
-    tables: [],
-    createTableDialog: false
-  }
-
-  rest: RestClient = new RestClient()
-  bcc: BroadcastChannel = new BroadcastChannel('lounge')
-
-  componentDidMount() {
-    this.loadTables = this.loadTables.bind(this)
-    this.create = this.create.bind(this)
-    this.joinTable = this.joinTable.bind(this)
-    this.loadTables()
-
-    this.bcc.onmessage = (msg: MessageEvent) => {
-      console.info('TablePage received BCC message')
-      this.loadTables()
-    }
-  }
-
-  componentWillUnmount() {
-    this.bcc.close()
-  }
-
-
-  loadTables() {
-      this.rest.listOpenTables().then(data => {
-        console.info('Loaded tables: ', data)
-        this.setState({loading: false, tables: data})
-      })
-      .catch(err => {
-          this.setState({loading: false})
-          console.error('Could not fetch tables', err)
-      })
-  }
-
-  create(data: CreateTableData) {
-    const reqBody: CreateRequestBody = {
-      name: getUserName() as string,
-      password: data.password,
-      logic: data.logic
-    }
-    this.rest.create(getUserId()!, reqBody).then(resp => {
-      window.location.hash = `#${resp.id}`
-    }).catch(err => console.error('Cound not create new table ', err))
-    this.setState({loading: true})
-  }
-
-  joinTable(table: TableDto, position: Position) {
-    if (table.protected) {
-      this.setState({joinRequest: {tableid: table.id, position: position}})
-      return
+    state: State = {
+        loading: true,
+        openTables: true,
+        tables: [],
+        createTableDialog: false
     }
 
-    console.info('Player joins table on position: ' + position)
-    const reqBody: JoinRequestBody = {
-      name: getUserName() as string,
-      position: position
-    }
-    this.rest.join(getUserId()!, table.id, reqBody)
-    .then(() => window.location.hash = `#${table.id}`)
-    .catch(err => console.error('Could not join ', err))
-    this.setState({loading: true, joinRequest: undefined})
-  }
+    rest: RestClient = new RestClient()
+    bcc: BroadcastChannel = new BroadcastChannel('lounge')
 
-  joinProtectedTable(pw: string) {
-    console.info('Player joins protected table on position: ' + this.state.joinRequest!.position)
-    const reqBody: JoinRequestBody = {
-      name: getUserName() as string,
-      position: this.state.joinRequest!.position,
-      password: pw
-    }
-    this.rest.join(getUserId()!, this.state.joinRequest!.tableid, reqBody)
-        .then(() => window.location.hash = `#${this.state.joinRequest!.tableid}`)
-        .catch(err => console.error('Could not join ', err))
-    this.setState({loading: true, joinRequest: undefined})
-  }
+    componentDidMount() {
+        this.loadOpenTables = this.loadOpenTables.bind(this)
+        this.create = this.create.bind(this)
+        this.joinTable = this.joinTable.bind(this)
+        this.loadOpenTables()
 
-  render () {
-    // No data loaded yet
-    if (this.state.loading) {
-      return <div>Fetching data ...</div>
+        this.bcc.onmessage = (msg: MessageEvent) => {
+            console.info('TablePage received BCC message')
+            if (this.state.openTables) {
+                this.loadOpenTables()
+            } else {
+                this.loadRunningTables()
+            }
+        }
     }
 
-    if (this.state.createTableDialog) {
-      return <CreateTableDialog onCancle={() => this.setState({createTableDialog: false})} onCreate={(data: CreateTableData) => this.create(data)} />
+    componentWillUnmount() {
+        this.bcc.close()
     }
 
-    if (this.state.joinRequest) {
-      return <PasswordDialog onCancle={() => this.setState({joinRequest: undefined})} onSubmit={pw => this.joinProtectedTable(pw)} />
+    loadOpenTables() {
+        this.rest.listOpenTables().then(data => {
+            console.info('Loaded tables: ', data)
+            this.setState({loading: false, tables: data})
+        })
+        .catch(err => {
+            this.setState({loading: false})
+            console.error('Could not fetch tables', err)
+        })
     }
 
-    let looser
-    if (this.state.tables.length === 0) {
-      looser = <div>
-        No Tables available 🤓 Create a new one 🔥
-      </div>
+    loadRunningTables() {
+        this.rest.listRunningTables(getUserId()!).then(data => {
+            console.info('Loaded tables: ', data)
+            this.setState({loading: false, tables: data})
+        })
+        .catch(err => {
+            this.setState({loading: false})
+            console.error('Could not fetch running tables', err)
+        })
     }
 
-    return <div className="tablepage">
-      <button className="jass-btn" onClick={() => this.setState({createTableDialog: true})}>Neuer Tisch</button>
+    create(data: CreateTableData) {
+        const reqBody: CreateRequestBody = {
+            name: getUserName() as string,
+            password: data.password,
+            logic: data.logic
+        }
+        this.rest.create(getUserId()!, reqBody).then(resp => {
+            window.location.hash = `#${resp.id}`
+        }).catch(err => console.error('Cound not create new table ', err))
+        this.setState({loading: true})
+    }
 
-      {looser}
-      <div className="tables-ct">
-        {this.state.tables.map(t => <div className="table-ct-ct"><Table table={t} onJoin={this.joinTable} /></div>)}
-      </div>
-    </div>
-  }
+    joinTable(table: TableDto, position: Position) {
+        if (table.protected) {
+            this.setState({joinRequest: {tableid: table.id, position: position}})
+            return
+        }
+
+        console.info('Player joins table on position: ' + position)
+        const reqBody: JoinRequestBody = {
+            name: getUserName() as string,
+            position: position
+        }
+        this.rest.join(getUserId()!, table.id, reqBody)
+            .then(() => window.location.hash = `#${table.id}`)
+            .catch(err => console.error('Could not join ', err))
+        this.setState({loading: true, joinRequest: undefined})
+    }
+
+    joinProtectedTable(pw: string) {
+        console.info('Player joins protected table on position: ' + this.state.joinRequest!.position)
+        const reqBody: JoinRequestBody = {
+            name: getUserName() as string,
+            position: this.state.joinRequest!.position,
+            password: pw
+        }
+        this.rest.join(getUserId()!, this.state.joinRequest!.tableid, reqBody)
+            .then(() => window.location.hash = `#${this.state.joinRequest!.tableid}`)
+            .catch(err => console.error('Could not join ', err))
+        this.setState({loading: true, joinRequest: undefined})
+    }
+
+    toggle() {
+        const openTables = !this.state.openTables
+        this.setState({openTables: openTables, loading: true})
+        if (openTables) {
+            this.loadOpenTables()
+        } else {
+            this.loadRunningTables()
+        }
+    }
+
+    render () {
+        // No data loaded yet
+        if (this.state.loading) {
+            return <div>Fetching data ...</div>
+        }
+
+        if (this.state.createTableDialog) {
+            return <CreateTableDialog onCancle={() => this.setState({createTableDialog: false})} onCreate={(data: CreateTableData) => this.create(data)} />
+        }
+
+        if (this.state.joinRequest) {
+            return <PasswordDialog onCancle={() => this.setState({joinRequest: undefined})} onSubmit={pw => this.joinProtectedTable(pw)} />
+        }
+
+        let looser
+        if (this.state.tables.length === 0) {
+            looser = <div>
+                No Tables available 🤓 Create a new one 🔥
+            </div>
+        }
+
+        let tableOnClick
+
+        return <div className="tablepage">
+            <button className="jass-btn" onClick={() => this.setState({createTableDialog: true})}>Neuer Tisch</button>
+            <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.toggle()}>{this.state.openTables ? 'Laufende Spiele' : 'Lounge'}</button>
+
+            {looser}
+            <div className="tables-ct">
+                {this.state.tables.map(t =>
+                    <div
+                        className="table-ct-ct"
+                        style={!this.state.openTables ? {cursor: 'pointer'} : {}}
+                        onClick={!this.state.openTables ? (() =>  window.location.hash = `#${t.id}`) : undefined} >
+                    <Table
+                        table={t}
+                        onJoin={this.state.openTables ? this.joinTable : undefined} />
+                </div>)}
+            </div>
+        </div>
+    }
 }
 
 interface Props {
 }
 interface State {
-  loading: boolean
-  tables: Array<TableDto>
-  createTableDialog: boolean
-  joinRequest?: {
-    tableid: string
-    position: Position
-  }
+    loading: boolean
+    tables: Array<TableDto>
+    createTableDialog: boolean
+    openTables: boolean
+    joinRequest?: {
+        tableid: string
+        position: Position
+    }
 }
 
 export default TablePage;

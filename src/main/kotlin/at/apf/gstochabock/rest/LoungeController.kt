@@ -19,13 +19,9 @@ class LoungeController {
     lateinit var tableMapper: TableMapper
 
     @GetMapping("/api/table")
-    fun getOpenTables(): List<TableDto> {
-        return loungeService.getOpenTables().map { tableMapper.toTableDto(it) }
-    }
-
-    @PostMapping("/api/tablet")
-    fun createTestTableT() {
-        loungeService.createTestTableT()
+    fun getTables(@RequestHeader playerid: String?): List<TableDto> {
+        return (if (playerid === null) loungeService.getOpenTables() else loungeService.getRunningTables(playerid))
+            .map { tableMapper.toTableDto(it) }
     }
 
     @PostMapping("/api/table")
