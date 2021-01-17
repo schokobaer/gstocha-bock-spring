@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment, ReactFragment} from 'react';
 import './CreateTableDialog.css'
 import Dialog from "../Dialog";
 import Select from "react-select";
@@ -7,6 +7,22 @@ const jassRulesOptions = [
     {value: 'base', label: 'Base'},
     {value: 'dornbirn', label: 'Dornbirn'}
 ]
+
+const jassRuleDescriptions: Record<string, any> = {
+    'base':
+    <Fragment>
+        <ul>
+            <li>4 Gleiche 6, 7, 8 erlaubt bei Goas, Bock, Kulmi</li>
+            <li>Niedrigere Weis zählt bei Goas</li>
+        </ul>
+    </Fragment>,
+    'dornbirn': <Fragment>
+        <ul>
+            <li>4 Gleiche 6, 7, 8 sind nie erlaubt</li>
+            <li>Es zählt immer der höhere Weis</li>
+        </ul>
+    </Fragment>
+}
 
 export default class CreateTableDialog extends React.Component<Props, State> {
 
@@ -50,6 +66,12 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             defaultValue={jassRulesOptions[0]}
                             options={jassRulesOptions}
                             onChange={(v: any) => this.setState({logic: v.value})} />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        {jassRuleDescriptions[this.state.logic]}
                     </td>
                 </tr>
             </table>
