@@ -73,6 +73,11 @@ class TableMapper {
 
         val player = t.players.find { it.playerid == playerid }!!
 
+        val undoable = t.history !== null && (
+                        t.state === TableState.TRUMPF
+                        || (t.state === TableState.PLAYING && t.players.all { it.cards.size === t.logic.amountCards() })
+                )
+
         return GameDto(
                 t.currentMove,
                 t.trumpf?.value,
@@ -80,7 +85,7 @@ class TableMapper {
                 weisPoints,
                 t.round.map { it.toString() },
                 roundHistory,
-                t.history !== null,
+                undoable,
                 players,
                 player.cards.map { it.toString() },
                 player.stoecke.name,
