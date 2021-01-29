@@ -35,10 +35,9 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - Exception handling on server
   - real logging on the server
   - shorter ids or usage of terms of a dictionary
-  - improve 'undo'
   - last stich as table, not as list
-  - integrate writer into game, to count the game points automatically
-  - cleanup service
+  - show trumpf on GameResult
+
   
 
 ## Bugs:
