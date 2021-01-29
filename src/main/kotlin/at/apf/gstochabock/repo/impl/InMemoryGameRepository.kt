@@ -66,4 +66,12 @@ class InMemoryGameRepository : GameRepository {
         pair.first = table
     }
 
+    override fun delete(id: String) {
+        if (gameStore.containsKey(id)) {
+            val lock = gameStore[id]!!.second
+            gameStore.remove(id)
+            lock.unlock()
+        }
+    }
+
 }

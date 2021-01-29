@@ -10,4 +10,5 @@ interface GameRepository {
     fun lockedRead(id: String): Table
     fun unlock(id: String)
     fun writeBack(table: Table)
+    fun delete(id: String)
 }

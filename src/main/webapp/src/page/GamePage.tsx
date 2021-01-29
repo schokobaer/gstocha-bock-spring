@@ -209,6 +209,13 @@ class GamePage extends React.Component<Props, State> {
         this.setState({loading: true})
     }
 
+    leave() {
+        this.rest.leave(getUserId()!, this.props.tableId)
+            .then(() => window.history.back())
+            .catch(err => console.error("Could not leave table: ", err))
+        this.setState({loading: true})
+    }
+
     getTablePlayers(): Array<GamePlayerDto|null> {
         // hard coded on 4 players
         if (!this.state.game) {
@@ -263,7 +270,10 @@ class GamePage extends React.Component<Props, State> {
 
       // Not all players joined yet
       if (this.state.game.state === "PENDING") {
-        return <Runde players={this.getTablePlayers()} cards={[]} />
+        return <Fragment>
+            <Runde players={this.getTablePlayers()} cards={[]} />
+            <div className="jass-btn" style={{marginTop: '30px'}} onClick={() => this.leave()}>Leave</div>
+        </Fragment>
       }
 
       // Undoable

@@ -69,6 +69,11 @@ class GameController {
         tableService.newGame(id, playerid)
     }
 
+    @DeleteMapping("/api/table/{id}")
+    fun leave(@PathVariable id: String, @RequestHeader playerid: String) {
+        tableService.leave(id, playerid)
+    }
+
     @GetMapping("/api/table/{id}/log", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun getLog(@PathVariable id: String): String {
         val game = tableService.getGameTable(id)
