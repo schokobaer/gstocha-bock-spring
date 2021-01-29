@@ -32,6 +32,7 @@
     background-size: contain;
     height: 140px;
     width: 76px;
+    border-radius: 5px;
 }
 
 .disabled > div > div {
