@@ -3,6 +3,15 @@ import './Karte.css'
 
 /**
  * className={this.props.disabled ? "disabled" : ""}
+ *
+ *
+ return <div className={`karte ${this.props.disabled ? "disabled" : ""}`} style={zidx || {}}>
+ <div>
+ <img src={`img/cards/${this.props.value}.jpg`}
+ alt={this.props.value}
+ onClick={() => this.props.onClick && this.props.disabled !== true ? this.props.onClick(this.props.value!) : undefined } />
+ </div>
+ </div>
  */
 
 export default class Karte extends React.Component<Props> {
@@ -16,9 +25,11 @@ export default class Karte extends React.Component<Props> {
     }
     return <div className={`karte ${this.props.disabled ? "disabled" : ""}`} style={zidx || {}}>
         <div>
-            <img src={`img/cards/${this.props.value}.jpg`}
-                 alt={this.props.value}
-                 onClick={() => this.props.onClick && this.props.disabled !== true ? this.props.onClick(this.props.value!) : undefined } />
+            <div
+                style={{backgroundImage: `url("img/cards/${this.props.value}.jpg")`}}
+                onClick={() => this.props.onClick && this.props.disabled !== true ? this.props.onClick(this.props.value!) : undefined }>
+
+            </div>
         </div>
     </div>
   }
