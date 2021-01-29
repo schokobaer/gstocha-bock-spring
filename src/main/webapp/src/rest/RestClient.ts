@@ -128,4 +128,22 @@ export default class RestClient {
     new(playerid: string, id: string): Promise<any> {
         return this.sendPost(`${api}/${id}/new`, {}, playerid)
     }
+
+    leave(playerid: string, id: string): Promise<any> {
+        return fetch(`${api}/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'playerid': playerid
+            },
+            cache: 'no-cache',
+            body: JSON.stringify({})
+        }).then(resp => {
+            if (resp.ok) {
+                return resp
+            }
+            throw 'Could not leave table'
+        })
+    }
 }

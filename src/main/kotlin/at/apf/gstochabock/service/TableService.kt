@@ -335,7 +335,22 @@ class TableService {
     }
 
     fun leave(tableid: String, playerid: String) {
-        // TODO: Implement
+        val table = gameRepo.lockedRead(tableid)
+        val player = getPlayer(table, playerid)
+
+        // Remove player
+        table.players.remove(player)
+        table.state = TableState.PENDING
+
+        // delete table if empty
+        if (table.players.isEmpty()) {
+            gameRepo.delete(tableid)
+        } else {
+            gameRepo.writeBack(table)
+        }
+
+        notifyService.loungeUpadte()
+        notifyService.gameUpdate(table)
     }
 
     fun lay(tableid: String, playerid: String) {

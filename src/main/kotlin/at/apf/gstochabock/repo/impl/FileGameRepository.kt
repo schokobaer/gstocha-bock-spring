@@ -104,6 +104,18 @@ class FileGameRepository : GameRepository {
         }
     }
 
+    override fun delete(id: String) {
+        val file = getFile(id)
+        if (file.exists()) {
+            file.delete()
+        }
+        if (locks.containsKey(id)) {
+            val lock = locks[id]!!
+            locks.remove(id)
+            lock.unlock()
+        }
+    }
+
     private fun getFile(tableid: String): File {
         var f = File(directory)
         return File(f.normalize().path + '/' + tableid + ".json")
