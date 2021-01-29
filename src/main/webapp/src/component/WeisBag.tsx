@@ -21,7 +21,7 @@ export default class WeisBag extends React.Component<Props, State> {
 
   render() {
     return <Fragment>
-        <div>
+        <div className="weis-bag-ct">
             <h2>Weis</h2>
             <div className="weis-bag">
                 {this.props.cards.map(c => <Karte value={c} onClick={this.props.onCardClick} />)}

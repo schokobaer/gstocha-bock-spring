@@ -35,3 +35,14 @@
 .table-ct .table-row div:first-of-type {
     border-right: solid #000 3px;
 }
+
+@media only screen and (max-width: 800px) {
+    .table-ct {
+        padding: 10px;
+        border-radius: 15px;
+    }
+    .table-row > div {
+        font-size: 16px;
+        text-align: center;
+    }
+}

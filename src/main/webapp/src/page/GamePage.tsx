@@ -344,7 +344,7 @@ class GamePage extends React.Component<Props, State> {
       }
 
       // Weis Button
-        const weisBtn = <div className="jass-btn" style={{marginTop: '30px', visibility: (this.weisingAllowed() ? "visible" : "hidden") }} onClick={() => this.setState({weising: true})}>Weisen</div>
+      const weisBtn = <div id="weisBtn" className="jass-btn" style={{visibility: (this.weisingAllowed() ? "visible" : "hidden") }} onClick={() => this.setState({weising: true})}>Weisen</div>
 
 
 

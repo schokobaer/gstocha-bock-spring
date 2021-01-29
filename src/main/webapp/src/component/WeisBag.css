@@ -1,3 +1,7 @@
+.weis-bag-ct {
+
+}
+
 .weis-bag {
     display: flex;
     flex-direction: row;
@@ -6,4 +10,13 @@
 
 .weis-bag > div {
     margin-right: -20px;
+}
+
+
+@media only screen and (max-width: 800px) {
+    .weis-bag-ct {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 30px;
+    }
 }

@@ -42,4 +42,4 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   
 
 ## Bugs:
-  
+  - Untertrumpfen works in Webapp -> e.g. Laub Trumpf, EK, E8, E6 works

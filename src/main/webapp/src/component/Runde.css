@@ -49,6 +49,7 @@
 
 .trumpf-ct>img {
     height: 40px;
+    pointer-events: none;
 }
 
 .peek-btn {
@@ -78,4 +79,32 @@
     background-color: #fff;
     padding: 5px;
     border-radius: 5px;
+}
+
+
+@media only screen and (max-width: 800px) {
+    .runde-ct {
+        padding: 10px;
+    }
+    .trumpf-ct {
+        padding: 7px;
+    }
+    .trumpf-ct>img {
+        height: 30px;
+    }
+    .peek-btn{
+        height: 44px;
+        width: 44px;
+        font-size: 26px;
+        user-select: none;
+    }
+    .peek-btn:hover {
+        background-color: #ddd;
+    }
+    .runde-top {
+        margin-top: -10px;
+    }
+    .runde-top br {
+        display: none;
+    }
 }

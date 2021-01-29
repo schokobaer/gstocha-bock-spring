@@ -57,6 +57,9 @@ export default class Runde extends React.Component<Props, State> {
                    title="Letzter Stich"
                    style={{visibility: this.props.lastRound ? 'visible' : 'hidden'}}
                    onMouseEnter={() => this.setState({showLast: true})}
+                   onTouchStart={() => this.setState({showLast: true})}
+                   onTouchEnd={() => this.setState({showLast: false})}
+                   onTouchCancel={() => this.setState({showLast: false})}
                    onMouseLeave={() => this.setState({showLast: false})}>👀</div>
             </div>
       }

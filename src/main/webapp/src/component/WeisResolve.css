@@ -30,3 +30,11 @@
 .weis-resolve > div > div {
     margin-right: -25px;
 }
+
+@media only screen and (max-width: 800px) {
+    .weis-window {
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 10px;
+    }
+}

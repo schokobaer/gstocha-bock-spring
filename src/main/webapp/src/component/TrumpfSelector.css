@@ -37,10 +37,28 @@
 
 .trumpfselector-trumpf>img {
     height: 40px;
+    pointer-events: none;
 }
 
 .table-ct-ct {
     width: 250px;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media only screen and (max-width: 800px) {
+    .trumpfselector-flex {
+        width: auto;
+        margin-bottom: 10px;
+    }
+    .trumpfselector-ct h2 {
+        font-size: 1em;
+    }
+    .trumpfselector-trumpf {
+        height: 48px;
+        width: 48px;
+    }
+    .trumpfselector-trumpf>img {
+        height: 30px;
+    }
 }

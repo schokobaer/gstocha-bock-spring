@@ -52,3 +52,21 @@ code {
   background-color: #aaa;
   box-shadow: #777 0px 0px 0px;
 }
+
+#weisBtn {
+  margin-top: 30px;
+}
+
+
+/* App Views */
+@media only screen and (max-width: 1048px) {
+  #root {
+    margin-top: 80px;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  #weisBtn {
+    margin: 10px
+  }
+}
