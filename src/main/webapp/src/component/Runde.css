@@ -40,7 +40,7 @@
     display: table;
 }
 
-.runde-middle-player-ct > label {
+.runde-middle-player-ct > runde-playername {
     display: table-cell;
     vertical-align: middle;
 }
