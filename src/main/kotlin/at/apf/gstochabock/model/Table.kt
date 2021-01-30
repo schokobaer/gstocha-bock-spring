@@ -1,6 +1,7 @@
 package at.apf.gstochabock.model
 
 import at.apf.gstochabock.gamelogic.JassLogic
+import java.util.*
 
 data class Table(
         var id: String,
@@ -13,8 +14,10 @@ data class Table(
         val roundHistory: MutableList<RoundHistory>,
         var players: MutableList<Player>,
         var history: Table?,
+        val created: String,
         val logic: JassLogic,
         var state: TableState = TableState.PENDING
+
 )
 
 data class RoundHistory(

@@ -38,10 +38,6 @@ class FileGameRepository : GameRepository {
         }
     }
 
-    override fun createTestTable(table: Table) {
-        TODO("Not yet implemented")
-    }
-
     override fun create(table: Table): String {
         val id = idGenerator.nextId()
         table.id = id

@@ -3,7 +3,6 @@ package at.apf.gstochabock.repo
 import at.apf.gstochabock.model.Table
 
 interface GameRepository {
-    fun createTestTable(table: Table)
     fun create(table: Table) : String
     fun list(pred: (Table) -> Boolean): List<Table>
     fun read(id: String) : Table

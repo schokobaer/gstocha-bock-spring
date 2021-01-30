@@ -13,10 +13,6 @@ class InMemoryGameRepository : GameRepository {
 
     private val gameStore: MutableMap<String, MutablePair<Table, Lock>> = mutableMapOf()
 
-    override fun createTestTable(table: Table) {
-        gameStore[table.id] = MutablePair<Table, Lock>(table, ReentrantLock())
-    }
-
     override fun create(table: Table) : String {
         val uuid = UUID.randomUUID().toString()
         table.id = uuid

@@ -8,6 +8,8 @@ import at.apf.gstochabock.repo.GameRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -25,6 +27,8 @@ class LoungeService {
     @Autowired
     lateinit var logger: GameEventLogger
 
+    val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy-HH:mm:ss")
+
     fun getOpenTables(): List<Table> {
         return gameRepo.list { it.players.size < it.logic.amountPlayers() }
     }
@@ -35,8 +39,9 @@ class LoungeService {
 
     fun createTable(playerid: String, playername: String, password: String?, logicString: String): Table {
         val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
+        val creationTime = simpleDateFormat.format(Date())
         val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
-                mutableListOf(), mutableListOf(), mutableListOf(), null, logic)
+                mutableListOf(), mutableListOf(), mutableListOf(), null, creationTime, logic)
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
         logger.info(table.id, playername, "createTable", "created table")

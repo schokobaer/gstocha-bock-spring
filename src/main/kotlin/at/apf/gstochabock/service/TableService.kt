@@ -66,6 +66,7 @@ class TableService {
                     )
                 }.toMutableList(),
                 null,
+                table.created,
                 table.logic,
                 table.state
         )
