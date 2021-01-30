@@ -24,10 +24,25 @@
     justify-content: center;
 }
 
-.runde-middle > * {
+.runde-middle > div {
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.runde-middle > div > div {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.runde-middle-player-ct {
+    display: table;
+}
+
+.runde-middle-player-ct > label {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .action-ct {
@@ -95,7 +110,7 @@
     .peek-btn{
         height: 44px;
         width: 44px;
-        font-size: 26px;
+        font-size: 26px; /* -> 28px, vertical allignment */
         user-select: none;
     }
     .peek-btn:hover {
@@ -106,5 +121,22 @@
     }
     .runde-top br {
         display: none;
+    }
+
+    .runde-middle {
+        margin-bottom: -30px;
+    }
+    .runde-middle > div:first-child {
+        flex-flow: column-reverse;
+    }
+    .runde-middle > div {
+        flex-flow: column;
+    }
+    .runde-middle-player-ct {
+        display: block;
+        margin-top: -10px;
+    }
+    .runde-middle-player-ct > label {
+        display: block;
     }
 }
