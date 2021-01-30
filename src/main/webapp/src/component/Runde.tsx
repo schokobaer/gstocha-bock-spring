@@ -75,8 +75,11 @@ export default class Runde extends React.Component<Props, State> {
             <div className="runde-middle">
                 <div>
                     <div className="runde-middle-player-ct">
-                        <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(0)}</label>
-                        {this.getWeisCall(0)}
+                        <div>
+                            <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(0)}</label>
+                            <br /> <br />
+                            {this.getWeisCall(0)}
+                        </div>
                     </div>
                     <div>
                         <div style={{transform: 'rotate(90deg)'}}>
@@ -91,8 +94,11 @@ export default class Runde extends React.Component<Props, State> {
                         </div>
                     </div>
                     <div className="runde-middle-player-ct">
-                        <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(2)}</label>
-                        {this.getWeisCall(2)}
+                        <div>
+                            <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(2)}</label>
+                            <br /> <br />
+                            {this.getWeisCall(2)}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -40,7 +40,7 @@
     display: table;
 }
 
-.runde-middle-player-ct > runde-playername {
+.runde-middle-player-ct > div {
     display: table-cell;
     vertical-align: middle;
 }
@@ -133,10 +133,13 @@
         flex-flow: column;
     }
     .runde-middle-player-ct {
-        display: block;
         margin-top: -10px;
-    }
-    .runde-middle-player-ct > label {
         display: block;
+    }
+    .runde-middle-player-ct > div {
+        display: block;
+    }
+    .runde-weiscall {
+        margin-bottom: -30px;
     }
 }
