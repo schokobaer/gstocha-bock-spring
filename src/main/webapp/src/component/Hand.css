@@ -31,4 +31,10 @@
     .hand-ct {
         margin-top: 0px;
     }
+
+    .hand-card-ct>div:hover * {
+        height: 108px;
+        width: 60px;
+        transition: 0.3s ease;
+    }
 }
