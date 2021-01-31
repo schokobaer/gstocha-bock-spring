@@ -37,7 +37,8 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - shorter ids or usage of terms of a dictionary
   - last stich as table, not as list
   - show trumpf on GameResult
-  - add creation timestamp for tables
+  - News site
+  - Stöcke-Button always visible after first round (if its a ELHS trumpf)
   
 
 ## Bugs:
