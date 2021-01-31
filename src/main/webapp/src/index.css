@@ -3,7 +3,7 @@ body {
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-  font-family: TheDeadSaloon;
+  font-family: Rocky;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* background-color:#0E4D00; */
@@ -34,8 +34,19 @@ code {
   src: url(font/thedeadsaloon-Regular.ttf);
 }
 
+@font-face {
+  font-family: Rocky;
+  /*src: url(font/Rocky-Regular.ttf);*/
+  src: url(font/Typewriter.ttf);
+}
+
+@font-face {
+  font-family: Typewriter;
+  src: url(font/Typewriter.ttf);
+}
+
 .jass-btn {
-  font-family: TheDeadSaloon;
+  font-family: Rocky;
   background-color: #ddd;
   font-size: 24px;
   display: inline-block;

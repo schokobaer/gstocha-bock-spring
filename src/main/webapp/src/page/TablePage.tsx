@@ -164,7 +164,7 @@ class TablePage extends React.Component<Props, State> {
                 </div>
                 <div>
                     <div>🖖</div>
-                    <div>Vorarlberger Tischnamen (siehe URL)</div>
+                    <div>V-Style Tischnamen (siehe URL)</div>
                 </div>
             </div>
         </div>
