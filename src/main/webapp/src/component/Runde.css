@@ -31,7 +31,7 @@
 }
 
 .runde-middle > div > div {
-    width: 100%;
+    width: 50%;
     height: 100%;
     text-align: center;
 }
@@ -131,6 +131,9 @@
     }
     .runde-middle > div {
         flex-flow: column;
+    }
+    .runde-middle > div > div {
+        width: 100%;
     }
     .runde-middle-player-ct {
         margin-top: -10px;
