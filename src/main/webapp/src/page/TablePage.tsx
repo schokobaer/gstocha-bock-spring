@@ -152,6 +152,21 @@ class TablePage extends React.Component<Props, State> {
                         onJoin={this.state.openTables ? this.joinTable : undefined} />
                 </div>)}
             </div>
+            <div className="news-ct">
+                <h2>Changelog</h2>
+                <div>
+                    <div>🦊 </div>
+                    <div>Firefox bug fixed</div>
+                </div>
+                <div>
+                    <div>☎️ </div>
+                    <div>Spielbar am Smartphone/Tablet</div>
+                </div>
+                <div>
+                    <div>🖖</div>
+                    <div>Vorarlberger Tischnamen (siehe URL)</div>
+                </div>
+            </div>
         </div>
     }
 }
