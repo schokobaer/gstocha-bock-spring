@@ -282,7 +282,9 @@ class GamePage extends React.Component<Props, State> {
       if (this.state.game.state === "PENDING") {
         return <Fragment>
             <Runde players={this.getTablePlayers()} cards={[]} />
-            <div className="jass-btn" style={{marginTop: '30px'}} onClick={() => this.leave()}>Leave</div>
+            <div className="jass-btn"
+                 style={{marginTop: '30px', backgroundColor: 'darkred', color: '#ccc', boxShadow: '0px 0px 10px #000'}}
+                 onClick={() => this.leave()}>Leave</div>
         </Fragment>
       }
 

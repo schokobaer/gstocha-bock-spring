@@ -24,6 +24,9 @@
     padding: 3% 0px;
     font-size: 16px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .table-ct .table-row div:first-of-type {

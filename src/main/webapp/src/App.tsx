@@ -62,10 +62,6 @@ class App extends React.Component<Props, State> {
       </div>
     </Fragment>
 
-    /*const howto = <div className="app-logout">
-      <a href="howto.html" className="jass-btn">HowTo</a>
-    </div>*/
-
     if (this.state.tableId) {
       return <div>
         {topBanner}
