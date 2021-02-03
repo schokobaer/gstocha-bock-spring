@@ -6,11 +6,15 @@ import at.apf.gstochabock.gamelogic.JassLogic
 import at.apf.gstochabock.model.*
 import com.google.gson.Gson
 import org.springframework.stereotype.Component
+import com.google.gson.GsonBuilder
+
+
+
 
 @Component
 class TableSerDes {
 
-    private val gson = Gson()
+    private val gson = GsonBuilder().setPrettyPrinting().create()
 
     fun toText(table: Table): String {
         val tdo = TableDO(table.password, table.points, table.weisPoints, table.currentMove, table.trumpf, table.round, table.roundHistory, table.players, null, table.created, table.logic.serializationCode(), table.state)

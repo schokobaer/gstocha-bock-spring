@@ -174,7 +174,7 @@ class GamePage extends React.Component<Props, State> {
       table.undoable = false
       //const callLay = table.round.length === 4 && table.cards.length === 1
       const callLay = false
-      if (this.state.stoecke) {
+      if (this.state.stoecke && this.canCallStoecke()) {
         if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
           console.info('Send stocke YESS')
           await this.rest.stoecke(getUserId()!, this.props.tableId)
@@ -247,6 +247,14 @@ class GamePage extends React.Component<Props, State> {
 
     weisingAllowed(): boolean {
         return this.state.game?.cards.length === 9
+    }
+
+    canCallStoecke(): boolean {
+        return this.state.stoecke === false
+            && this.state.game?.stoecke === 'Callable'
+            && this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O"
+                || c === this.state.game?.trumpf + "K").length === 1
+            && this.state.game.currentMove === this.state.game.players[0].position
     }
 
     render () {
@@ -337,9 +345,10 @@ class GamePage extends React.Component<Props, State> {
 
       // Stoecke Button
       let stoeckeBtn
-      if (this.state.stoecke === false && this.state.game.stoecke === 'Callable' &&
-        this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O" ||
-        c === this.state.game?.trumpf + "K").length === 1 && this.state.game.currentMove === this.state.game.players[0].position) {
+      if (this.state.game?.cards.length < 9 && this.state.game?.cards.length > 0 // Show the button not in first round
+          && ['E', 'H', 'L', 'S'].find(e => e === this.state.game?.trumpf) !== undefined // show the button only in ELHS trumpf rounds
+          && this.state.game.currentMove === this.state.game.players[0].position // only show in my turn
+          && !this.state.stoecke) { // only show if not already clicked
           stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
       }
 

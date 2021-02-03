@@ -7,9 +7,6 @@
 
     background-color: #8b5a2b;
     background-image: url("../texture/dark-wood.png");
-
-    -webkit-box-shadow: -5px 5px 10px -5px rgba(85,85,85,0.7);
-    -moz-box-shadow: -5px 5px 10px -5px rgba(85,85,85,0.7);
     box-shadow: 0px 0px 15px
 }
 
