@@ -34,11 +34,8 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - Display starter from last round on lastRoundHover
   - Exception handling on server
   - real logging on the server
-  - shorter ids or usage of terms of a dictionary
   - last stich as table, not as list
   - show trumpf on GameResult
-  - Stöcke-Button always visible after first round (if its a ELHS trumpf) + HowTo Update
-  - Textbox onEnter
 
 ### Stylings:
   - Mobile: Hand cards in 2 rows, not overlapping

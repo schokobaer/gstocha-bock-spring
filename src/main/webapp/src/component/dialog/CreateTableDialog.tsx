@@ -56,6 +56,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             className={pwCssClasses}
                             maxLength={15}
                             value={this.state.passwordValue}
+                            onKeyDown={e => e.key === 'Enter' && this.submit()}
                             onChange={(e) => this.setState({passwordValue: e.target.value}) }/>
                     </td>
                 </tr>

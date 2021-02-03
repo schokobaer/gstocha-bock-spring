@@ -21,7 +21,9 @@ export default class PasswordDialog extends React.Component<Props, State> {
         return <Dialog>
             <div>
                 Password:
-                <input type="password" className={pwCssClasses} maxLength={15} value={this.state.passwordValue} onChange={(e) => this.setState({passwordValue: e.target.value}) }/>
+                <input type="password" className={pwCssClasses} maxLength={15} value={this.state.passwordValue}
+                       onKeyDown={e => e.key === 'Enter' && this.submit()}
+                       onChange={(e) => this.setState({passwordValue: e.target.value}) }/>
             </div>
             <div>
                 <button className="jass-btn ok-btn" style={{marginTop: '15px', fontSize: '18px'}} onClick={() => this.submit()}>Ok</button>
