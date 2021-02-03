@@ -26,10 +26,17 @@
     border-radius: 100px;
     height: 64px;
     width: 64px;
+    box-shadow: 0px 0px 5px;
+    transition: ease 0.5s;
 }
 
 .trumpfselector-trumpf:hover {
-    background-color: #67d1eb;
+    /*background-color: darkgoldenrod;*/
+    box-shadow: 0px 0px 25px;
+}
+
+.trumpfselector-trumpf:active {
+    background-color: #aaa;
 }
 
 .trumpfselector-trumpf>img {

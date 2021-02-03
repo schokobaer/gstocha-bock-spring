@@ -164,37 +164,40 @@ class GamePage extends React.Component<Props, State> {
     }
 
     async playCard(card: string) {
-      const table = this.state.game!
-      if (table.round.length === 4) {
-        table.round = []
-      }
-      table.round.push(card)
-      table.cards.splice(table.cards.indexOf(card), 1)
-      table.currentMove!++
-      table.undoable = false
-      //const callLay = table.round.length === 4 && table.cards.length === 1
-      const callLay = false
-      if (this.state.stoecke && this.canCallStoecke()) {
-        if (card === this.state.game?.trumpf + "O" || card === this.state.game?.trumpf + "K") {
-          console.info('Send stocke YESS')
-          await this.rest.stoecke(getUserId()!, this.props.tableId)
-          .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
+        const table = this.state.game!
+        if (table.round.length === 4) {
+            table.round = []
         }
-      }
-      this.setState({game: table, weisResponse: '', weisResult: undefined, stoecke: false})
-      const reqBody: PlayRequestBody = {
-        card: card
-      }
-      this.rest.play(getUserId()!, this.props.tableId, reqBody)
-      .catch(err => console.error('Could not play card ', err))
-      .finally( () => {
-          if (callLay) {
-              setTimeout(() => {
-                  this.rest.lay(getUserId()!, this.props.tableId)
-                      .catch(err => console.warn(`Cound not lay last round: ${err}`))
-              }, 2000)
-          }
-      })
+        table.round.push(card)
+        table.cards.splice(table.cards.indexOf(card), 1)
+        table.currentMove!++
+        table.undoable = false
+        //const callLay = table.round.length === 4 && table.cards.length === 1
+        const callLay = false
+
+
+        if (this.state.stoecke // stocke must be clicked before
+            && this.state.game?.stoecke === 'Callable'  // player must have callable stoeckability
+            && (card === this.state.game.trumpf + "O" || card === this.state.game.trumpf + "K")  // played card is either O or K
+            && this.state.game.cards.find(c => c === this.state.game?.trumpf + "O" || c === this.state.game?.trumpf + "K") === undefined) { // neither O or K are on hand anymore
+            console.info('Send stocke YESS')
+            await this.rest.stoecke(getUserId()!, this.props.tableId)
+                .catch(err => console.warn(`Cound not indicate stoecke: ${err}`))
+        }
+        this.setState({game: table, weisResponse: '', weisResult: undefined, stoecke: false})
+        const reqBody: PlayRequestBody = {
+            card: card
+        }
+        this.rest.play(getUserId()!, this.props.tableId, reqBody)
+            .catch(err => console.error('Could not play card ', err))
+            .finally( () => {
+              if (callLay) {
+                  setTimeout(() => {
+                      this.rest.lay(getUserId()!, this.props.tableId)
+                          .catch(err => console.warn(`Cound not lay last round: ${err}`))
+                  }, 2000)
+              }
+            })
     }
 
     undo() {
@@ -250,8 +253,7 @@ class GamePage extends React.Component<Props, State> {
     }
 
     canCallStoecke(): boolean {
-        return this.state.stoecke === false
-            && this.state.game?.stoecke === 'Callable'
+        return this.state.game?.stoecke === 'Callable'
             && this.state.game.cards.filter(c => c === this.state.game?.trumpf + "O"
                 || c === this.state.game?.trumpf + "K").length === 1
             && this.state.game.currentMove === this.state.game.players[0].position
@@ -318,7 +320,6 @@ class GamePage extends React.Component<Props, State> {
       // All cards in round are set and a weis is available
       let weisResolve
       if (this.state.weisResult) {
-        //const weisingPlayers = this.state.game.players.filter(p => p?.weis?.length || 0 > 0).map(p => p!.name) // TODO: What is this? does it work?
         weisResolve = <WeisResolve weises={this.state.weisResult} onClose={() => this.setState({weisResult: undefined})} />
       }
       
@@ -344,18 +345,10 @@ class GamePage extends React.Component<Props, State> {
       }
 
       // Stoecke Button
-      let stoeckeBtn
-      if (this.state.game?.cards.length < 9 && this.state.game?.cards.length > 0 // Show the button not in first round
-          && ['E', 'H', 'L', 'S'].find(e => e === this.state.game?.trumpf) !== undefined // show the button only in ELHS trumpf rounds
-          && this.state.game.currentMove === this.state.game.players[0].position // only show in my turn
-          && !this.state.stoecke) { // only show if not already clicked
-          stoeckeBtn = <button className="jass-btn" onClick={() => this.setState({stoecke: true})}>Stöcke</button>
-      }
-
-      // Weis Button
-      const weisBtn = <div id="weisBtn" className="jass-btn" style={{visibility: (this.weisingAllowed() ? "visible" : "hidden") }} onClick={() => this.setState({weising: true})}>Weisen</div>
-
-
+        const stoeckeBtnVisible = this.state.game?.cards.length < 9 && this.state.game?.cards.length > 0 // Show the button not in first round
+            && ['E', 'H', 'L', 'S'].find(e => e === this.state.game?.trumpf) !== undefined // show the button only in ELHS trumpf rounds
+            //&& this.state.game.currentMove === this.state.game.players[0].position // only show in my turn
+            && !this.state.stoecke ? "visible" : "hidden"
 
       return <Fragment>
         {undoBtn}
@@ -365,8 +358,14 @@ class GamePage extends React.Component<Props, State> {
             cards={round!}
             lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
             trumpf={this.state.game.trumpf} />
-        {weisBtn} {stoeckeBtn}
-          <span style={{marginLeft: '10px'}}>{this.state.weisResponse}</span>
+            <div className="game-button-ct">
+                { this.weisingAllowed() && <Fragment>
+                    <div className="jass-btn" onClick={() => this.setState({weising: true})}>Weisen</div>
+                    <span style={{marginLeft: '10px'}}>{this.state.weisResponse}</span>
+                </Fragment>
+                }
+                <button className="jass-btn" style={{visibility: stoeckeBtnVisible}} onClick={() => this.setState({stoecke: true})}>Stöcke</button>
+            </div>
         <Hand
               cards={this.state.game.cards}
               round={this.state.game.round}

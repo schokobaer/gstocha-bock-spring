@@ -49,6 +49,7 @@
 
 .action-ct > div {
     margin-bottom: 5px;
+    box-shadow: 0px 0px 5px;
 }
 
 .trumpf-ct {
@@ -74,10 +75,12 @@
     width: 60px;
     justify-content: center;
     cursor: grab;
+    transition: ease 0.5s;
 }
 
 .peek-btn:hover {
-    background-color: #67d1eb;
+    /*background-color: #67d1eb;*/
+    box-shadow: 0px 0px 20px;
 }
 
 .runde-playername {

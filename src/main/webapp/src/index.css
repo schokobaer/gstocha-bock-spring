@@ -52,7 +52,7 @@ code {
   font-size: 24px;
   display: inline-block;
   padding: 5px 20px;
-  box-shadow: 0px 0px 5px;
+  box-shadow: 0px 0px 10px;
   cursor: pointer;
   transition: 0.3s ease;
 }
@@ -66,10 +66,9 @@ code {
   box-shadow: #777 0px 0px 0px;
 }
 
-#weisBtn {
+.game-button-ct {
   margin-top: 30px;
 }
-
 
 /* App Views */
 @media only screen and (max-width: 1048px) {
@@ -85,7 +84,7 @@ code {
   .jass-btn {
     font-size: 16px;
   }
-  #weisBtn {
-    margin: 10px
+  .game-button-ct {
+    margin-top: 10px;
   }
 }

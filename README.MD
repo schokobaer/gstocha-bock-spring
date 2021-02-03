@@ -39,6 +39,9 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - show trumpf on GameResult
   - Stöcke-Button always visible after first round (if its a ELHS trumpf) + HowTo Update
   - Textbox onEnter
+
+### Stylings:
+  - Mobile: Hand cards in 2 rows, not overlapping
   
 
 ## Bugs:
