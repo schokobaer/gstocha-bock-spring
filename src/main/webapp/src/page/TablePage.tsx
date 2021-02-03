@@ -10,7 +10,6 @@ import PasswordDialog from "../component/dialog/PasswordDialog";
 class TablePage extends React.Component<Props, State> {
 
     state: State = {
-        loading: true,
         openTables: true,
         tables: [],
         createTableDialog: false
@@ -42,10 +41,9 @@ class TablePage extends React.Component<Props, State> {
     loadOpenTables() {
         this.rest.listOpenTables().then(data => {
             console.info('Loaded tables: ', data)
-            this.setState({loading: false, tables: data})
+            this.setState({tables: data})
         })
         .catch(err => {
-            this.setState({loading: false})
             console.error('Could not fetch tables', err)
         })
     }
@@ -53,10 +51,9 @@ class TablePage extends React.Component<Props, State> {
     loadRunningTables() {
         this.rest.listRunningTables(getUserId()!).then(data => {
             console.info('Loaded tables: ', data)
-            this.setState({loading: false, tables: data})
+            this.setState({tables: data})
         })
         .catch(err => {
-            this.setState({loading: false})
             console.error('Could not fetch running tables', err)
         })
     }
@@ -70,7 +67,6 @@ class TablePage extends React.Component<Props, State> {
         this.rest.create(getUserId()!, reqBody).then(resp => {
             window.location.hash = `#${resp.id}`
         }).catch(err => console.error('Cound not create new table ', err))
-        this.setState({loading: true})
     }
 
     joinTable(table: TableDto, position: Position) {
@@ -87,7 +83,7 @@ class TablePage extends React.Component<Props, State> {
         this.rest.join(getUserId()!, table.id, reqBody)
             .then(() => window.location.hash = `#${table.id}`)
             .catch(err => console.error('Could not join ', err))
-        this.setState({loading: true, joinRequest: undefined})
+        this.setState({joinRequest: undefined})
     }
 
     joinProtectedTable(pw: string) {
@@ -100,12 +96,12 @@ class TablePage extends React.Component<Props, State> {
         this.rest.join(getUserId()!, this.state.joinRequest!.tableid, reqBody)
             .then(() => window.location.hash = `#${this.state.joinRequest!.tableid}`)
             .catch(err => console.error('Could not join ', err))
-        this.setState({loading: true, joinRequest: undefined})
+        this.setState({joinRequest: undefined})
     }
 
     toggle() {
         const openTables = !this.state.openTables
-        this.setState({openTables: openTables, loading: true})
+        this.setState({openTables: openTables})
         if (openTables) {
             this.loadOpenTables()
         } else {
@@ -114,11 +110,6 @@ class TablePage extends React.Component<Props, State> {
     }
 
     render () {
-        // No data loaded yet
-        if (this.state.loading) {
-            return <div>Fetching data ...</div>
-        }
-
         if (this.state.createTableDialog) {
             return <CreateTableDialog onCancle={() => this.setState({createTableDialog: false})} onCreate={(data: CreateTableData) => this.create(data)} />
         }
@@ -129,12 +120,10 @@ class TablePage extends React.Component<Props, State> {
 
         let looser
         if (this.state.tables.length === 0) {
-            looser = <div>
+            looser = <div style={{marginTop: '10px'}}>
                 No Tables available 🤓 Create a new one 🔥
             </div>
         }
-
-        let tableOnClick
 
         return <div className="tablepage">
             <button className="jass-btn" onClick={() => this.setState({createTableDialog: true})}>Neuer Tisch</button>
@@ -155,6 +144,10 @@ class TablePage extends React.Component<Props, State> {
             <div className="news-ct">
                 <h2>Changelog</h2>
                 <div>
+                    <div>✏️</div>
+                    <div>Change Name</div>
+                </div>
+                <div>
                     <div>❕</div>
                     <div>Stöcke Button immer sichtbar</div>
                 </div>
@@ -171,7 +164,7 @@ class TablePage extends React.Component<Props, State> {
                     <div>V-Style Tischnamen (siehe URL)</div>
                 </div>
             </div>
-            <div className="build-number">Build: 1.2.11</div>
+            <div className="build-number">Build: 1.2.12</div>
         </div>
     }
 }
@@ -179,7 +172,6 @@ class TablePage extends React.Component<Props, State> {
 interface Props {
 }
 interface State {
-    loading: boolean
     tables: Array<TableDto>
     createTableDialog: boolean
     openTables: boolean

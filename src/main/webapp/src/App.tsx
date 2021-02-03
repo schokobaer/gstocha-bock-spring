@@ -56,13 +56,17 @@ class App extends React.Component<Props, State> {
 
   render () {
     if (this.state.setup === true) {
-      return <NameDialog onNameSet={(name: string) => this.setName(name)} />
+      return <NameDialog onNameSet={(name: string) => this.setName(name)} onCancel={() => this.setState({setup: false})} />
     }
 
+    const bannerHeight = document.body.clientWidth < 800 ? '-87px' : '-60px'
     const topBanner = <Fragment>
-      <div className="top-banner" style={{marginTop: this.state.topBanner ? '0px' : '-60px'}}>
+      <div className="top-banner" style={{marginTop: this.state.topBanner ? '0px' : bannerHeight}}>
         <a href="/" className="logo"><img src="/logo192.png" /><span>Gstocha-Bock</span></a>
-        <a href="howto.html" className="howto jass-btn">HowTo</a>
+        <div>
+          <span className="jass-btn" onClick={() => this.setState({setup: true})}>Change Name</span>
+          <a href="howto.html" className="howto jass-btn">HowTo</a>
+        </div>
       </div>
       <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
         <div className="top-banner-down-btn" onClick={() => this.setState({topBanner: !this.state.topBanner})}>💡</div>
