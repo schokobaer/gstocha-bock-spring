@@ -155,6 +155,10 @@ class TablePage extends React.Component<Props, State> {
             <div className="news-ct">
                 <h2>Changelog</h2>
                 <div>
+                    <div>❕</div>
+                    <div>Stöcke Button immer sichtbar</div>
+                </div>
+                <div>
                     <div>🦊 </div>
                     <div>Firefox bug fixed</div>
                 </div>
