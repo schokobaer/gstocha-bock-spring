@@ -72,9 +72,9 @@ code {
 
 /* App Views */
 @media only screen and (max-width: 1048px) {
-  #root {
+  /*#root {
     margin-top: 80px;
-  }
+  }*/
 }
 
 @media only screen and (max-width: 800px) {

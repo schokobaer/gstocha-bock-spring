@@ -11,7 +11,8 @@ class App extends React.Component<Props, State> {
 
   state: State = {
     tableId: undefined,
-    setup: true
+    setup: true,
+    topBanner: false
   }
 
   ws: WebSocketClient | null = null
@@ -51,19 +52,29 @@ class App extends React.Component<Props, State> {
       return <NameDialog onNameSet={(name: string) => this.setName(name)} />
     }
 
-    const howto = <div className="app-logout">
+    const topBanner = <Fragment>
+      <div className="top-banner" style={{marginTop: this.state.topBanner ? '0px' : '-60px'}}>
+        <a href="/" className="jass-btn">Lounge</a>
+        <a href="howto.html" className="jass-btn">HowTo</a>
+      </div>
+      <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
+        <div className="top-banner-down-btn" onClick={() => this.setState({topBanner: !this.state.topBanner})}>💡</div>
+      </div>
+    </Fragment>
+
+    /*const howto = <div className="app-logout">
       <a href="howto.html" className="jass-btn">HowTo</a>
-    </div>
+    </div>*/
 
     if (this.state.tableId) {
       return <div>
-        {howto}
+        {topBanner}
         <GamePage websocket={this.ws!} tableId={this.state.tableId} />
       </div>
     }
 
     return <Fragment>
-        {howto}
+        {topBanner}
         <TablePage />    
       </Fragment>
   }
@@ -73,6 +84,7 @@ interface Props {}
 interface State {
   tableId?: string
   setup: boolean
+  topBanner: boolean
 }
 
 export default App;
