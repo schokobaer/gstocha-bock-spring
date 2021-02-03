@@ -35,3 +35,11 @@
     width: 25px;
     text-align: center;
 }
+
+
+.build-number {
+    margin-top: 10px;
+    font-size: 10px;
+    font-family: monospace;
+    color: #ccc;
+}
