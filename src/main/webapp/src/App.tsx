@@ -12,7 +12,7 @@ class App extends React.Component<Props, State> {
   state: State = {
     tableId: undefined,
     setup: true,
-    topBanner: false
+    topBanner: true
   }
 
   ws: WebSocketClient | null = null
@@ -35,8 +35,14 @@ class App extends React.Component<Props, State> {
 
     if (getUserName() && getUserId()) {
       this.setState({setup: false})
+      this.hintBanner()
       this.initWebSockets()
     }
+  }
+
+  hintBanner() {
+    this.setState({topBanner: true})
+    setTimeout(() => this.setState({topBanner: false}), 800)
   }
 
   setName(name: string) {
@@ -44,6 +50,7 @@ class App extends React.Component<Props, State> {
       setUserName(name)
       setUserId(uuid())
       this.setState({setup: false})
+      this.hintBanner()
     }
   }
 
@@ -54,8 +61,8 @@ class App extends React.Component<Props, State> {
 
     const topBanner = <Fragment>
       <div className="top-banner" style={{marginTop: this.state.topBanner ? '0px' : '-60px'}}>
-        <a href="/" className="jass-btn">Lounge</a>
-        <a href="howto.html" className="jass-btn">HowTo</a>
+        <a href="/" className="logo"><img src="/logo192.png" /><span>Gstocha-Bock</span></a>
+        <a href="howto.html" className="howto jass-btn">HowTo</a>
       </div>
       <div style={{display: 'flex', flexDirection: 'row-reverse'}}>
         <div className="top-banner-down-btn" onClick={() => this.setState({topBanner: !this.state.topBanner})}>💡</div>

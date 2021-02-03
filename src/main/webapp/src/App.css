@@ -37,3 +37,29 @@
 .top-banner > * {
     height: fit-content;
 }
+
+.logo {
+    text-decoration: none;
+    display: table;
+    margin-top: 5px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+}
+.logo:visited {
+    color: #000;
+}
+.logo > * {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.logo img {
+    height: 30px;
+    margin-right: 5px;
+}
+
+.howto:visited {
+    text-decoration: none;
+    color: #000;
+}
