@@ -48,7 +48,9 @@ class App extends React.Component<Props, State> {
   setName(name: string) {
     if (name.length > 0 && name.length <= 15) {
       setUserName(name)
-      setUserId(uuid())
+      if (getUserId() === null) {
+        setUserId(uuid())
+      }
       this.setState({setup: false})
       this.hintBanner()
     }
@@ -65,7 +67,7 @@ class App extends React.Component<Props, State> {
         <a href="/" className="logo"><img src="/logo192.png" /><span>Gstocha-Bock</span></a>
         <div>
           <span className="jass-btn" onClick={() => this.setState({setup: true})}>Change Name</span>
-          <a href="howto.html" className="howto jass-btn">HowTo</a>
+          <a href="howto.html" target="_blank" className="howto jass-btn">HowTo</a>
         </div>
       </div>
       <div style={{display: 'flex', flexDirection: 'row-reverse'}}>

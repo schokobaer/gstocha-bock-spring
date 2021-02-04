@@ -59,9 +59,12 @@
     margin-right: 5px;
 }
 
+.howto {
+    color: blue;
+}
 .howto:visited {
     text-decoration: none;
-    color: #000;
+    color: blue;
 }
 
 .top-banner .jass-btn {

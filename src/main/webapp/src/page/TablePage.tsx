@@ -164,7 +164,7 @@ class TablePage extends React.Component<Props, State> {
                     <div>V-Style Tischnamen (siehe URL)</div>
                 </div>
             </div>
-            <div className="build-number">Build: 1.2.12</div>
+            <div className="build-number">Build: 1.2.13</div>
         </div>
     }
 }
