@@ -25,12 +25,12 @@ export default class Table extends React.Component<Props> {
   render() {
     return <div className="table-ct">
       <div className="table-row">
-        <div>{this.getChair(0)}</div>
-        <div>{this.getChair(1)}</div>
+        <div>{this.props.puck === 0 && "⚫ "} {this.getChair(0)}</div>
+        <div>{this.props.puck === 1 && "⚫ "}{this.getChair(1)}</div>
       </div>
       <div className="table-row">
-        <div>{this.getChair(3)}</div>
-        <div>{this.getChair(2)}</div>
+        <div>{this.props.puck === 3 && "⚫ "}{this.getChair(3)}</div>
+        <div>{this.props.puck === 2 && "⚫ "}{this.getChair(2)}</div>
       </div>
     </div>
   }
@@ -39,4 +39,5 @@ export default class Table extends React.Component<Props> {
 interface Props {
     table: TableDto
     onJoin?: (table: TableDto, position: Position) => void
+    puck?: number
 }

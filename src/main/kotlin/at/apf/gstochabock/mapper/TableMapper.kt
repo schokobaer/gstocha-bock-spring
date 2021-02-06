@@ -89,6 +89,7 @@ class TableMapper {
                 players,
                 player.cards.map { it.toString() },
                 player.stoecke.name,
+                t.puck?.position,
                 t.state.name
         )
     }

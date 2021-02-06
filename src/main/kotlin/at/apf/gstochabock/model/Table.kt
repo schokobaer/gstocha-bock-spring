@@ -1,7 +1,6 @@
 package at.apf.gstochabock.model
 
 import at.apf.gstochabock.gamelogic.JassLogic
-import java.util.*
 
 data class Table(
         var id: String,
@@ -16,6 +15,7 @@ data class Table(
         var history: Table?,
         val created: String,
         val logic: JassLogic,
+        val puck: Puck? = null,
         var state: TableState = TableState.PENDING
 
 )
@@ -33,3 +33,9 @@ enum class TableState {
     PLAYING, // Playing
     FINISHED // All cards are played, points are calculated
 }
+
+data class Puck (
+        var position: Int,
+        var starter: Card?
+)
+

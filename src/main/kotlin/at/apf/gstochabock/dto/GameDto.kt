@@ -13,6 +13,7 @@ data class GameDto(
         val players: List<GamePlayerDto>,
         val cards: List<String>,
         val stoecke: String,
+        val puck: Int?,
         val state: String
 )
 

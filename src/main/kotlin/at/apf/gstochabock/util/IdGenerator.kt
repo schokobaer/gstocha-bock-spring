@@ -9,26 +9,26 @@ class IdGenerator {
 
     val words = listOf(
 
-        "käeknöpfle",
+        "kaeknoepfle",
         "riebelbibel",
         "funka",
 
-        "stöcke",
+        "stoecke",
         "slalom",
         "trumpf",
 
-        "fläschafurzer",
+        "flaeschafurzer",
         "doppelfisch",
         "strohkopf",
         "elefant",
         "bluamatopf",
         "weli",
-        "löwe",
+        "loewe",
         "schlange",
 
-        "seebrünzler",
-        "oberländer",
-        "nüziders",
+        "seebruenzler",
+        "oberlaender",
+        "nueziders",
         "ems",
         "breagaz",
         "dorabira",

@@ -6,7 +6,7 @@ import {
     PlayRequestBody,
     CreateRequestBody,
     CreateResponseBody,
-    WeisResponseBody
+    WeisResponseBody, NewGameRequestBody
 } from '../dto/dtos'
 
 const api = '/api/table'
@@ -125,8 +125,8 @@ export default class RestClient {
         return this.sendPost(`${api}/${id}/undo`, {}, playerid)
     }
 
-    new(playerid: string, id: string): Promise<any> {
-        return this.sendPost(`${api}/${id}/new`, {}, playerid)
+    new(playerid: string, id: string, req: NewGameRequestBody): Promise<any> {
+        return this.sendPost(`${api}/${id}/new`, req, playerid)
     }
 
     leave(playerid: string, id: string): Promise<any> {

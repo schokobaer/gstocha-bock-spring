@@ -37,11 +37,24 @@ class LoungeService {
         return gameRepo.list { it.players.find { p -> p.playerid == playerid } !== null }
     }
 
-    fun createTable(playerid: String, playername: String, password: String?, logicString: String): Table {
+    fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?): Table {
         val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
         val creationTime = simpleDateFormat.format(Date())
-        val table = Table("", password, mutableListOf(), mutableListOf(), null, null,
-                mutableListOf(), mutableListOf(), mutableListOf(), null, creationTime, logic)
+        val table = Table(
+            "",
+            password,
+            mutableListOf(),
+            mutableListOf(),
+            null,
+            null,
+                mutableListOf(),
+            mutableListOf(),
+            mutableListOf(),
+            null,
+            creationTime,
+            logic,
+            if (puckCard !== null) Puck(0, Card(puckCard)) else null
+        )
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
         logger.info(table.id, playername, "createTable", "created table")
@@ -85,6 +98,7 @@ class LoungeService {
         // table full
         if (table.players.size === table.logic.amountPlayers()) {
             tableService.nextGame(table)
+            tableService.organizePuck(table)
             logger.info(tableid, playername, "joinTable", "initialized next game")
             table.players.forEach { logger.info(tableid, it.name, "handCards", it.cards.map { c -> c.toString() }.stream().collect(Collectors.joining(","))) }
         }

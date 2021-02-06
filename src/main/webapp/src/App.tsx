@@ -38,6 +38,7 @@ class App extends React.Component<Props, State> {
       this.hintBanner()
       this.initWebSockets()
     }
+
   }
 
   hintBanner() {

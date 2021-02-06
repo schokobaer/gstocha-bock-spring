@@ -17,11 +17,11 @@ class TableSerDes {
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
     fun toText(table: Table): String {
-        val tdo = TableDO(table.password, table.points, table.weisPoints, table.currentMove, table.trumpf, table.round, table.roundHistory, table.players, null, table.created, table.logic.serializationCode(), table.state)
+        val tdo = TableDO(table.password, table.points, table.weisPoints, table.currentMove, table.trumpf, table.round, table.roundHistory, table.players, null, table.created, table.logic.serializationCode(), table.puck, table.state)
         val history = table.history
 
         if (history !== null) {
-            tdo.history = TableDO(history.password, history.points, history.weisPoints, history.currentMove, history.trumpf, history.round, history.roundHistory, history.players, null, table.created, history.logic.serializationCode(), history.state)
+            tdo.history = TableDO(history.password, history.points, history.weisPoints, history.currentMove, history.trumpf, history.round, history.roundHistory, history.players, null, table.created, history.logic.serializationCode(), history.puck, history.state)
         }
 
         return gson.toJson(tdo)
@@ -30,10 +30,10 @@ class TableSerDes {
     fun fromText(text: String): Table {
         val tdo = gson.fromJson<TableDO>(text, TableDO::class.java)
         val logic = if (tdo.logic.equals("base")) BaseJassLogic() else DornbirnJassLogic()
-        val table = Table("", tdo.password, tdo.points, tdo.weisPoints, tdo.currentMove, tdo.trumpf, tdo.round, tdo.roundHistory, tdo.players, null, tdo.created ?: "N/A", logic, tdo.state)
+        val table = Table("", tdo.password, tdo.points, tdo.weisPoints, tdo.currentMove, tdo.trumpf, tdo.round, tdo.roundHistory, tdo.players, null, tdo.created ?: "N/A", logic, tdo.puck, tdo.state)
         val h = tdo.history
         if (h !== null) {
-            table.history = Table("", h.password, h.points, h.weisPoints, h.currentMove, h.trumpf, h.round, h.roundHistory, h.players, null, tdo.created ?: "N/A", logic, h.state)
+            table.history = Table("", h.password, h.points, h.weisPoints, h.currentMove, h.trumpf, h.round, h.roundHistory, h.players, null, tdo.created ?: "N/A", logic, h.puck, h.state)
         }
 
         return table
@@ -53,5 +53,6 @@ private data class TableDO(
         var history: TableDO?,
         val created: String?,
         val logic: String,
+        val puck: Puck?,
         var state: TableState = TableState.PENDING
 )

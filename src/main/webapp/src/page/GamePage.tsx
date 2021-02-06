@@ -9,7 +9,8 @@ import {
     Position,
     JoinRequestBody,
     GamePlayerDto,
-    WeisResponseBody
+    WeisResponseBody,
+    NewGameRequestBody
 } from '../dto/dtos'
 import '../App.css';
 import Hand from '../component/Hand';
@@ -35,7 +36,8 @@ class GamePage extends React.Component<Props, State> {
         weising: false,
         weisCards: [],
         weisResponse: '',
-        showLastStich: false
+        showLastStich: false,
+        puckRestart: false
     }
 
     rest: RestClient = new RestClient()
@@ -207,7 +209,10 @@ class GamePage extends React.Component<Props, State> {
     }
 
     nextGame() {
-        this.rest.new(getUserId()!, this.props.tableId)
+        const req: NewGameRequestBody = {
+            restart: this.state.puckRestart
+        }
+        this.rest.new(getUserId()!, this.props.tableId, req)
             .catch(err => console.error('Could not init next game ', err))
         this.setState({loading: true})
     }
@@ -300,7 +305,7 @@ class GamePage extends React.Component<Props, State> {
       if (this.state.game.state === "TRUMPF") {
         return <Fragment>
           {undoBtn}
-          <TrumpfSelector onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
+          <TrumpfSelector puck={this.state.game.puck} onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
           <Hand cards={this.state.game ? this.state.game.cards : []} />
         </Fragment>
       }
@@ -396,6 +401,7 @@ interface State {
       player: string
       weis: Array<string>
     }>
+    puckRestart: boolean
 }
   
-  export default GamePage;
+export default GamePage;

@@ -24,6 +24,7 @@ export interface GameDto {
     players: Array<GamePlayerDto>
     cards: Array<string>
     stoecke: Stoeckability
+    puck?: number
     state?: GameState
 }
 
@@ -48,6 +49,7 @@ export interface CreateRequestBody {
     name: string
     password?: string
     logic: string
+    puck?: string
 }
 
 export interface CreateResponseBody {
@@ -81,6 +83,9 @@ export interface PlayRequestBody {
     card: string
 }
 
+export interface NewGameRequestBody {
+    restart: boolean
+}
 
 
 

@@ -7,6 +7,7 @@ import at.apf.gstochabock.repo.GameRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
+import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -45,6 +46,22 @@ class TableService {
         }
     }
 
+    /**
+     * When a game starts, it searches for the player with the puck card and assigns thats players position.
+     * If there is no card, a random is used. If the puck is empty, no puck will be assigned.
+     */
+    fun organizePuck(table: Table) {
+        if (table.puck !== null) {
+            if (table.puck.starter !== null) {
+                table.puck.position = table.players.find {
+                        p -> p.cards.find { it.equals(table.puck.starter) } !== null
+                }?.position ?: Random().nextInt(table.logic.amountPlayers())
+            } else {
+                table.puck.position = Random().nextInt(table.logic.amountPlayers())
+            }
+        }
+    }
+
     fun addHistory(table: Table) {
         val t2 = Table(
                 table.id,
@@ -68,6 +85,7 @@ class TableService {
                 null,
                 table.created,
                 table.logic,
+                if (table.puck !== null) Puck(table.puck.position, table.puck.starter) else null,
                 table.state
         )
         table.history = t2
@@ -312,7 +330,7 @@ class TableService {
         notifyService.gameUpdate(table)
     }
 
-    fun newGame(tableid: String, playerid: String) {
+    fun newGame(tableid: String, playerid: String, restart: Boolean) {
         val table = gameRepo.lockedRead(tableid)
 
         val player = getPlayer(table, playerid)
@@ -328,6 +346,11 @@ class TableService {
 
         addHistory(table)
         nextGame(table)
+        if (restart) {
+            organizePuck(table)
+        } else if (table.puck !== null) {
+            table.puck.position = (table.puck.position + 1) % table.logic.amountPlayers()
+        }
         logger.info(tableid, player.name, "newGame", "started new Game")
         table.players.forEach { logger.info(tableid, it.name, "handCards", it.cards.map { c -> c.toString() }.stream().collect(Collectors.joining(","))) }
 

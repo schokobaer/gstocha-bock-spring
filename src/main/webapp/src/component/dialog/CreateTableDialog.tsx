@@ -24,17 +24,25 @@ const jassRuleDescriptions: Record<string, any> = {
     </Fragment>
 }
 
+const puckCardOptions = [
+    {value: 'S6', label: 'Weli'},
+    {value: 'SX', label: 'Schell 10'},
+    {value: undefined, label: 'Random'},
+]
+
 export default class CreateTableDialog extends React.Component<Props, State> {
 
     state: State = {
         passwordValue: "",
-        logic: "base"
+        logic: "base",
+        starter: 'S6'
     }
 
     submit() {
         const data: CreateTableData = {
             password: this.state.passwordValue.length > 0 ? this.state.passwordValue : undefined,
-            logic: this.state.logic
+            logic: this.state.logic,
+            starter: this.state.starter
         }
         this.props.onCreate(data)
     }
@@ -58,6 +66,15 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             value={this.state.passwordValue}
                             onKeyDown={e => e.key === 'Enter' && this.submit()}
                             onChange={(e) => this.setState({passwordValue: e.target.value}) }/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Puck Starter</td>
+                    <td>
+                        <Select
+                            defaultValue={puckCardOptions[0]}
+                            options={puckCardOptions}
+                            onChange={(v: any) => this.setState({starter: v.value})} />
                     </td>
                 </tr>
                 <tr>
@@ -92,9 +109,11 @@ interface Props {
 interface State {
     passwordValue: string
     logic: string
+    starter?: string
 }
 
 export interface CreateTableData {
     password?: string
     logic: string
+    starter?: string
 }

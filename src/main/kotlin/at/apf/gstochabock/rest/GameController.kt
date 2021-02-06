@@ -65,8 +65,8 @@ class GameController {
     }
 
     @PostMapping("/api/table/{id}/new")
-    fun newGame(@PathVariable id: String, @RequestHeader playerid: String) {
-        tableService.newGame(id, playerid)
+    fun newGame(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: NewGameRequestBody) {
+        tableService.newGame(id, playerid, req.restart)
     }
 
     @DeleteMapping("/api/table/{id}")

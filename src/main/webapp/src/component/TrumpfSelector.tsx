@@ -25,7 +25,7 @@ class TrumpfSelector extends React.Component<Props, State> {
             </div>
 
             <div className="table-ct-ct">
-                <Table table={{id: '', protected: false, players: this.props.players}} onJoin={() => {}} />
+                <Table puck={this.props.puck} table={{id: '', protected: false, players: this.props.players}} onJoin={() => {}} />
             </div>
         </div>
     }
@@ -34,6 +34,7 @@ class TrumpfSelector extends React.Component<Props, State> {
   interface Props {
       onSelected: (trumpf: Trumpf) => void
       players: Array<GamePlayerDto>
+      puck?: number
   }
   interface State {
       selection: string
