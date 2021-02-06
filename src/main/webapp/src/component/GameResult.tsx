@@ -6,7 +6,8 @@ import Karte from './Karte';
 export default class GameResult extends React.Component<Props, State> {
 
     state: State = {
-        showRounds: false
+        showRounds: false,
+        puckRestart: false
     }
 
     getNames(i: number): string {
@@ -106,7 +107,12 @@ export default class GameResult extends React.Component<Props, State> {
 
                 {this.state.showRounds ? stiche : gameResult }
 
-                <button className="jass-btn" onClick={this.props.onNewGame}>Nächstes Spiel</button>
+                <div onClick={() => this.setState({puckRestart: !this.state.puckRestart})}>
+                <input type="checkbox"
+                       checked={this.state.puckRestart}
+                       style={{marginTop: '10px'}} /> Puck neu vergeben
+                </div>
+                <button className="jass-btn" onClick={() => this.props.onNewGame(this.state.puckRestart)}>Nächstes Spiel</button>
                 <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.setState({showRounds: !this.state.showRounds})}>{this.state.showRounds ? 'Ergebnis' : 'Stiche'}</button>
                 <br />
 
@@ -123,9 +129,10 @@ interface Props {
     points: Array<number>
     weis: Array<WeisPoints>
     roundHistory: Array<GameRoundDto>
-    onNewGame: () => void
+    onNewGame: (puckRestart: boolean) => void
 }
 
 interface State {
     showRounds: boolean
+    puckRestart: boolean
 }

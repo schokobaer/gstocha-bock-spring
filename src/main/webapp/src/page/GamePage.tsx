@@ -36,8 +36,7 @@ class GamePage extends React.Component<Props, State> {
         weising: false,
         weisCards: [],
         weisResponse: '',
-        showLastStich: false,
-        puckRestart: false
+        showLastStich: false
     }
 
     rest: RestClient = new RestClient()
@@ -208,9 +207,9 @@ class GamePage extends React.Component<Props, State> {
         this.setState({loading: true})
     }
 
-    nextGame() {
+    nextGame(puckRestart: boolean) {
         const req: NewGameRequestBody = {
-            restart: this.state.puckRestart
+            restart: puckRestart
         }
         this.rest.new(getUserId()!, this.props.tableId, req)
             .catch(err => console.error('Could not init next game ', err))
@@ -338,7 +337,7 @@ class GamePage extends React.Component<Props, State> {
                   points={this.state.game.points!}
                   roundHistory={this.state.game.roundHistory}
                   weis={this.state.game.weisPoints || []}
-                  onNewGame={this.nextGame} />
+                  onNewGame={(restartPuck: boolean) => this.nextGame(restartPuck)} />
       }
 
       // Normal playing state
@@ -401,7 +400,6 @@ interface State {
       player: string
       weis: Array<string>
     }>
-    puckRestart: boolean
 }
   
 export default GamePage;
