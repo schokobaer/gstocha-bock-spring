@@ -53,7 +53,7 @@ class LoungeService {
             null,
             creationTime,
             logic,
-            if (puckCard !== null) Puck(0, Card(puckCard)) else null
+            Puck(0, if (puckCard !== null) Card(puckCard) else null)
         )
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
