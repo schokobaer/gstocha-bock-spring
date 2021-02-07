@@ -34,9 +34,9 @@ class App extends React.Component<Props, State> {
     }
 
     if (getUserName() && getUserId()) {
+      this.initWebSockets()
       this.setState({setup: false})
       this.hintBanner()
-      this.initWebSockets()
     }
 
   }
@@ -51,6 +51,9 @@ class App extends React.Component<Props, State> {
       setUserName(name)
       if (getUserId() === null) {
         setUserId(uuid())
+      }
+      if (this.ws === null) {
+        this.initWebSockets()
       }
       this.setState({setup: false})
       this.hintBanner()

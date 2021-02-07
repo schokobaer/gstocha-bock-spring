@@ -29,7 +29,7 @@
 
 @media only screen and (max-width: 800px) {
     .hand-ct {
-        margin-top: 0px;
+        margin-top: 10px;
     }
 
     .hand-card-ct>div:hover * {

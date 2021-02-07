@@ -303,9 +303,11 @@ class GamePage extends React.Component<Props, State> {
       // No trumpf set yet
       if (this.state.game.state === "TRUMPF") {
         return <Fragment>
-          {undoBtn}
-          <TrumpfSelector puck={this.state.game.puck} onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
-          <Hand cards={this.state.game ? this.state.game.cards : []} />
+            <TrumpfSelector puck={this.state.game.puck} onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
+            <div className="game-button-ct" style={{flexDirection: 'row-reverse'}}>
+                {this.state.game.undoable && <button className="jass-btn" onClick={() => this.undo()}>Back</button>}
+            </div>
+            <Hand cards={this.state.game ? this.state.game.cards : []} />
         </Fragment>
       }
 
@@ -353,25 +355,24 @@ class GamePage extends React.Component<Props, State> {
       // Stoecke Button
         const stoeckeBtnVisible = this.state.game?.cards.length < 9 && this.state.game?.cards.length > 0 // Show the button not in first round
             && ['E', 'H', 'L', 'S'].find(e => e === this.state.game?.trumpf) !== undefined // show the button only in ELHS trumpf rounds
-            //&& this.state.game.currentMove === this.state.game.players[0].position // only show in my turn
             && !this.state.stoecke ? "visible" : "hidden"
 
       return <Fragment>
-        {undoBtn}
         {weisResolve}
         <Runde players={this.getTablePlayers()}
             roundStartPos={(currentMove! - round!.length + 4) % 4}
             cards={round!}
             lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
             trumpf={this.state.game.trumpf} />
-            <div className="game-button-ct">
-                { this.weisingAllowed() && <Fragment>
-                    <div className="jass-btn" onClick={() => this.setState({weising: true})}>Weisen</div>
-                    <span style={{marginLeft: '10px'}}>{this.state.weisResponse}</span>
-                </Fragment>
-                }
-                <button className="jass-btn" style={{visibility: stoeckeBtnVisible}} onClick={() => this.setState({stoecke: true})}>Stöcke</button>
-            </div>
+        <div className="game-button-ct">
+            { this.weisingAllowed() && <Fragment>
+                <div className="jass-btn" onClick={() => this.setState({weising: true})}>Weisen</div>
+                <span style={{marginLeft: '10px'}}>{this.state.weisResponse}</span>
+            </Fragment>
+            }
+            <button className="jass-btn" style={{visibility: stoeckeBtnVisible}} onClick={() => this.setState({stoecke: true})}>Stöcke</button>
+            {this.state.game.undoable && <button className="jass-btn" onClick={() => this.undo()}>Undo</button>}
+        </div>
         <Hand
               cards={this.state.game.cards}
               round={this.state.game.round}
