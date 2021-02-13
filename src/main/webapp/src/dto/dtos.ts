@@ -43,6 +43,7 @@ export interface TableDto {
     id: string
     protected: boolean
     players: Array<TablePlayerDto>
+    randomOrder: boolean
 }
 
 export interface CreateRequestBody {

@@ -23,15 +23,28 @@ export default class Table extends React.Component<Props> {
     }
 
   render() {
-    return <div className="table-ct">
-      <div className="table-row">
-        <div>{this.props.puck === 0 && "⚫ "} {this.getChair(0)}</div>
-        <div>{this.props.puck === 1 && "⚫ "}{this.getChair(1)}</div>
-      </div>
-      <div className="table-row">
-        <div>{this.props.puck === 3 && "⚫ "}{this.getChair(3)}</div>
-        <div>{this.props.puck === 2 && "⚫ "}{this.getChair(2)}</div>
-      </div>
+      if (this.props.table.randomOrder === true) {
+          return <div className="table-ct-rnd">
+              <div className="table-rnd-player">
+              {this.props.table.players.map(p =>
+                      <div>{p.name}</div>
+              )}
+              </div>
+              <div>
+              {this.props.onJoin !== undefined && <button className="jass-btn" onClick={() => this.joinTable(0)}>Join</button>}
+              </div>
+          </div>
+      }
+
+      return <div className="table-ct">
+        <div className="table-row">
+            <div>{this.props.puck === 0 && "⚫ "} {this.getChair(0)}</div>
+            <div>{this.props.puck === 1 && "⚫ "}{this.getChair(1)}</div>
+        </div>
+        <div className="table-row">
+            <div>{this.props.puck === 3 && "⚫ "}{this.getChair(3)}</div>
+            <div>{this.props.puck === 2 && "⚫ "}{this.getChair(2)}</div>
+        </div>
     </div>
   }
 }

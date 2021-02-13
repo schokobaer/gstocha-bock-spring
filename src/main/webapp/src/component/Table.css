@@ -33,6 +33,24 @@
     border-right: solid #000 3px;
 }
 
+
+.table-ct-rnd {
+    padding: 15px;
+    background-color: #136600;
+    border-radius: 20px;
+
+
+    background-color: #8b5a2b;
+    background-image: url("../texture/dark-wood.png");
+    box-shadow: 0px 0px 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.table-rnd-player{
+
+}
+
 @media only screen and (max-width: 800px) {
     .table-ct {
         padding: 10px;

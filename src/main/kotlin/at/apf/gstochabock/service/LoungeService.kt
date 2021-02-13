@@ -115,15 +115,30 @@ class LoungeService {
             logger.warn(tableid, playername, "joinTable", "tried to join a table on an already set position")
             throw RuntimeException("Table position already set")
         }
-        table.players.add(Player(playerid, playername, position, mutableListOf(), mutableListOf(), Stoeckability.None))
+
+        var pos = position
+        if (table.randomizePlayerOrder === true) {
+            val positions = mutableListOf<Int>()
+            var i = 0
+            while (i < table.logic.amountPlayers()) {
+                if (table.players.find { it.position === i } === null) {
+                    positions.add(i)
+                }
+                i++
+            }
+            val index = Random().nextInt(positions.size)
+            pos = positions[index]
+        }
+
+        table.players.add(Player(playerid, playername, pos, mutableListOf(), mutableListOf(), Stoeckability.None))
         table.players.sortBy { it.position }
         logger.info(tableid, playername, "joinTable", "player joined table")
 
         // table full
         if (table.players.size === table.logic.amountPlayers()) {
-            if (table.randomizePlayerOrder === true) {
+            /*if (table.randomizePlayerOrder === true) {
                 randomizePlayerOrder(table)
-            }
+            }*/
             tableService.nextGame(table)
             tableService.organizePuck(table)
             logger.info(tableid, playername, "joinTable", "initialized next game")
