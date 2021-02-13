@@ -35,14 +35,16 @@ export default class CreateTableDialog extends React.Component<Props, State> {
     state: State = {
         passwordValue: "",
         logic: "base",
-        starter: 'S6'
+        starter: 'S6',
+        randomizePlayerPosition: false
     }
 
     submit() {
         const data: CreateTableData = {
             password: this.state.passwordValue.length > 0 ? this.state.passwordValue : undefined,
             logic: this.state.logic,
-            starter: this.state.starter
+            starter: this.state.starter,
+            randomizePlayerPosition: this.state.randomizePlayerPosition
         }
         this.props.onCreate(data)
     }
@@ -66,6 +68,16 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             value={this.state.passwordValue}
                             onKeyDown={e => e.key === 'Enter' && this.submit()}
                             onChange={(e) => this.setState({passwordValue: e.target.value}) }/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Randomize Player Position</td>
+                    <td>
+                        <div onClick={() => this.setState({randomizePlayerPosition: !this.state.randomizePlayerPosition})}>
+                            <input type="checkbox"
+                                   checked={this.state.randomizePlayerPosition}
+                                   style={{marginTop: '10px'}} />
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -110,10 +122,12 @@ interface State {
     passwordValue: string
     logic: string
     starter?: string
+    randomizePlayerPosition: boolean
 }
 
 export interface CreateTableData {
     password?: string
     logic: string
     starter?: string
+    randomizePlayerPosition: boolean
 }

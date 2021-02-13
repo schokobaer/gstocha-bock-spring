@@ -26,7 +26,7 @@ class LoungeController {
 
     @PostMapping("/api/table")
     fun createTable(@RequestHeader playerid: String, @RequestBody req: CreateRequestBody): CreateResponseBody {
-        val table = loungeService.createTable(playerid, req.name, req.password, req.logic, req.puck)
+        val table = loungeService.createTable(playerid, req.name, req.password, req.logic, req.puck, req.randomizePlayerOrder)
         return CreateResponseBody(table.id)
     }
 

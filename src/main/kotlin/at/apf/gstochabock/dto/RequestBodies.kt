@@ -4,7 +4,8 @@ class CreateRequestBody(
         val name: String,
         val password: String? = null,
         val logic: String = "base",
-        val puck: String? = null
+        val puck: String? = null,
+        val randomizePlayerOrder: Boolean = false
 )
 
 data class JoinRequestBody(

@@ -63,7 +63,8 @@ class TablePage extends React.Component<Props, State> {
             name: getUserName() as string,
             password: data.password,
             logic: data.logic,
-            puck: data.starter
+            puck: data.starter,
+            randomizePlayerOrder: data.randomizePlayerPosition
         }
         this.rest.create(getUserId()!, reqBody).then(resp => {
             window.location.hash = `#${resp.id}`

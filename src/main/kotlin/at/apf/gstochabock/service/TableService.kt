@@ -86,6 +86,7 @@ class TableService {
                 table.created,
                 table.logic,
                 if (table.puck !== null) Puck(table.puck.position, table.puck.starter) else null,
+                table.randomizePlayerOrder ?: false,
                 table.state
         )
         table.history = t2

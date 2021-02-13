@@ -50,6 +50,7 @@ export interface CreateRequestBody {
     password?: string
     logic: string
     puck?: string
+    randomizePlayerOrder: boolean
 }
 
 export interface CreateResponseBody {

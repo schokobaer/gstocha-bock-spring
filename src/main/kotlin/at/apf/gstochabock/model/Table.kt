@@ -16,6 +16,7 @@ data class Table(
         val created: String,
         val logic: JassLogic,
         val puck: Puck? = null,
+        val randomizePlayerOrder: Boolean? = false,
         var state: TableState = TableState.PENDING
 
 )

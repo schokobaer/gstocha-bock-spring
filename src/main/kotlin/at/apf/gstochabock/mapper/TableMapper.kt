@@ -14,7 +14,7 @@ class TableMapper {
     lateinit var playerMapper: PlayerMapper
 
     fun toTableDto(t: Table): TableDto {
-        return TableDto(t.id, t.password !== null, t.players.map { playerMapper.toTablePlayerDto(it) })
+        return TableDto(t.id, t.password !== null, t.players.map { playerMapper.toTablePlayerDto(it) }, t.randomizePlayerOrder ?: false)
     }
 
     fun toGameDto(t: Table, playerid: String): GameDto {
