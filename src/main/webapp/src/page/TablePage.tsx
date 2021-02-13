@@ -146,6 +146,10 @@ class TablePage extends React.Component<Props, State> {
             <div className="news-ct">
                 <h2>Changelog</h2>
                 <div>
+                    <div>🎲</div>
+                    <div>Position Shuffle</div>
+                </div>
+                <div>
                     <div>⚫</div>
                     <div>Spieler Puck</div>
                 </div>
@@ -170,7 +174,7 @@ class TablePage extends React.Component<Props, State> {
                     <div>V-Style Tischnamen (siehe URL)</div>
                 </div>
             </div>
-            <div className="build-number">Build: 1.2.16</div>
+            <div className="build-number">Build: 1.2.17</div>
         </div>
     }
 }

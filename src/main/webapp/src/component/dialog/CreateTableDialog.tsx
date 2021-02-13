@@ -71,7 +71,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                     </td>
                 </tr>
                 <tr>
-                    <td>Randomize Player Position</td>
+                    <td>Shuffle Position</td>
                     <td>
                         <div onClick={() => this.setState({randomizePlayerPosition: !this.state.randomizePlayerPosition})}>
                             <input type="checkbox"
