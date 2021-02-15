@@ -1,0 +1,105 @@
+package at.apf.gstochabock.gamelogic.writer
+
+import java.lang.RuntimeException
+
+
+class BaseWriter : GameWriter {
+
+    private val data: MutableList<MutableMap<WriterTrumpf, WriteEntry>> = mutableListOf()
+    private var currentTrumpf: WriterTrumpf? = null
+    private var currentTeam: Int? = null
+
+    override fun serializeString() = "basewriter"
+
+    override fun import(data: List<List<Pair<Int, Int>>>) {
+        for (teamData in data) {
+            val map = mutableMapOf<WriterTrumpf, WriteEntry>()
+            this.data.add(map)
+
+            var i = 0
+            for (trumpf in trumpfOrder()) {
+                map[trumpf] = WriteEntry(
+                        teamData[i]!!.first !== 0,
+                        teamData[i]!!.first,
+                        teamData[i]!!.second
+                )
+                i++
+            }
+        }
+    }
+
+    override fun export(): List<List<Pair<Int, Int>>> {
+        val result = mutableListOf<List<Pair<Int, Int>>>()
+        for (teamData in data) {
+            val list = mutableListOf<Pair<Int, Int>>()
+            result.add(list)
+            for (t in trumpfOrder()) {
+                list.add(Pair(teamData[t]!!.points, teamData[t]!!.weis))
+            }
+        }
+        return result
+    }
+
+    override fun init(teams: Int) {
+        for (i in 0..teams) {
+            data.add(mutableMapOf())
+            for (t in trumpfOrder()) {
+                data[i]!![t] = WriteEntry(false, 0, 0)
+            }
+        }
+    }
+
+    override fun trumpfOrder(): List<WriterTrumpf> = listOf(
+            WriterTrumpf.Eichel,
+            WriterTrumpf.Laub,
+            WriterTrumpf.Herz,
+            WriterTrumpf.Schell,
+            WriterTrumpf.Geiss,
+            WriterTrumpf.Bock,
+            WriterTrumpf.Sieben,
+            WriterTrumpf.Acht,
+            WriterTrumpf.Kulmi
+    )
+
+    override fun openTrumpfs(team: Int): List<WriterTrumpf> =
+        data[team].filter { !it.value.played }.map { it.key }
+
+    override fun anounce(team: Int, trumpf: WriterTrumpf) {
+        if (!openTrumpfs(team).contains(trumpf)) {
+            throw RuntimeException("Trumpf already played!")
+        }
+        currentTeam = team
+        currentTrumpf = trumpf
+        data[team][trumpf]!!.played = true
+    }
+
+    fun multiplicator() = trumpfOrder().indexOf(currentTrumpf) + 1
+
+    override fun calcPoints(points: Int): Int {
+
+        return when {
+            points === 257 -> 257 * multiplicator()
+            points === -257 -> 257 * multiplicator() * 2
+            else -> points - (157 - points)
+        }
+    }
+
+    override fun write(points: Int) {
+        data[currentTeam!!][currentTrumpf]!!.points = calcPoints(points)
+    }
+
+    override fun writeWeiss(team: Int, points: Int) {
+        data[team][currentTrumpf]!!.weis += points * multiplicator()
+    }
+
+    override fun writeStoecke(team: Int) {
+        data[team][currentTrumpf]!!.weis += 20 * multiplicator()
+    }
+
+}
+
+data class WriteEntry(
+        var played: Boolean,
+        var points: Int,
+        var weis: Int
+)
