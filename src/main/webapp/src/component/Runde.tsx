@@ -16,8 +16,12 @@ export default class Runde extends React.Component<Props, State> {
    */
   getCard(idx: number): string | undefined {
       if (this.props.players[idx] === undefined) return undefined
-      const roundStartPos = this.state.showLast && this.props.lastRound ? this.props.lastRound.startPosition : this.props.roundStartPos
-      const cards = this.state.showLast && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
+      let roundStartPos = this.state.showLast && this.props.lastRound ? this.props.lastRound.startPosition : this.props.roundStartPos
+      let cards = this.state.showLast && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
+      if (this.props.cards.length === 0 && this.props.lastRound) {
+          roundStartPos = this.props.lastRound.startPosition
+          cards = this.props.lastRound.cards
+      }
       return this.props.players[idx]?.position === roundStartPos ? cards[0] :
         this.props.players[idx]?.position === (roundStartPos! + 4 + 1) % 4 ? cards[1] :
         this.props.players[idx]?.position === (roundStartPos! + 4 + 2) % 4 ? cards[2] :
@@ -41,9 +45,19 @@ export default class Runde extends React.Component<Props, State> {
       return ""
   }
 
+  getStoeckeCallout(idx: number) {
+      const pred = (c: string) => c === this.props.trumpf + "K" || c === this.props.trumpf + "O"
+      if (this.props.players[idx]?.stoeckeCallout && (
+          this.props.cards.find(pred) !== undefined  // second stoecke card is played in the current round
+          || this.props.lastRound?.cards.find(pred) !== undefined && this.props.cards.length === 0)) { // or second stoecke card was played in the last round and the next round hasnt started yet
+          return <label className="runde-weiscall" style={{margin: '0 auto'}}>STÖCKE !</label>
+      }
+      return ""
+  }
+
   getMyCard(): string | undefined {
-    const cards = this.state.showLast && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
-    return cards.find(c => c !== this.getCard(0) && c !== this.getCard(1) && c !== this.getCard(2))
+      const cards = (this.state.showLast || this.props.cards.length === 0) && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
+      return cards.find(c => c !== this.getCard(0) && c !== this.getCard(1) && c !== this.getCard(2))
   }
 
   render() {
@@ -67,6 +81,7 @@ export default class Runde extends React.Component<Props, State> {
             {actionBtns}
             <div className="runde-top">
                 {this.getWeisCall(1)}
+                {this.getStoeckeCallout(1)}
                 <label className="runde-playername">{this.getName(1)}</label><br />
                 <div style={{transform: 'rotate(180deg)'}}>
                     <Karte value={this.getCard(1)} />
@@ -79,6 +94,7 @@ export default class Runde extends React.Component<Props, State> {
                             <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(0)}</label>
                             <br /> <br />
                             {this.getWeisCall(0)}
+                            {this.getStoeckeCallout(0)}
                         </div>
                     </div>
                     <div>
@@ -98,6 +114,7 @@ export default class Runde extends React.Component<Props, State> {
                             <label className="runde-playername" style={{margin: '0 auto'}}>{this.getName(2)}</label>
                             <br /> <br />
                             {this.getWeisCall(2)}
+                            {this.getStoeckeCallout(2)}
                         </div>
                     </div>
                 </div>

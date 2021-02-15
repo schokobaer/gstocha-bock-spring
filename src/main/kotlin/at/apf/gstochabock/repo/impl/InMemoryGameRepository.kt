@@ -1,9 +1,7 @@
 package at.apf.gstochabock.repo.impl
 
-import at.apf.gstochabock.model.MutablePair
 import at.apf.gstochabock.model.Table
 import at.apf.gstochabock.repo.GameRepository
-import org.springframework.stereotype.Repository
 import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.locks.Lock
@@ -22,10 +20,7 @@ class InMemoryGameRepository : GameRepository {
 
     override fun list(pred: (Table) -> Boolean): List<Table> {
         val tables = gameStore.values.map { it.first }
-        if (pred !== null) {
-            return tables.filter { pred.invoke(it) }
-        }
-        return tables
+        return tables.filter { pred.invoke(it) }
     }
 
     override fun read(id: String) : Table {
@@ -70,4 +65,5 @@ class InMemoryGameRepository : GameRepository {
         }
     }
 
+    data class MutablePair<K, V>(var first: K, var second: V)
 }

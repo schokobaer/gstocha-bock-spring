@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import './Changelog.css'
 import {getLastVersion, setLastVersion, Version} from "../util/GameRepo";
 
-const version = new Version("1.2.17")
+const version = new Version("1.2.18")
 
 const features: Array<Feature> = [
     {icon: '🖖', description: 'V-Style Tischnamen (siehe URL)', version: new Version("1.2.11")},

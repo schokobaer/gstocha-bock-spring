@@ -68,7 +68,15 @@ class TableMapper {
                     weisCall = weisesSorted.last().rank.value
                 }
             }
-            players.add(GamePlayerDto(it.name, it.position, weis, weisCall))
+            players.add(
+                    GamePlayerDto(
+                            it.name,
+                            it.position,
+                            weis,
+                            weisCall,
+                            it.stoecke === Stoeckability.Called
+                    )
+            )
         }
 
         val player = t.players.find { it.playerid == playerid }!!

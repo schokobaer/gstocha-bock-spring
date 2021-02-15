@@ -1,7 +1,5 @@
 package at.apf.gstochabock.dto
 
-import at.apf.gstochabock.model.Stoeckability
-
 data class GameDto(
         val currentMove: Int?,
         val trumpf: String?,

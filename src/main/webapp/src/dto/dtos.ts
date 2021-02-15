@@ -6,6 +6,7 @@ export type Stoeckability = 'None' | 'Callable' | 'Called'
 export interface GamePlayerDto extends TablePlayerDto {
     weis?: Array<string>
     weisCall?: string
+    stoeckeCallout: boolean
 }
 
 export interface WeisPoints {

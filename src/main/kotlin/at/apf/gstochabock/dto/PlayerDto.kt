@@ -9,5 +9,6 @@ data class GamePlayerDto(
         val name: String,
         val position: Int,
         val weis: List<String>?,
-        val weisCall: String? = null
+        val weisCall: String? = null,
+        val stoeckeCallout: Boolean = false
 )
