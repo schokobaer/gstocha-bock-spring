@@ -6,6 +6,7 @@ import './TablePage.css'
 import CreateTableDialog, {CreateTableData} from "../component/dialog/CreateTableDialog";
 import {getUserId, getUserName} from "../util/GameRepo";
 import PasswordDialog from "../component/dialog/PasswordDialog";
+import Changelog from "../component/Changelog";
 
 class TablePage extends React.Component<Props, State> {
 
@@ -143,38 +144,7 @@ class TablePage extends React.Component<Props, State> {
                         onJoin={this.state.openTables ? this.joinTable : undefined} />
                 </div>)}
             </div>
-            <div className="news-ct">
-                <h2>Changelog</h2>
-                <div>
-                    <div>🎲</div>
-                    <div>Position Shuffle</div>
-                </div>
-                <div>
-                    <div>⚫</div>
-                    <div>Spieler Puck</div>
-                </div>
-                <div>
-                    <div>✏️</div>
-                    <div>Change Name</div>
-                </div>
-                <div>
-                    <div>❕</div>
-                    <div>Stöcke Button immer sichtbar</div>
-                </div>
-                <div>
-                    <div>🦊 </div>
-                    <div>Firefox bug fixed</div>
-                </div>
-                <div>
-                    <div>☎️ </div>
-                    <div>Spielbar am Smartphone/Tablet</div>
-                </div>
-                <div>
-                    <div>🖖</div>
-                    <div>V-Style Tischnamen (siehe URL)</div>
-                </div>
-            </div>
-            <div className="build-number">Build: 1.2.17</div>
+            <Changelog />
         </div>
     }
 }

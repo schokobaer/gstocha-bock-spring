@@ -1,0 +1,61 @@
+.news-ct {
+    font-family: Typewriter;
+    background-color: #ddd;
+    padding: 10px 20px;
+    margin-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 25px;
+}
+
+.news-ct > div {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.news-ct > div > div:first-child {
+    margin-right: 10px;
+    width: 25px;
+    text-align: center;
+}
+
+.news-ct a {
+    color: #000;
+}
+
+.news-ct a:visited {
+    color: #000;
+}
+
+.build-number {
+    margin-top: 10px;
+    font-size: 10px;
+    font-family: monospace;
+    color: #ccc;
+}
+
+.fresh-feature {
+    animation: alarmlights 3s 3 ease-in-out;
+    /*animation: popup 3s linear;*/
+}
+
+@keyframes popup {
+    0% {
+        font-size: 0px;
+    }
+    100% {
+        font-size: initial;
+    }
+}
+
+@keyframes alarmlights {
+    0% {
+        background-color: initial;
+    }
+    50% {
+        background-color: #FF4136;
+        font-size: 0px;
+    }
+    100% {
+        background-color: initial;
+    }
+}
