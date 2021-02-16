@@ -79,6 +79,7 @@ export interface JoinRequestBody {
 
 export interface TrumpfRequestBody {
     trumpf: Trumpf
+    joker?: string
 }
 
 export interface WeisRequestBody {

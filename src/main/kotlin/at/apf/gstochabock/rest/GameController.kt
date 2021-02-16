@@ -35,7 +35,7 @@ class GameController {
 
     @PostMapping("/api/table/{id}/trumpf")
     fun trumpf(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: TrumpfRequestBody) {
-        tableService.setTrumpf(id, playerid, Trumpf.fromValue(req.trumpf))
+        tableService.setTrumpf(id, playerid, Trumpf.fromValue(req.trumpf), req.joker)
     }
 
     @PostMapping("/api/table/{id}/weis")

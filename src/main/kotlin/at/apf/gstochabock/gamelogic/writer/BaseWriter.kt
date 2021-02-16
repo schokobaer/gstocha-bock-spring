@@ -6,8 +6,8 @@ import java.lang.RuntimeException
 class BaseWriter : GameWriter {
 
     private val data: MutableList<MutableMap<WriterTrumpf, WriteEntry>> = mutableListOf()
-    private var currentTrumpf: WriterTrumpf? = null
-    private var currentTeam: Int? = null
+
+
 
     override fun serializationCode() = "base"
 
@@ -107,6 +107,9 @@ class BaseWriter : GameWriter {
         }
         return clone
     }
+
+    override var currentTrumpf: WriterTrumpf? = null
+    override var currentTeam: Int? = null
 
 }
 

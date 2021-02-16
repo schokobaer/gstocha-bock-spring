@@ -123,10 +123,11 @@ class GamePage extends React.Component<Props, State> {
         this.setState({loading: true})
     }
 
-    trumpfSelected(trumpf: Trumpf) {
+    trumpfSelected(trumpf: Trumpf, joker?: string) {
         console.info('Player selected trumpf: ' + trumpf)
         const reqBody: TrumpfRequestBody = {
-            trumpf: trumpf
+            trumpf: trumpf,
+            joker: joker
         }
         this.rest.trumpf(getUserId()!, this.props.tableId, reqBody)
             .catch(err => console.error('Could not set trumpf ', err))

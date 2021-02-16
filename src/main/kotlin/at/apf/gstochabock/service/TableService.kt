@@ -1,6 +1,5 @@
 package at.apf.gstochabock.service
 
-import at.apf.gstochabock.gamelogic.writer.BaseWriter
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
@@ -107,9 +106,9 @@ class TableService {
         return gameRepo.read(tableid)
     }
 
-    fun setTrumpf(tableid: String, startingPlayerid: String, trumpf: Trumpf) {
+    fun setTrumpf(tableid: String, playerid: String, trumpf: Trumpf, joker: String?) {
         val table = gameRepo.lockedRead(tableid)
-        val player = getPlayer(table, startingPlayerid)
+        val player = getPlayer(table, playerid)
 
         if (table.state !== TableState.TRUMPF) {
             gameRepo.unlock(tableid)

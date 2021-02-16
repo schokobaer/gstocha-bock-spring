@@ -3,6 +3,7 @@ package at.apf.gstochabock.serialize
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.gamelogic.DornbirnJassLogic
 import at.apf.gstochabock.gamelogic.writer.BaseWriter
+import at.apf.gstochabock.gamelogic.writer.WriterTrumpf
 import at.apf.gstochabock.model.*
 import org.springframework.stereotype.Component
 import com.google.gson.GsonBuilder
@@ -31,7 +32,12 @@ class TableSerDes {
                 table.created,
                 table.logic.serializationCode(),
                 table.puck,
-                if (table.writer !== null) WriterDO(table.writer.serializationCode(), writerSerDes.toText(table.writer.export())) else null,
+                if (table.writer !== null) WriterDO(
+                        table.writer.serializationCode(),
+                        writerSerDes.toText(table.writer.export()),
+                        table.writer.currentTrumpf?.value,
+                        table.writer.currentTeam
+                ) else null,
                 table.randomizePlayerOrder,
                 table.state
         )
@@ -51,7 +57,12 @@ class TableSerDes {
                     table.created,
                     history.logic.serializationCode(),
                     history.puck,
-                    if (history.writer !== null) WriterDO(history.writer.serializationCode(), writerSerDes.toText(history.writer.export())) else null,
+                    if (history.writer !== null) WriterDO(
+                            history.writer.serializationCode(),
+                            writerSerDes.toText(history.writer.export()),
+                            history.writer.currentTrumpf?.value,
+                            history.writer.currentTeam
+                    ) else null,
                     table.randomizePlayerOrder,
                     history.state
             )
@@ -66,6 +77,10 @@ class TableSerDes {
         val writer = if (tdo.writer !== null) if (tdo.writer.type.equals("base")) BaseWriter() else null else null
         if (writer !== null) {
             writer.import(writerSerDes.fromText(tdo.writer!!.data))
+            if (tdo.writer.currentTrumpf !== null) {
+                writer.currentTrumpf = WriterTrumpf.values().find { tdo.writer.currentTrumpf.equals(it.value) }
+            }
+            writer.currentTeam = tdo.writer.currrentTeam
         }
         val table = Table(
                 "",
@@ -136,5 +151,7 @@ private data class TableDO(
 
 private data class WriterDO(
         val type: String,
-        val data: String
+        val data: String,
+        val currentTrumpf: String?,
+        val currrentTeam: Int?
 )
