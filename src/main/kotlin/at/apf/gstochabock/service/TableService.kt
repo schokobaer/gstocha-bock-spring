@@ -129,7 +129,6 @@ class TableService {
                 logger.warn(tableid, player.name, "setTrumpf", "tried to set unallowed writer trumpf $writerTrumpf")
                 throw RuntimeException("WriterTrumpf not allowed")
             }
-            table.writer.anounce(teamIdx, writerTrumpf)
         }
 
         addHistory(table)
@@ -147,6 +146,12 @@ class TableService {
                 it.stoecke = Stoeckability.Callable
                 logger.info(tableid, player.name, "setTrumpf", "player ${it.name} is stockeable")
             }
+        }
+
+        if (table.writer !== null) {
+            val teamIdx = player.position % table.logic.amountTeams()
+            val writerTrumpf = WriterTrumpf.fromTrumpf(trumpf, joker)
+            table.writer.anounce(teamIdx, writerTrumpf)
         }
 
         gameRepo.writeBack(table)
@@ -299,6 +304,19 @@ class TableService {
                 }
                 table.state = TableState.FINISHED
                 logger.info(tableid, player.name, "play", "changed state to FINISHED")
+
+
+                if (table.writer !== null) {
+                    // writer calculations
+                    table.writer.write(table.points[table.writer.currentTeam!!])
+                    for (i in 0 until table.logic.amountTeams()) {
+                        table.writer.writeWeiss(i, table.weisPoints[i])
+                    }
+                    val stoeckePlayer = table.players.find { it.stoecke === Stoeckability.Called }
+                    if (stoeckePlayer !== null) {
+                        table.writer.writeStoecke(stoeckePlayer.position % table.logic.amountTeams())
+                    }
+                }
             }
 
             // assign points
