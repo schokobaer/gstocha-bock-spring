@@ -25,6 +25,19 @@ class TrumpfSelector extends React.Component<Props, State> {
     }
     
     select(trumpf: Trumpf) {
+        if (this.props.writer) {
+            const teamIdx = this.props.players[0].position % 2
+            if (this.state.j7 && this.props.writer.table[teamIdx][this.trumpfOrder().indexOf("7")].first !== 0) {
+                return
+            }
+            if (this.state.j8 && this.props.writer.table[teamIdx][this.trumpfOrder().indexOf("8")].first !== 0) {
+                return
+            }
+            const writerTrumpf = trumpf[0]
+            if (!this.state.j7 && !this.state.j8 && this.props.writer.table[teamIdx][this.trumpfOrder().indexOf(writerTrumpf)].first !== 0) {
+                return
+            }
+        }
         this.props.onSelected(trumpf, this.state.j7 ? "7" : this.state.j8 ? "8" : undefined)
     }
 
