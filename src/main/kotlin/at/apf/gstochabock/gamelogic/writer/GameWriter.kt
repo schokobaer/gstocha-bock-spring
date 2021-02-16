@@ -1,7 +1,7 @@
 package at.apf.gstochabock.gamelogic.writer
 
 interface GameWriter {
-    fun serializeString(): String
+    fun serializationCode(): String
     fun import(data: List<List<Pair<Int, Int>>>)
     fun export(): List<List<Pair<Int, Int>>>
     fun init(teams: Int)
@@ -12,4 +12,5 @@ interface GameWriter {
     fun write(points: Int)
     fun writeWeiss(team: Int, points: Int)
     fun writeStoecke(team: Int)
+    fun clone(): GameWriter
 }

@@ -11,6 +11,7 @@ data class GameDto(
         val players: List<GamePlayerDto>,
         val cards: List<String>,
         val stoecke: String,
+        val writer: WriterDto?,
         val puck: Int?,
         val state: String
 )
@@ -24,4 +25,9 @@ data class GameRoundDto(
         val startPosition: Int,
         val cards: List<String>,
         val teamIndex: Int
+)
+
+data class WriterDto(
+        val type: String,
+        val table: List<List<Pair<Int, Int>>>
 )

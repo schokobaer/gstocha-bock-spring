@@ -1,6 +1,7 @@
 package at.apf.gstochabock.model
 
 import at.apf.gstochabock.gamelogic.JassLogic
+import at.apf.gstochabock.gamelogic.writer.GameWriter
 
 data class Table(
         var id: String,
@@ -16,6 +17,7 @@ data class Table(
         val created: String,
         val logic: JassLogic,
         val puck: Puck? = null,
+        val writer: GameWriter?,
         val randomizePlayerOrder: Boolean? = false,
         var state: TableState = TableState.PENDING
 

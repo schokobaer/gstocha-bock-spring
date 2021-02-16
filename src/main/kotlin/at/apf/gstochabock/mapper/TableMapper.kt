@@ -4,6 +4,7 @@ import at.apf.gstochabock.dto.*
 import at.apf.gstochabock.model.Stoeckability
 import at.apf.gstochabock.model.Table
 import at.apf.gstochabock.model.TableState
+import at.apf.gstochabock.model.Trumpf
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -97,6 +98,7 @@ class TableMapper {
                 players,
                 player.cards.map { it.toString() },
                 player.stoecke.name,
+                if (t.writer !== null) WriterDto(t.writer.serializationCode(), t.writer.export()) else null,
                 t.puck?.position,
                 t.state.name
         )

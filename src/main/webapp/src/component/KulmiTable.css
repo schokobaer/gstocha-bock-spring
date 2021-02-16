@@ -1,0 +1,58 @@
+.kulmi-table {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.kulmi-table>div {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.kulmi-table-head {
+    font-size: 20px;
+    border-bottom: #000 solid 3px;
+}
+
+.kulmi-table-head > div {
+    border-left: #000 solid 3px;
+}
+
+.kulmi-table-head>div:first-child {
+    border-left: 0px;
+}
+
+.kulmi-table>div>div {
+    width: 100%;
+    min-width: 20px;
+    padding: 1px 0px;
+}
+
+.kulmi-table-trumpf-col {
+    width: 20px !important;
+    border-left: #000 solid 3px;
+}
+
+.kulmi-table > div > .kulmi-table-trumpf-col:first-child {
+    border-left: 0px;
+}
+
+.kulmi-table .trumpf-row:nth-child(odd) {
+    background-color: #cccccc55;
+}
+
+.kulmi-table .trumpf-available {
+    background-color: #136600;
+    color: #cccccc;
+}
+
+.kulmi-table .single-sum-row {
+    border-top: #000 solid 3px;
+    font-size: 18px;
+}
+
+.kulmi-table .total-sum-row {
+    border-top: #000 solid 3px;
+    font-size: 18px;
+    font-weight: bold;
+}

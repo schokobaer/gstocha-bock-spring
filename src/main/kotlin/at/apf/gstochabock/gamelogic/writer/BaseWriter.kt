@@ -9,7 +9,7 @@ class BaseWriter : GameWriter {
     private var currentTrumpf: WriterTrumpf? = null
     private var currentTeam: Int? = null
 
-    override fun serializeString() = "basewriter"
+    override fun serializationCode() = "base"
 
     override fun import(data: List<List<Pair<Int, Int>>>) {
         for (teamData in data) {
@@ -41,7 +41,7 @@ class BaseWriter : GameWriter {
     }
 
     override fun init(teams: Int) {
-        for (i in 0..teams) {
+        for (i in 0 until teams) {
             data.add(mutableMapOf())
             for (t in trumpfOrder()) {
                 data[i]!![t] = WriteEntry(false, 0, 0)
@@ -94,6 +94,18 @@ class BaseWriter : GameWriter {
 
     override fun writeStoecke(team: Int) {
         data[team][currentTrumpf]!!.weis += 20 * multiplicator()
+    }
+
+    override fun clone(): GameWriter {
+        val clone = BaseWriter()
+        data.forEach {
+            val map = mutableMapOf<WriterTrumpf, WriteEntry>()
+            clone.data.add(map)
+            for ((k,v) in it) {
+                map[k] = WriteEntry(v.played, v.points, v.weis)
+            }
+        }
+        return clone
     }
 
 }

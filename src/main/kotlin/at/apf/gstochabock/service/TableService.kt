@@ -1,5 +1,6 @@
 package at.apf.gstochabock.service
 
+import at.apf.gstochabock.gamelogic.writer.BaseWriter
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
@@ -86,6 +87,7 @@ class TableService {
                 table.created,
                 table.logic,
                 if (table.puck !== null) Puck(table.puck.position, table.puck.starter) else null,
+                table.writer?.clone(),
                 table.randomizePlayerOrder ?: false,
                 table.state
         )

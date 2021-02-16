@@ -1,7 +1,9 @@
 package at.apf.gstochabock.serialize
 
+import org.springframework.stereotype.Component
 import java.util.stream.Collectors
 
+@Component
 class GameWriterSerDes {
 
     fun fromText(text: String): List<List<Pair<Int, Int>>> {

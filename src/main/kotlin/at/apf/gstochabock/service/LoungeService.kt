@@ -2,6 +2,7 @@ package at.apf.gstochabock.service
 
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.gamelogic.DornbirnJassLogic
+import at.apf.gstochabock.gamelogic.writer.BaseWriter
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
@@ -37,8 +38,12 @@ class LoungeService {
         return gameRepo.list { it.players.find { p -> p.playerid == playerid } !== null }
     }
 
-    fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?, randomizePlayerOrder: Boolean?): Table {
+    fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?, randomizePlayerOrder: Boolean?, writerString: String?): Table {
         val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
+        val writer = if ("base".equals(writerString)) BaseWriter() else null
+        if (writer !== null) {
+            writer.init(logic.amountTeams())
+        }
         val creationTime = simpleDateFormat.format(Date())
         val table = Table(
             "",
@@ -47,13 +52,14 @@ class LoungeService {
             mutableListOf(),
             null,
             null,
-                mutableListOf(),
+            mutableListOf(),
             mutableListOf(),
             mutableListOf(),
             null,
             creationTime,
             logic,
             Puck(0, if (puckCard !== null) Card(puckCard) else null),
+            writer,
             randomizePlayerOrder ?: false
         )
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))

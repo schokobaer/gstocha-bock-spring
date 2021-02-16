@@ -303,7 +303,11 @@ class GamePage extends React.Component<Props, State> {
       // No trumpf set yet
       if (this.state.game.state === "TRUMPF") {
         return <Fragment>
-            <TrumpfSelector puck={this.state.game.puck} onSelected={this.trumpfSelected} players={this.state.game.players.map(p => p as GamePlayerDto)} />
+            <TrumpfSelector
+                puck={this.state.game.puck}
+                onSelected={this.trumpfSelected}
+                players={this.state.game.players.map(p => p as GamePlayerDto)}
+                writer={this.state.game.writer} />
             <div className="game-button-ct" style={{flexDirection: 'row-reverse'}}>
                 {this.state.game.undoable && <button className="jass-btn" onClick={() => this.undo()}>Back</button>}
             </div>

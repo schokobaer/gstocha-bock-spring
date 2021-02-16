@@ -26,6 +26,7 @@ export interface GameDto {
     cards: Array<string>
     stoecke: Stoeckability
     puck?: number
+    writer?: WriterDto
     state?: GameState
 }
 
@@ -33,6 +34,16 @@ export interface GameRoundDto {
     startPosition: number
     cards: Array<string>
     teamIndex: number
+}
+
+export interface WriterDto {
+    type: string
+    table: Array<Array<Pair<number, number>>>
+}
+
+export interface Pair<K, V> {
+    first: K
+    second: K
 }
 
 export interface TablePlayerDto {
@@ -52,6 +63,7 @@ export interface CreateRequestBody {
     password?: string
     logic: string
     puck?: string
+    writer?: string
     randomizePlayerOrder: boolean
 }
 

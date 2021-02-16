@@ -5,6 +5,7 @@ class CreateRequestBody(
         val password: String? = null,
         val logic: String = "base",
         val puck: String? = null,
+        val writer: String? = null,
         val randomizePlayerOrder: Boolean = false
 )
 
