@@ -344,6 +344,7 @@ class GamePage extends React.Component<Props, State> {
                   points={this.state.game.points!}
                   roundHistory={this.state.game.roundHistory}
                   weis={this.state.game.weisPoints || []}
+                  writer={this.state.game.writer}
                   onNewGame={(restartPuck: boolean) => this.nextGame(restartPuck)} />
       }
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import './GameResult.css'
-import {GamePlayerDto, GameRoundDto, WeisPoints} from '../dto/dtos';
+import {GamePlayerDto, GameRoundDto, WeisPoints, WriterDto} from '../dto/dtos';
 import Karte from './Karte';
-import DisplaySwitch from "./widget/DisplaySwitch";
+import DisplaySwitch, {SwitchItem} from "./widget/DisplaySwitch";
+import KulmiTable from "./KulmiTable";
 
 export default class GameResult extends React.Component<Props, State> {
 
@@ -50,7 +51,6 @@ export default class GameResult extends React.Component<Props, State> {
     render() {
         let gameResult = <React.Fragment>
             <div>
-                <h2>Game Results</h2>
                 <table style={{width: '100%'}}>
                     <tr>
                         <td></td>
@@ -80,7 +80,6 @@ export default class GameResult extends React.Component<Props, State> {
 
         let stiche = <React.Fragment>
             <div>
-                <h2>Stiche</h2>
                 <table style={{width: '100%'}}>
                     <tr>
                         <td>{this.getNames(0) /* TODO: Make generic */}</td>
@@ -101,28 +100,33 @@ export default class GameResult extends React.Component<Props, State> {
             </div>
         </React.Fragment>
 
-
+        const displayItems: Array<SwitchItem<DisplayValue>> = [
+            {title: 'Ergebnis', value: 'RESULT'},
+            {title: 'Stiche', value: 'STICHE'}
+        ]
+        if (this.props.writer) {
+            displayItems.push({title: 'Tabelle', value: 'TABLE'})
+        }
 
         return <React.Fragment>
             <div className="result-window">
 
                 <DisplaySwitch onChange={(value: DisplayValue) => this.setState({display: value})}
-                               items={[
-                                   {title: 'Result', value: 'RESULT'},
-                                   {title: 'Stiche', value: 'STICHE'},
-                                   {title: 'Tabelle', value: 'TABLE'}
-                                   ]}
+                               items={displayItems}
                                value={this.state.display} />
 
-                {this.state.display === 'STICHE' ? stiche : gameResult }
+                {this.state.display === 'STICHE' && stiche}
+                {this.state.display === 'RESULT' && gameResult}
+                {this.state.display === 'TABLE' && <KulmiTable players={this.props.players} writer={this.props.writer!} /> }
 
+                {this.props.writer == null &&
                 <div onClick={() => this.setState({puckRestart: !this.state.puckRestart})}>
-                <input type="checkbox"
-                       checked={this.state.puckRestart}
-                       style={{marginTop: '10px'}} /> Puck neu vergeben
+                    <input type="checkbox"
+                           checked={this.state.puckRestart}
+                           style={{marginTop: '10px'}}/> Puck neu vergeben
                 </div>
+                }
                 <button className="jass-btn" onClick={() => this.props.onNewGame(this.state.puckRestart)}>Nächstes Spiel</button>
-                <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.setState({display: this.state.display === 'RESULT' ? 'STICHE' : 'RESULT'})}>{this.state.display === 'STICHE' ? 'Ergebnis' : 'Stiche'}</button>
                 <br />
 
                 <p>
@@ -139,6 +143,7 @@ interface Props {
     weis: Array<WeisPoints>
     roundHistory: Array<GameRoundDto>
     onNewGame: (puckRestart: boolean) => void
+    writer?: WriterDto
 }
 
 type DisplayValue = 'RESULT' | 'STICHE' | 'TABLE'

@@ -1,13 +1,20 @@
 .display-switch {
     display: flex;
     border-bottom: black solid 3px;
+
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 .display-switch-item {
     font-size: 1.5em;
     font-weight: bold;
     text-shadow: 0px 0px 2px #ccc;
-    padding: 0px 10px;
+    padding: 0px 40px 0px 10px;
+    /*width: 160px;
+    padding-left: 10px;*/
     cursor: pointer;
     margin-bottom: -3px;
     transition: 0.5s ease;
