@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import './Changelog.css'
 import {getLastVersion, setLastVersion, Version} from "../util/GameRepo";
 
-const version = new Version("1.2.18")
+const version = new Version("1.3")
 
 const features: Array<Feature> = [
     {icon: '🖖', description: 'V-Style Tischnamen (siehe URL)', version: new Version("1.2.11")},
@@ -12,7 +12,7 @@ const features: Array<Feature> = [
     {icon: '✏️', description: 'Change Name', version: new Version("1.2.15"), link: 'Change_Name'},
     {icon: '⚫', description: 'Spieler Puck', version: new Version("1.2.16"), link: 'Spieler_Puck_8'},
     {icon: '🎲', description: 'Position Shuffle', version: new Version("1.2.17"), link: 'Neuer_Tisch_8'},
-
+    {icon: '📝', description: 'Schrift', version: new Version("1.3")}
 ]
 
 export default class Changelog extends React.Component<Props, State> {

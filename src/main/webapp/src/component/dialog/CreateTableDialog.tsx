@@ -32,8 +32,8 @@ const puckCardOptions = [
 
 const writerOptions = [
     {value: undefined, label: 'Ohne'},
-    {value: 'base', label: 'Richtig'},
-    {value: 'ESLH', label: 'Dornbirn'}
+    {value: 'base', label: 'Kulmi Richtig'},
+    {value: 'ESLH', label: 'Kulmi Dornbirn'}
 ]
 
 const writerDescriptions: Record<string, any> = {
