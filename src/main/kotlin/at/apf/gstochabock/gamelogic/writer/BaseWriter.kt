@@ -3,7 +3,7 @@ package at.apf.gstochabock.gamelogic.writer
 import java.lang.RuntimeException
 
 
-class BaseWriter : GameWriter {
+open class BaseWriter : GameWriter {
 
     private val data: MutableList<MutableMap<WriterTrumpf, WriteEntry>> = mutableListOf()
 
@@ -80,7 +80,7 @@ class BaseWriter : GameWriter {
         return when {
             points === 257 -> 257 * multiplicator()
             points === -257 -> 257 * multiplicator() * 2
-            else -> points - (157 - points)
+            else -> (points - (157 - points)) * multiplicator()
         }
     }
 
@@ -94,6 +94,17 @@ class BaseWriter : GameWriter {
 
     override fun writeStoecke(team: Int) {
         data[team][currentTrumpf]!!.weis += 20 * multiplicator()
+    }
+
+    override fun over(): Boolean = data.all { it.all { (k,v) -> v.played } }
+
+
+    override fun reset() {
+        data.forEach { teamData -> teamData.forEach {
+            it.value.played = false
+            it.value.points = 0
+            it.value.weis = 0
+        } }
     }
 
     override fun clone(): GameWriter {

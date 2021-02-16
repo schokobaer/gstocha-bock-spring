@@ -57,7 +57,8 @@ export default class CreateTableDialog extends React.Component<Props, State> {
             password: this.state.passwordValue.length > 0 ? this.state.passwordValue : undefined,
             logic: this.state.logic,
             starter: this.state.starter,
-            randomizePlayerPosition: this.state.randomizePlayerPosition
+            randomizePlayerPosition: this.state.randomizePlayerPosition,
+            writer: this.state.writer
         }
         this.props.onCreate(data)
     }

@@ -1,5 +1,6 @@
 package at.apf.gstochabock.service
 
+import at.apf.gstochabock.gamelogic.writer.BaseWriter
 import at.apf.gstochabock.gamelogic.writer.WriterTrumpf
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.Trumpf
@@ -309,8 +310,12 @@ class TableService {
                 if (table.writer !== null) {
                     // writer calculations
                     table.writer.write(table.points[table.writer.currentTeam!!])
+                    val matsch = table.points[table.writer.currentTeam!!] === 257
+                    val kontraMatsch = table.points.indexOf(257) >= 0 && !matsch
                     for (i in 0 until table.logic.amountTeams()) {
-                        table.writer.writeWeiss(i, table.weisPoints[i])
+                        if (!(matsch && i !== table.writer.currentTeam) && !(kontraMatsch && i === table.writer.currentTeam)) {
+                            table.writer.writeWeiss(i, table.weisPoints[i])
+                        }
                     }
                     val stoeckePlayer = table.players.find { it.stoecke === Stoeckability.Called }
                     if (stoeckePlayer !== null) {
@@ -376,8 +381,14 @@ class TableService {
         logger.clean(tableid)
 
         addHistory(table)
+        var restart2 = restart
+        if (table.writer?.over() === true) {
+            table.writer.reset()
+            restart2 = true
+        }
+
         nextGame(table)
-        if (restart) {
+        if (restart2) {
             organizePuck(table)
         } else if (table.puck !== null) {
             table.puck.position = (table.puck.position + 1) % table.logic.amountPlayers()

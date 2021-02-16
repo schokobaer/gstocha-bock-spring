@@ -10,6 +10,8 @@ import at.apf.gstochabock.service.TableService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import java.io.FileNotFoundException
+import java.lang.RuntimeException
 
 @RestController
 class GameController {
@@ -25,12 +27,16 @@ class GameController {
 
     @GetMapping("/api/table/{id}")
     fun getGame(@PathVariable id: String, @RequestHeader playerid: String): Any {
-        val game = tableService.getGameTable(id)
-        if (game.players.find { it.playerid == playerid } !== null) {
-            return tableMapper.toGameDto(game, playerid)
-        }
+        try {
+            val game = tableService.getGameTable(id)
+            if (game.players.find { it.playerid == playerid } !== null) {
+                return tableMapper.toGameDto(game, playerid)
+            }
 
-        return tableMapper.toTableDto(game)
+            return tableMapper.toTableDto(game)
+        } catch (e: FileNotFoundException) {
+            return 0
+        }
     }
 
     @PostMapping("/api/table/{id}/trumpf")

@@ -12,6 +12,8 @@ interface GameWriter {
     fun write(points: Int)
     fun writeWeiss(team: Int, points: Int)
     fun writeStoecke(team: Int)
+    fun over(): Boolean
+    fun reset()
     fun clone(): GameWriter
 
     var currentTrumpf: WriterTrumpf?

@@ -34,7 +34,7 @@ class KulmiTable extends React.Component<Props, State> {
                         {this.props.writer.table.map(teamData =>
                             <Fragment>
                                 <div className={"kulmi-table-trumpf-col" + (teamData[i].first === 0 ? " trumpf-available" : "")}>{t}</div>
-                                <div>{teamData[i].first !== 0 ? teamData[i].first : '-'}</div>
+                                <div>{teamData[i].first !== 0 ? teamData[i].first : ''}</div>
                                 <div>{teamData[i].second !== 0 ? teamData[i].second : ''}</div>
                             </Fragment>
                         )}

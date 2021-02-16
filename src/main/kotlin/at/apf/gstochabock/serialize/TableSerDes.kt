@@ -3,6 +3,7 @@ package at.apf.gstochabock.serialize
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.gamelogic.DornbirnJassLogic
 import at.apf.gstochabock.gamelogic.writer.BaseWriter
+import at.apf.gstochabock.gamelogic.writer.DornbirnWriter
 import at.apf.gstochabock.gamelogic.writer.WriterTrumpf
 import at.apf.gstochabock.model.*
 import org.springframework.stereotype.Component
@@ -74,7 +75,7 @@ class TableSerDes {
     fun fromText(text: String): Table {
         val tdo = gson.fromJson<TableDO>(text, TableDO::class.java)
         val logic = if (tdo.logic.equals("base")) BaseJassLogic() else DornbirnJassLogic()
-        val writer = if (tdo.writer !== null) if (tdo.writer.type.equals("base")) BaseWriter() else null else null
+        val writer = if (tdo.writer !== null) (if (tdo.writer.type.equals("base")) BaseWriter() else if (tdo.writer.type.equals("ESLH")) DornbirnWriter() else null) else null
         if (writer !== null) {
             writer.import(writerSerDes.fromText(tdo.writer!!.data))
             if (tdo.writer.currentTrumpf !== null) {
@@ -102,7 +103,7 @@ class TableSerDes {
         )
         val h = tdo.history
         if (h !== null) {
-            val historyWriter = if (h.writer !== null) if (h.writer.type.equals("base")) BaseWriter() else null else null
+            val historyWriter = if (h.writer !== null) if (h.writer.type.equals("base")) BaseWriter() else if (h.writer.type.equals("ESLH")) DornbirnWriter() else null else null
             if (historyWriter !== null) {
                 historyWriter.import(writerSerDes.fromText(h.writer!!.data))
                 if (h.writer.currentTrumpf !== null) {

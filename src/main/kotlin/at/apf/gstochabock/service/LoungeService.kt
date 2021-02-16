@@ -3,6 +3,7 @@ package at.apf.gstochabock.service
 import at.apf.gstochabock.gamelogic.BaseJassLogic
 import at.apf.gstochabock.gamelogic.DornbirnJassLogic
 import at.apf.gstochabock.gamelogic.writer.BaseWriter
+import at.apf.gstochabock.gamelogic.writer.DornbirnWriter
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.*
 import at.apf.gstochabock.repo.GameRepository
@@ -40,7 +41,7 @@ class LoungeService {
 
     fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?, randomizePlayerOrder: Boolean?, writerString: String?): Table {
         val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
-        val writer = if ("base".equals(writerString)) BaseWriter() else null
+        val writer = if ("base".equals(writerString)) BaseWriter() else if ("ESLH".equals(writerString)) DornbirnWriter() else null
         if (writer !== null) {
             writer.init(logic.amountTeams())
         }
