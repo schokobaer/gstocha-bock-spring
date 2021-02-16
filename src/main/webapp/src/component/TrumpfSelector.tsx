@@ -3,6 +3,7 @@ import {Trumpf, GamePlayerDto, WriterDto} from '../dto/dtos';
 import './TrumpfSelector.css'
 import Table from './Table';
 import KulmiTable from "./KulmiTable";
+import DisplaySwitch, {SwitchItem} from "./widget/DisplaySwitch";
 
 class TrumpfSelector extends React.Component<Props, State> {
 
@@ -28,8 +29,19 @@ class TrumpfSelector extends React.Component<Props, State> {
     }
 
     render () {
+
+        const displayItems: Array<SwitchItem<boolean>> = [
+            {title: 'Trumpf', value: false}
+        ]
+        if (this.props.writer) {
+            displayItems.push({title: 'Tabelle', value: true})
+        }
+
         return <div className="trumpfselector-ct">
-            <h2>{this.state.showTable ? "Tabelle" : "Trumpf auswählen"}</h2>
+
+            <DisplaySwitch onChange={(value: boolean) => this.setState({showTable: value})}
+                           items={displayItems}
+                           value={this.state.showTable} />
 
             {this.state.showTable ?
                 <KulmiTable players={this.props.players} writer={this.props.writer!}/>
@@ -81,11 +93,6 @@ class TrumpfSelector extends React.Component<Props, State> {
             <div className="table-ct-ct">
                 <Table puck={this.props.puck} table={{id: '', protected: false, players: this.props.players, randomOrder: false}} onJoin={() => {}} />
             </div>
-
-            {this.props.writer &&
-            <button className="jass-btn"
-                    onClick={() => this.setState({showTable: !this.state.showTable})}>{this.state.showTable ? "Trumpf" : "Tabelle"}</button>
-            }
         </div>
     }
 }
