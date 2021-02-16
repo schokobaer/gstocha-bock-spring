@@ -40,6 +40,7 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
 
 ### Stylings:
   - Mobile: Hand cards in 2 rows, not overlapping
+  - Shuffle Table: Force default display in RunningGames
   
 
 ## Bugs:

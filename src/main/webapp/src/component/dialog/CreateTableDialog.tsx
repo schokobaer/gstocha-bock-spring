@@ -30,6 +30,19 @@ const puckCardOptions = [
     {value: undefined, label: 'Random'},
 ]
 
+const writerOptions = [
+    {value: undefined, label: 'Ohne'},
+    {value: 'base', label: 'Richtig'},
+    {value: 'ESLH', label: 'Dornbirn'}
+]
+
+const writerDescriptions: Record<string, any> = {
+    'base':
+        <Fragment>Eichel, Laub, Herz, Schell, Geiss, Bock, 7, 8, Kulmi </Fragment>,
+    'ESLH': <Fragment>Eichel, Schell, Laub, Herz, Geiss, Bock, 7, 8, Kulmi</Fragment>,
+    'undefined': <Fragment>Keine Schrift, offenes Spiel</Fragment>
+}
+
 export default class CreateTableDialog extends React.Component<Props, State> {
 
     state: State = {
@@ -104,6 +117,21 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                         {jassRuleDescriptions[this.state.logic]}
                     </td>
                 </tr>
+                <tr>
+                    <td>Schrift</td>
+                    <td>
+                        <Select
+                            defaultValue={writerOptions[0]}
+                            options={writerOptions}
+                            onChange={(v: any) => this.setState({writer: v.value})} />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        {writerDescriptions[this.state.writer || 'undefined']}
+                    </td>
+                </tr>
             </table>
             <div>
                 <button className="jass-btn table-create-btn" style={{marginTop: '15px', fontSize: '18px'}} onClick={() => this.submit()}>Create</button>
@@ -123,6 +151,7 @@ interface State {
     logic: string
     starter?: string
     randomizePlayerPosition: boolean
+    writer?: string
 }
 
 export interface CreateTableData {
@@ -130,4 +159,5 @@ export interface CreateTableData {
     logic: string
     starter?: string
     randomizePlayerPosition: boolean
+    writer?: string
 }

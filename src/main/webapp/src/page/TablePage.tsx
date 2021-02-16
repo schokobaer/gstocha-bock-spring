@@ -65,7 +65,7 @@ class TablePage extends React.Component<Props, State> {
             password: data.password,
             logic: data.logic,
             puck: data.starter,
-            writer: 'base',
+            writer: data.writer,
             randomizePlayerOrder: data.randomizePlayerPosition
         }
         this.rest.create(getUserId()!, reqBody).then(resp => {
