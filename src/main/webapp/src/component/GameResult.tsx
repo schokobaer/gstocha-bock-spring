@@ -2,11 +2,12 @@ import React from 'react';
 import './GameResult.css'
 import {GamePlayerDto, GameRoundDto, WeisPoints} from '../dto/dtos';
 import Karte from './Karte';
+import DisplaySwitch from "./widget/DisplaySwitch";
 
 export default class GameResult extends React.Component<Props, State> {
 
     state: State = {
-        showRounds: false,
+        display: 'RESULT',
         puckRestart: false
     }
 
@@ -105,7 +106,15 @@ export default class GameResult extends React.Component<Props, State> {
         return <React.Fragment>
             <div className="result-window">
 
-                {this.state.showRounds ? stiche : gameResult }
+                <DisplaySwitch onChange={(value: DisplayValue) => this.setState({display: value})}
+                               items={[
+                                   {title: 'Result', value: 'RESULT'},
+                                   {title: 'Stiche', value: 'STICHE'},
+                                   {title: 'Tabelle', value: 'TABLE'}
+                                   ]}
+                               value={this.state.display} />
+
+                {this.state.display === 'STICHE' ? stiche : gameResult }
 
                 <div onClick={() => this.setState({puckRestart: !this.state.puckRestart})}>
                 <input type="checkbox"
@@ -113,7 +122,7 @@ export default class GameResult extends React.Component<Props, State> {
                        style={{marginTop: '10px'}} /> Puck neu vergeben
                 </div>
                 <button className="jass-btn" onClick={() => this.props.onNewGame(this.state.puckRestart)}>Nächstes Spiel</button>
-                <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.setState({showRounds: !this.state.showRounds})}>{this.state.showRounds ? 'Ergebnis' : 'Stiche'}</button>
+                <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.setState({display: this.state.display === 'RESULT' ? 'STICHE' : 'RESULT'})}>{this.state.display === 'STICHE' ? 'Ergebnis' : 'Stiche'}</button>
                 <br />
 
                 <p>
@@ -132,7 +141,9 @@ interface Props {
     onNewGame: (puckRestart: boolean) => void
 }
 
+type DisplayValue = 'RESULT' | 'STICHE' | 'TABLE'
+
 interface State {
-    showRounds: boolean
+    display: DisplayValue
     puckRestart: boolean
 }

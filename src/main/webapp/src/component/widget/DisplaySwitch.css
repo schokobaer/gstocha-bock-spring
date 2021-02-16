@@ -1,0 +1,26 @@
+.display-switch {
+    display: flex;
+    border-bottom: black solid 3px;
+}
+
+.display-switch-item {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 0px 0px 2px #ccc;
+    padding: 0px 10px;
+    cursor: pointer;
+    margin-bottom: -3px;
+    transition: 0.5s ease;
+    border-bottom: black solid 3px;
+}
+
+.display-switch-item:hover {
+    /*border-bottom-color: #FF4136;*/
+    /*box-shadow: 0 8px 4px -4px #FF4136;*/
+    text-shadow: 0px 0px 6px #ccc;
+}
+
+.display-switch-item-active {
+    border-bottom: #FF4136 solid 3px;
+    text-shadow: 0px 0px 4px #ccc;
+}
