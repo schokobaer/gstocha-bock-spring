@@ -1,5 +1,6 @@
 package at.apf.gstochabock.service
 
+import at.apf.gstochabock.gamelogic.writer.WriterTrumpf
 import at.apf.gstochabock.log.GameEventLogger
 import at.apf.gstochabock.model.Trumpf
 import at.apf.gstochabock.model.*
@@ -119,6 +120,16 @@ class TableService {
             gameRepo.unlock(tableid)
             logger.warn(tableid, player.name, "setTrumpf", "tried to set unallowed trumpf $trumpf")
             throw RuntimeException("Trumpf not allowed")
+        }
+        if (table.writer !== null) {
+            val teamIdx = player.position % table.logic.amountTeams()
+            val writerTrumpf = WriterTrumpf.fromTrumpf(trumpf, joker)
+            if (!table.writer.openTrumpfs(teamIdx).contains(writerTrumpf)) {
+                gameRepo.unlock(tableid)
+                logger.warn(tableid, player.name, "setTrumpf", "tried to set unallowed writer trumpf $writerTrumpf")
+                throw RuntimeException("WriterTrumpf not allowed")
+            }
+            table.writer.anounce(teamIdx, writerTrumpf)
         }
 
         addHistory(table)

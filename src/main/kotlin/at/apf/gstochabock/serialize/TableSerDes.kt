@@ -105,6 +105,10 @@ class TableSerDes {
             val historyWriter = if (h.writer !== null) if (h.writer.type.equals("base")) BaseWriter() else null else null
             if (historyWriter !== null) {
                 historyWriter.import(writerSerDes.fromText(h.writer!!.data))
+                if (h.writer.currentTrumpf !== null) {
+                    historyWriter.currentTrumpf = WriterTrumpf.values().find { h.writer.currentTrumpf.equals(it.value) }
+                }
+                historyWriter.currentTeam = h.writer.currrentTeam
             }
             table.history = Table(
                     "",
