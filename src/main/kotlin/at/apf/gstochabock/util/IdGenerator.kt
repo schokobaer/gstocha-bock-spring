@@ -41,7 +41,8 @@ class IdGenerator {
         "montafu",
         "wald",
 
-        "hoerbranz-rules-bitches"
+        "hoerbranz-rules-bitches",
+        "domi-stinkt"
     )
 
     val rnd = Random(Date().time)

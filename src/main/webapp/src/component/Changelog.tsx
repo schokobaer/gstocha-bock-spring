@@ -12,7 +12,7 @@ const features: Array<Feature> = [
     {icon: '❕', description: 'Stöcke Button immer sichtbar', version: new Version("1.2.14"), link: 'Stcke_25'},
     {icon: '🦊 ', description: 'Firefox bug fixed', version: new Version("1.2.13")},
     {icon: '☎️ ', description: 'Spielbar am Smartphone/Tablet', version: new Version("1.2.12")},
-    {icon: '🖖', description: 'V-Style Tischnamen (siehe URL)', version: new Version("1.2.11")},
+    {icon: '🖖', description: 'V-Style Tischnamen', version: new Version("1.2.11")}
 ]
 
 export default class Changelog extends React.Component<Props, State> {

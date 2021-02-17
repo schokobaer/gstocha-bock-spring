@@ -142,7 +142,7 @@ class TablePage extends React.Component<Props, State> {
                         onClick={!this.state.openTables ? (() =>  window.location.hash = `#${t.id}`) : undefined} >
                     <Table
                         table={t}
-                        onJoin={this.state.openTables ? this.joinTable : undefined} />
+                        onJoin={this.state.openTables ? this.joinTable : undefined} displayName={true} />
                 </div>)}
             </div>
             <Changelog />

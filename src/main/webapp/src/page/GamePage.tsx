@@ -274,7 +274,7 @@ class GamePage extends React.Component<Props, State> {
       // Not joined the table yet
       if (this.state.table) {
         return <div style={{marginTop: '30px'}}>
-          <Table table={this.state.table} onJoin={this.joinTable} />
+          <Table table={this.state.table} onJoin={this.joinTable} displayName={true} />
         </div>
       }
 
