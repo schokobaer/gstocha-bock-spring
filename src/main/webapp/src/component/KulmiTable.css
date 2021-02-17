@@ -56,3 +56,7 @@
     font-size: 18px;
     font-weight: bold;
 }
+
+.kulmi-table-active {
+    background-color: #13660055;
+}

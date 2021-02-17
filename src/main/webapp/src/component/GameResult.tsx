@@ -117,7 +117,7 @@ export default class GameResult extends React.Component<Props, State> {
 
                 {this.state.display === 'STICHE' && stiche}
                 {this.state.display === 'RESULT' && gameResult}
-                {this.state.display === 'TABLE' && <KulmiTable players={this.props.players} writer={this.props.writer!} /> }
+                {this.state.display === 'TABLE' && <KulmiTable players={this.props.players} writer={this.props.writer!} highlight={true} /> }
 
                 {this.props.writer == null &&
                 <div onClick={() => this.setState({puckRestart: !this.state.puckRestart})}>

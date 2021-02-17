@@ -2,17 +2,17 @@ import React, { Fragment } from 'react';
 import './Changelog.css'
 import {getLastVersion, setLastVersion, Version} from "../util/GameRepo";
 
-const version = new Version("1.3")
+const version = new Version("1.3.1")
 
 const features: Array<Feature> = [
-    {icon: '🖖', description: 'V-Style Tischnamen (siehe URL)', version: new Version("1.2.11")},
-    {icon: '☎️ ', description: 'Spielbar am Smartphone/Tablet', version: new Version("1.2.12")},
-    {icon: '🦊 ', description: 'Firefox bug fixed', version: new Version("1.2.13")},
-    {icon: '❕', description: 'Stöcke Button immer sichtbar', version: new Version("1.2.14"), link: 'Stcke_25'},
-    {icon: '✏️', description: 'Change Name', version: new Version("1.2.15"), link: 'Change_Name'},
-    {icon: '⚫', description: 'Spieler Puck', version: new Version("1.2.16"), link: 'Spieler_Puck_8'},
+    {icon: '📝', description: 'Schrift', version: new Version("1.3")},
     {icon: '🎲', description: 'Position Shuffle', version: new Version("1.2.17"), link: 'Neuer_Tisch_8'},
-    {icon: '📝', description: 'Schrift', version: new Version("1.3")}
+    {icon: '⚫', description: 'Spieler Puck', version: new Version("1.2.16"), link: 'Spieler_Puck_8'},
+    {icon: '✏️', description: 'Change Name', version: new Version("1.2.15"), link: 'Change_Name'},
+    {icon: '❕', description: 'Stöcke Button immer sichtbar', version: new Version("1.2.14"), link: 'Stcke_25'},
+    {icon: '🦊 ', description: 'Firefox bug fixed', version: new Version("1.2.13")},
+    {icon: '☎️ ', description: 'Spielbar am Smartphone/Tablet', version: new Version("1.2.12")},
+    {icon: '🖖', description: 'V-Style Tischnamen (siehe URL)', version: new Version("1.2.11")},
 ]
 
 export default class Changelog extends React.Component<Props, State> {
@@ -20,7 +20,6 @@ export default class Changelog extends React.Component<Props, State> {
     componentWillMount(): void {
         this.setState({lastVersion: getLastVersion()})
         setLastVersion(version)
-        features.reverse()
     }
 
     render() {

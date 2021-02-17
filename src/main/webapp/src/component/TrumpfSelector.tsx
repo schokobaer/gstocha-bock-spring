@@ -57,7 +57,7 @@ class TrumpfSelector extends React.Component<Props, State> {
                            value={this.state.showTable} />
 
             {this.state.showTable ?
-                <KulmiTable players={this.props.players} writer={this.props.writer!}/>
+                <KulmiTable players={this.props.players} writer={this.props.writer!} />
                 :
                 <div>
                     <div className="trumpfselector-flex">

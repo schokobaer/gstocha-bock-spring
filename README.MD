@@ -42,9 +42,7 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
 ### Stylings:
   - Mobile: Hand cards in 2 rows, not overlapping
   - Shuffle Table: Force default display in RunningGames
-  - Highlight the current played game in KulmiTable
   
 
 ## Bugs:
   - Untertrumpfen works in Webapp -> e.g. Laub Trumpf, EK, E8, E6 works
-  - Changelog: Reverse should only happen once

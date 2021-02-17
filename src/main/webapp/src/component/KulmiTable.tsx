@@ -31,17 +31,17 @@ class KulmiTable extends React.Component<Props, State> {
                 </div>
                 {this.trumpfOrder().map((t: string, i: number) =>
                     <div className="trumpf-row">
-                        {this.props.writer.table.map(teamData =>
+                        {this.props.writer.table.map((teamData, teamIdx) =>
                             <Fragment>
-                                <div className={"kulmi-table-trumpf-col" + (teamData[i].first === 0 ? " trumpf-available" : "")}>{t}</div>
-                                <div>{teamData[i].first !== 0 ? teamData[i].first : ''}</div>
-                                <div>{teamData[i].second !== 0 ? teamData[i].second : ''}</div>
+                                <div className={"kulmi-table-trumpf-col" + (teamData[i].first === 0 ? " trumpf-available" : "") + (this.props.writer.currentTeam === teamIdx && this.props.writer.currentTrumpf === this.trumpfOrder()[i] && this.props.highlight ? ' kulmi-table-active' : '')}>{t}</div>
+                                <div className={this.props.writer.currentTeam === teamIdx && this.props.writer.currentTrumpf === this.trumpfOrder()[i] && this.props.highlight ? 'kulmi-table-active' : ''}>{teamData[i].first !== 0 ? teamData[i].first : ''}</div>
+                                <div className={this.props.writer.currentTeam === teamIdx && this.props.writer.currentTrumpf === this.trumpfOrder()[i] && this.props.highlight ? 'kulmi-table-active' : ''}>{teamData[i].second !== 0 ? teamData[i].second : ''}</div>
                             </Fragment>
                         )}
                     </div>
                 )}
             {this.props.writer.table.filter(teamData =>
-                teamData.filter(trumpfData => trumpfData.first === 0).length === 0).length === this.props.writer.table.length &&
+                teamData.filter(trumpfData => trumpfData.first === 0).length === 0).length === this.props.writer.table.length && // check if all games are played
                 <Fragment>
                     <div className="single-sum-row">
                         {this.props.writer.table.map(teamData =>
@@ -74,6 +74,7 @@ class KulmiTable extends React.Component<Props, State> {
 interface Props {
     players: Array<GamePlayerDto>
     writer: WriterDto
+    highlight?: boolean
 }
 interface State {
 }
