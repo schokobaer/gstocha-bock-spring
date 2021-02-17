@@ -65,6 +65,7 @@ class TablePage extends React.Component<Props, State> {
             password: data.password,
             logic: data.logic,
             puck: data.starter,
+            puckOpens: data.puckOpens,
             writer: data.writer,
             randomizePlayerOrder: data.randomizePlayerPosition
         }

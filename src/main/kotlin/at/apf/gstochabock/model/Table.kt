@@ -39,6 +39,7 @@ enum class TableState {
 
 data class Puck (
         var position: Int,
+        var opens: Boolean,
         var starter: Card?
 )
 

@@ -49,6 +49,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
         passwordValue: "",
         logic: "base",
         starter: 'S6',
+        puckOpens: false,
         randomizePlayerPosition: false
     }
 
@@ -57,6 +58,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
             password: this.state.passwordValue.length > 0 ? this.state.passwordValue : undefined,
             logic: this.state.logic,
             starter: this.state.starter,
+            puckOpens: this.state.puckOpens,
             randomizePlayerPosition: this.state.randomizePlayerPosition,
             writer: this.state.writer
         }
@@ -70,7 +72,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
         }
 
         return <Dialog>
-            <h3>Neuer Tisch</h3>
+            <h2>Neuer Tisch</h2>
             <table style={{width: '100%'}}>
                 <tr>
                     <td>Pasword</td>
@@ -91,6 +93,7 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             <input type="checkbox"
                                    checked={this.state.randomizePlayerPosition}
                                    style={{marginTop: '10px'}} />
+                            <span style={{marginLeft: 5}}>(Spieler werden beim Beitreten zufällig am Tisch positioniert)</span>
                         </div>
                     </td>
                 </tr>
@@ -101,6 +104,17 @@ export default class CreateTableDialog extends React.Component<Props, State> {
                             defaultValue={puckCardOptions[0]}
                             options={puckCardOptions}
                             onChange={(v: any) => this.setState({starter: v.value})} />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Puck Opens</td>
+                    <td>
+                        <div onClick={() => this.setState({puckOpens: !this.state.puckOpens})}>
+                            <input type="checkbox"
+                                   checked={this.state.puckOpens}
+                                   style={{marginTop: '10px'}} />
+                            <span style={{marginLeft: 5}}>(Es beginnt immer der Spieler mit dem Puck, egal wer ansagt)</span>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -151,6 +165,7 @@ interface State {
     passwordValue: string
     logic: string
     starter?: string
+    puckOpens: boolean
     randomizePlayerPosition: boolean
     writer?: string
 }
@@ -159,6 +174,7 @@ export interface CreateTableData {
     password?: string
     logic: string
     starter?: string
+    puckOpens: boolean
     randomizePlayerPosition: boolean
     writer?: string
 }

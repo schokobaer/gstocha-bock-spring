@@ -13,3 +13,7 @@
 .table-create-btn {
     margin-right: 10px;
 }
+
+.dialog table tr td {
+    padding: 3px 0px;
+}

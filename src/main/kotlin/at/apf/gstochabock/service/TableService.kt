@@ -87,7 +87,7 @@ class TableService {
                 null,
                 table.created,
                 table.logic,
-                if (table.puck !== null) Puck(table.puck.position, table.puck.starter) else null,
+                if (table.puck !== null) Puck(table.puck.position, table.puck.opens, table.puck.starter) else null,
                 table.writer?.clone(),
                 table.randomizePlayerOrder ?: false,
                 table.state
@@ -136,8 +136,13 @@ class TableService {
 
         table.trumpf = trumpf
         logger.info(tableid, player.name, "setTrumpf", "set trumpf to $trumpf")
-        table.currentMove = player.position
-        logger.info(tableid, player.name, "setTrumpf", "set starting player to ${player.position}")
+        if (table.puck?.opens === false) {
+            table.currentMove = player.position
+            logger.info(tableid, player.name, "setTrumpf", "set starting player to ${player.position}")
+        } else {
+            table.currentMove = table.puck?.position ?: player.position
+            logger.info(tableid, player.name, "setTrumpf", "set starting player to ${table.currentMove}")
+        }
         table.state = TableState.PLAYING
         logger.info(tableid, player.name, "setTrumpf", "changed state to PLAYING")
 

@@ -39,7 +39,7 @@ class LoungeService {
         return gameRepo.list { it.players.find { p -> p.playerid == playerid } !== null }
     }
 
-    fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?, randomizePlayerOrder: Boolean?, writerString: String?): Table {
+    fun createTable(playerid: String, playername: String, password: String?, logicString: String, puckCard: String?, randomizePlayerOrder: Boolean?, writerString: String?, puckOpens: Boolean): Table {
         val logic = if (logicString.equals("base")) BaseJassLogic() else DornbirnJassLogic()
         val writer = if ("base".equals(writerString)) BaseWriter() else if ("ESLH".equals(writerString)) DornbirnWriter() else null
         if (writer !== null) {
@@ -59,7 +59,7 @@ class LoungeService {
             null,
             creationTime,
             logic,
-            Puck(0, if (puckCard !== null) Card(puckCard) else null),
+            Puck(0, puckOpens, if (puckCard !== null) Card(puckCard) else null),
             writer,
             randomizePlayerOrder ?: false
         )

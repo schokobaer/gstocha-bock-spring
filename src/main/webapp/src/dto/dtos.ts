@@ -65,6 +65,7 @@ export interface CreateRequestBody {
     password?: string
     logic: string
     puck?: string
+    puckOpens: boolean
     writer?: string
     randomizePlayerOrder: boolean
 }
