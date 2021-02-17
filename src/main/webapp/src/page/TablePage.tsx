@@ -7,6 +7,7 @@ import CreateTableDialog, {CreateTableData} from "../component/dialog/CreateTabl
 import {getUserId, getUserName} from "../util/GameRepo";
 import PasswordDialog from "../component/dialog/PasswordDialog";
 import Changelog from "../component/Changelog";
+import DisplaySwitch from "../component/widget/DisplaySwitch";
 
 class TablePage extends React.Component<Props, State> {
 
@@ -106,7 +107,7 @@ class TablePage extends React.Component<Props, State> {
 
     toggle() {
         const openTables = !this.state.openTables
-        this.setState({openTables: openTables})
+        this.setState({openTables: openTables, tables: []})
         if (openTables) {
             this.loadOpenTables()
         } else {
@@ -125,14 +126,22 @@ class TablePage extends React.Component<Props, State> {
 
         let looser
         if (this.state.tables.length === 0) {
-            looser = <div style={{marginTop: '10px'}}>
-                No Tables available 🤓 Create a new one 🔥
+            looser = <div style={{marginTop: '20px', textShadow: '0px 0px 3px #ccc'}}>
+                🧦 Just old socks hanging around. Create a new Table for more excitement ...
             </div>
         }
 
         return <div className="tablepage">
+
+            <DisplaySwitch
+                onChange={() => this.toggle()}
+                items={[
+                    {title: 'Lounge', value: true},
+                    {title: 'Laufende Spiele', value: false}
+                ]}
+                value={this.state.openTables} />
+
             <button className="jass-btn" onClick={() => this.setState({createTableDialog: true})}>Neuer Tisch</button>
-            <button style={{marginLeft: '10px'}} className="jass-btn" onClick={() => this.toggle()}>{this.state.openTables ? 'Laufende Spiele' : 'Lounge'}</button>
 
             {looser}
             <div className="tables-ct">
@@ -143,7 +152,9 @@ class TablePage extends React.Component<Props, State> {
                         onClick={!this.state.openTables ? (() =>  window.location.hash = `#${t.id}`) : undefined} >
                     <Table
                         table={t}
-                        onJoin={this.state.openTables ? this.joinTable : undefined} displayName={true} />
+                        onJoin={this.state.openTables ? this.joinTable : undefined}
+                        forcePosition={!this.state.openTables}
+                        displayName={true} />
                 </div>)}
             </div>
             <Changelog />

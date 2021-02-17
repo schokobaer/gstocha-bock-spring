@@ -23,7 +23,7 @@ export default class Table extends React.Component<Props> {
     }
 
   render() {
-      if (this.props.table.randomOrder === true) {
+      if (this.props.table.randomOrder === true && this.props.forcePosition !== true) {
           return <div className="table-ct-rnd">
               { this.props.displayName &&
               <div className="table-name">{this.props.table.id}</div>
@@ -64,4 +64,5 @@ interface Props {
     onJoin?: (table: TableDto, position: Position) => void
     puck?: number
     displayName?: boolean
+    forcePosition?: boolean
 }
