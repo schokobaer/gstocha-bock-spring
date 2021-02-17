@@ -29,5 +29,7 @@ data class GameRoundDto(
 
 data class WriterDto(
         val type: String,
-        val table: List<List<Pair<Int, Int>>>
+        val table: List<List<Pair<Int, Int>>>,
+        val currentTeam: Int?,
+        val currentTrumpf: String?
 )

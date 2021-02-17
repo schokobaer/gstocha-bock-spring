@@ -79,13 +79,17 @@ open class BaseWriter : GameWriter {
 
         return when {
             points === 257 -> 257 * multiplicator()
-            points === -257 -> 257 * multiplicator() * 2
+            points === -257 -> -257 * multiplicator() * 2
             else -> (points - (157 - points)) * multiplicator()
         }
     }
 
     override fun write(points: Int) {
         data[currentTeam!!][currentTrumpf]!!.points = calcPoints(points)
+    }
+
+    override fun matsch(kontra: Boolean) {
+        data[currentTeam!!][currentTrumpf]!!.points = calcPoints(if (kontra) -257 else 257)
     }
 
     override fun writeWeiss(team: Int, points: Int) {

@@ -9,12 +9,12 @@ export default class Runde extends React.Component<Props, State> {
         showLast: false
     }
 
-  /**
-   * Finds the played card for a specific player. If the player has not played yet or the player is not given,
-   * undefined is returned.
-   * @param idx index of the player to find out the played card
-   */
-  getCard(idx: number): string | undefined {
+    /**
+    * Finds the played card for a specific player. If the player has not played yet or the player is not given,
+    * undefined is returned.
+    * @param idx index of the player to find out the played card
+    */
+    getCard(idx: number): string | undefined {
       if (this.props.players[idx] === undefined) return undefined
       let roundStartPos = this.state.showLast && this.props.lastRound ? this.props.lastRound.startPosition : this.props.roundStartPos
       let cards = this.state.showLast && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
@@ -27,25 +27,25 @@ export default class Runde extends React.Component<Props, State> {
         this.props.players[idx]?.position === (roundStartPos! + 4 + 2) % 4 ? cards[2] :
         this.props.players[idx]?.position === (roundStartPos! + 4 + 3) % 4 ? cards[3] :
         undefined
-  }
+    }
 
-  getName(idx: number): string {
+    getName(idx: number): string {
       if (this.props.players === null || this.props.players[idx] === null) {
           return "Empty"
       }
       return this.props.players[idx]!!.name
-  }
+    }
 
-  getWeisCall(idx: number) {
+    getWeisCall(idx: number) {
       if (this.props.players[idx] !== null && this.props.players[idx]!!.weisCall !== null) {
           const weissCall = this.props.players[idx]!!.weisCall
           const str = weissCall === "Q" ? "4 Gleiche" : weissCall + " Blatt"
           return <label className="runde-weiscall" style={{margin: '0 auto'}}>{str}</label>
       }
       return ""
-  }
+    }
 
-  getStoeckeCallout(idx: number) {
+    getStoeckeCallout(idx: number) {
       const pred = (c: string) => c === this.props.trumpf + "K" || c === this.props.trumpf + "O"
       if (this.props.players[idx]?.stoeckeCallout && (
           this.props.cards.find(pred) !== undefined  // second stoecke card is played in the current round
@@ -53,20 +53,23 @@ export default class Runde extends React.Component<Props, State> {
           return <label className="runde-weiscall" style={{margin: '0 auto'}}>STÖCKE !</label>
       }
       return ""
-  }
+    }
 
-  getMyCard(): string | undefined {
+    getMyCard(): string | undefined {
       const cards = (this.state.showLast || this.props.cards.length === 0) && this.props.lastRound ? this.props.lastRound.cards : this.props.cards
       return cards.find(c => c !== this.getCard(0) && c !== this.getCard(1) && c !== this.getCard(2))
-  }
+    }
 
-  render() {
+    render() {
       let actionBtns
       if (this.props.trumpf) {
           actionBtns = <div className="action-ct">
               <div className="trumpf-ct">
                   <img src={`img/trumpf/${this.props.trumpf}.png`} />
               </div>
+              {this.props.joker &&
+              <div className="joker-ct">{this.props.joker}</div>
+              }
               <div className="peek-btn"
                    title="Letzter Stich"
                    style={{visibility: this.props.lastRound ? 'visible' : 'hidden'}}
@@ -123,7 +126,7 @@ export default class Runde extends React.Component<Props, State> {
                 <Karte value={this.getMyCard()} />
             </div>
         </div>
-  }
+    }
 }
 
 interface Props {
@@ -131,6 +134,7 @@ interface Props {
     roundStartPos?: number
     cards: Array<string>
     trumpf?: string
+    joker?: string
     lastRound?: {
         startPosition: number;
         cards: Array<string>;

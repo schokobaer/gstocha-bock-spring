@@ -39,6 +39,8 @@ export interface GameRoundDto {
 export interface WriterDto {
     type: string
     table: Array<Array<Pair<number, number>>>
+    currentTeam?: number
+    currentTrumpf?: string
 }
 
 export interface Pair<K, V> {

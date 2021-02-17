@@ -20,13 +20,14 @@ export default class Changelog extends React.Component<Props, State> {
     componentWillMount(): void {
         this.setState({lastVersion: getLastVersion()})
         setLastVersion(version)
+        features.reverse()
     }
 
     render() {
         return <Fragment>
             <div className="news-ct">
                 <h2>Changelog</h2>
-                {features.reverse().map(f =>
+                {features.map(f =>
                     <div className={(this.state.lastVersion.compare(f.version) < 0) ? "fresh-feature" : ''}>
                         <div>{f.icon}</div>
                         {f.link ?

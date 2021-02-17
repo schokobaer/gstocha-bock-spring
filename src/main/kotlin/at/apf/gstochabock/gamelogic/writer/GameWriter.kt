@@ -10,6 +10,7 @@ interface GameWriter {
     fun anounce(team: Int, trumpf: WriterTrumpf)
     fun calcPoints(points: Int): Int
     fun write(points: Int)
+    fun matsch(kontra: Boolean)
     fun writeWeiss(team: Int, points: Int)
     fun writeStoecke(team: Int)
     fun over(): Boolean

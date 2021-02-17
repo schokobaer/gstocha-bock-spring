@@ -305,28 +305,31 @@ class TableService {
                 }
                 table.state = TableState.FINISHED
                 logger.info(tableid, player.name, "play", "changed state to FINISHED")
-
-
-                if (table.writer !== null) {
-                    // writer calculations
-                    table.writer.write(table.points[table.writer.currentTeam!!])
-                    val matsch = table.points[table.writer.currentTeam!!] === 257
-                    val kontraMatsch = table.points.indexOf(257) >= 0 && !matsch
-                    for (i in 0 until table.logic.amountTeams()) {
-                        if (!(matsch && i !== table.writer.currentTeam) && !(kontraMatsch && i === table.writer.currentTeam)) {
-                            table.writer.writeWeiss(i, table.weisPoints[i])
-                        }
-                    }
-                    val stoeckePlayer = table.players.find { it.stoecke === Stoeckability.Called }
-                    if (stoeckePlayer !== null) {
-                        table.writer.writeStoecke(stoeckePlayer.position % table.logic.amountTeams())
-                    }
-                }
             }
 
             // assign points
             table.points[winningTeamIndex] += points
             logger.info(tableid, player.name, "play", "adding points to team ${nextMove % table.logic.amountTeams()} -> in total ${table.points[nextMove % table.logic.amountTeams()]}")
+
+            if (table.players.all { it.cards.isEmpty() } && table.writer !== null) {
+                // writer calculations
+                val matsch = table.roundHistory.all { it.teamIndex === winningTeamIndex }
+                val kontraMatsch = matsch && winningTeamIndex !== table.writer.currentTeam
+                if (matsch) {
+                    table.writer.matsch(kontraMatsch)
+                } else {
+                    table.writer.write(table.points[table.writer.currentTeam!!])
+                }
+                for (i in 0 until table.logic.amountTeams()) {
+                    if (!(matsch && i !== table.writer.currentTeam) && !(kontraMatsch && i === table.writer.currentTeam)) {
+                        table.writer.writeWeiss(i, table.weisPoints[i])
+                    }
+                }
+                val stoeckePlayer = table.players.find { it.stoecke === Stoeckability.Called }
+                if (stoeckePlayer !== null) {
+                    table.writer.writeStoecke(stoeckePlayer.position % table.logic.amountTeams())
+                }
+            }
 
             table.currentMove = nextMove
             table.round.clear()

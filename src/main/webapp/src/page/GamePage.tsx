@@ -369,7 +369,8 @@ class GamePage extends React.Component<Props, State> {
             roundStartPos={(currentMove! - round!.length + 4) % 4}
             cards={round!}
             lastRound={this.state.game.roundHistory[this.state.game.roundHistory.length - 1]}
-            trumpf={this.state.game.trumpf} />
+            trumpf={this.state.game.trumpf}
+            joker={['7', '8'].find(j => j === this.state.game?.writer?.currentTrumpf) !== undefined ? this.state.game?.writer?.currentTrumpf : undefined} />
         <div className="game-button-ct">
             { this.weisingAllowed() && <Fragment>
                 <div className="jass-btn" onClick={() => this.setState({weising: true})}>Weisen</div>

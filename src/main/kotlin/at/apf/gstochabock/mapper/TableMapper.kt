@@ -98,7 +98,12 @@ class TableMapper {
                 players,
                 player.cards.map { it.toString() },
                 player.stoecke.name,
-                if (t.writer !== null) WriterDto(t.writer.serializationCode(), t.writer.export()) else null,
+                if (t.writer !== null) WriterDto(
+                        t.writer.serializationCode(),
+                        t.writer.export(),
+                        t.writer.currentTeam,
+                        t.writer.currentTrumpf?.value
+                ) else null,
                 t.puck?.position,
                 t.state.name
         )

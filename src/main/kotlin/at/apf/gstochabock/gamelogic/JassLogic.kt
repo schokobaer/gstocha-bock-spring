@@ -40,4 +40,5 @@ interface JassLogic {
     fun roundWinner(round: List<Card>, trumpf: Trumpf): Int
 
     fun calcPoints(round: List<Card>, trumpf: Trumpf): Int
+
 }
