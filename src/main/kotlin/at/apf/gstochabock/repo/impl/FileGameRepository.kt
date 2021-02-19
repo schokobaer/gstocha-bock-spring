@@ -4,6 +4,8 @@ import at.apf.gstochabock.model.Table
 import at.apf.gstochabock.repo.GameRepository
 import at.apf.gstochabock.serialize.TableSerDes
 import at.apf.gstochabock.util.IdGenerator
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -14,12 +16,17 @@ import java.io.IOException
 import java.io.PrintWriter
 import java.lang.RuntimeException
 import java.nio.file.Files
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 class FileGameRepository : GameRepository {
 
     private val locks: MutableMap<String, Lock> = mutableMapOf()
+    private val cache: Cache<String, Table> = Caffeine.newBuilder()
+            .maximumSize(10)
+            .expireAfterAccess(1, TimeUnit.DAYS)
+            .build()
 
     @Autowired
     private lateinit var idGenerator: IdGenerator
@@ -110,6 +117,9 @@ class FileGameRepository : GameRepository {
             locks.remove(id)
             lock.unlock()
         }
+        if (cache.getIfPresent(id) !== null) {
+            cache.invalidate(id)
+        }
     }
 
     private fun getFile(tableid: String): File {
@@ -118,11 +128,17 @@ class FileGameRepository : GameRepository {
     }
 
     private fun writeFile(table: Table) {
+        cache.put(table.id, table)
         val json = serDes.toText(table)
         FileUtils.write(getFile(table.id), json, "UTF-8")
     }
 
     private fun readFile(tableid: String): Table {
+        val t = cache.getIfPresent(tableid)
+        if (t !== null) {
+            return t
+        }
+
         val json = FileUtils.readFileToString(getFile(tableid), "UTF-8")
         val table = serDes.fromText(json)
         table.id = tableid

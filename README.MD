@@ -35,6 +35,7 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - last stich as table, not as list
   - show trumpf on GameResult
   - table caching
+  - if a writer exists: disable not available trumpfs visually as well
 
 ### Stylings:
   - Mobile: Hand cards in 2 rows, not overlapping
