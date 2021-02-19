@@ -1,21 +1,29 @@
 package at.apf.gstochabock.log
 
-import at.apf.gstochabock.repo.LogRepo
+import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.io.File
+import java.nio.charset.Charset
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.stream.Collectors
 
 @Component
 class GameEventLogger {
 
-    @Autowired
-    private lateinit var logRepo: LogRepo
-
     private val sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-    private val logSize = 200
+    private lateinit var directory: String
+
+    @Value("\${log.directory}")
+    fun setDirectory(directory: String) {
+        val file = File(directory)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+        this.directory = file.normalize().path
+    }
 
     private fun fill(str: String, n: Int, left: Boolean = true): String {
         var s = str
@@ -28,14 +36,9 @@ class GameEventLogger {
     @Synchronized
     private fun log(lvl: String, tableid: String, player: String, action: String, msg: String) {
         val now = Date()
-        val tbid = fill(tableid.substring(0, 8), 8)
         val timestamp = sdf.format(now)
-        val log = "[$timestamp] ${fill(lvl, 5)} --- $tbid/${fill(player, 15, false)} [${fill(action, 15)}]: $msg"
-        val store = logRepo.get(tableid)
-        store.add(log)
-        while (store.size > logSize) {
-            store.removeAt(0)
-        }
+        val log = "[$timestamp] ${fill(lvl, 5)} --- ${fill(player, 15, false)} [${fill(action, 15)}]: $msg\n"
+        flush(tableid, log)
     }
 
     fun debug(tableid: String, player: String, action: String, msg: String) {
@@ -54,11 +57,12 @@ class GameEventLogger {
         log("ERROR", tableid, player, action, msg)
     }
 
-    fun clean(tableid: String) {
-        //logRepo.get(tableid).clear()
+    private fun flush(tableid: String, log: String) {
+        val file = File(directory + '/' + tableid + ".log")
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        FileUtils.write(file, log, Charset.forName("UTF-8"), true)
     }
 
-    fun export(tableid: String): String {
-        return logRepo.get(tableid).stream().collect(Collectors.joining("\n"))
-    }
 }

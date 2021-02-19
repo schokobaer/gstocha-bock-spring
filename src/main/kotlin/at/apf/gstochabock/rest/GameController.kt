@@ -80,12 +80,4 @@ class GameController {
         tableService.leave(id, playerid)
     }
 
-    @GetMapping("/api/table/{id}/log", produces = [MediaType.TEXT_PLAIN_VALUE])
-    fun getLog(@PathVariable id: String): String {
-        val game = tableService.getGameTable(id)
-        if (game.state === TableState.FINISHED)
-            return logger.export(id)
-        return "Game not finished"
-    }
-
 }

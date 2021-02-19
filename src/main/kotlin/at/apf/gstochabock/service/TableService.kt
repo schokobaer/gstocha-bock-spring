@@ -386,7 +386,6 @@ class TableService {
         }
 
         logger.info(tableid, player.name, "newGame", "clearing log buffer now...")
-        logger.clean(tableid)
 
         addHistory(table)
         var restart2 = restart

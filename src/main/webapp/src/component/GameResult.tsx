@@ -17,8 +17,6 @@ export default class GameResult extends React.Component<Props, State> {
         return `${players[0].name} & ${players[1].name}`
     }
 
-    getTableId = () => document.location.hash.length < 2 ? undefined : document.location.hash.substring(1)
-
     getStichTable() {
         const idxArr: Array<number> = []
         const resultArr: Array<Array<Array<string>>> = []
@@ -127,11 +125,6 @@ export default class GameResult extends React.Component<Props, State> {
                 </div>
                 }
                 <button className="jass-btn" onClick={() => this.props.onNewGame(this.state.puckRestart)}>Nächstes Spiel</button>
-                <br />
-
-                <p>
-                    <a href={"/api/table/" + this.getTableId() + "/log"} target="_blank">generate game logs</a>
-                </p>
             </div>
         </React.Fragment>
     }
