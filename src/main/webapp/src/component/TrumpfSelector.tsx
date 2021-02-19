@@ -17,7 +17,7 @@ class TrumpfSelector extends React.Component<Props, State> {
         if (this.props.writer) {
             return this.props.writer.type === "base" ? [
                 "E", "L", "H", "S", "G", "B", "7", "8", "K"
-            ] : this.props.writer.type === "dornbirn" ? [
+            ] : this.props.writer.type === "ESLH" ? [
                 "E", "S", "L", "H", "G", "B", "7", "8", "K"
             ] : []
         }
