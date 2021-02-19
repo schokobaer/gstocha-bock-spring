@@ -65,32 +65,9 @@ class LoungeService {
         )
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
-        logger.info(table.id, playername, "createTable", "created table")
+        logger.info(table.id, playername, "createTable", "created table: Puck=$puckCard, puckOpens=$puckOpens, Randomize=$randomizePlayerOrder, writer=$writerString")
         notifyService.loungeUpadte()
         return table
-    }
-
-    private fun randomizePlayerOrder(table: Table) {
-        val allPlayers = table.players.toMutableList()
-        val positions = mutableListOf<Int>()
-        var i = 1
-        while (i < table.logic.amountPlayers()) {
-            positions.add(i)
-            i++
-        }
-        table.players.clear()
-        table.players.add(allPlayers[0])
-        allPlayers.removeAt(0)
-        while (allPlayers.isNotEmpty()) {
-            val player = allPlayers[0]
-            allPlayers.removeAt(0)
-            val index = Random().nextInt(positions.size)
-            val pos = positions[index]
-            positions.removeAt(index)
-            player.position = pos
-            table.players.add(player)
-        }
-        table.players.sortBy { it.position }
     }
 
     fun joinTable(tableid: String, playerid: String, playername: String, position: Int, password: String?) {
@@ -143,9 +120,6 @@ class LoungeService {
 
         // table full
         if (table.players.size === table.logic.amountPlayers()) {
-            /*if (table.randomizePlayerOrder === true) {
-                randomizePlayerOrder(table)
-            }*/
             tableService.nextGame(table)
             tableService.organizePuck(table)
             logger.info(tableid, playername, "joinTable", "initialized next game")

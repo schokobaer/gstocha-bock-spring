@@ -58,8 +58,10 @@ class TableService {
                 table.puck.position = table.players.find {
                         p -> p.cards.find { it.equals(table.puck.starter) } !== null
                 }?.position ?: Random().nextInt(table.logic.amountPlayers())
+                logger.info(table.id, " -- ", "puck", "Starter: ${table.puck.position}")
             } else {
                 table.puck.position = Random().nextInt(table.logic.amountPlayers())
+                logger.info(table.id, " -- ", "puck", "Random order: ${table.puck.position}")
             }
         }
     }
@@ -141,7 +143,7 @@ class TableService {
             logger.info(tableid, player.name, "setTrumpf", "set starting player to ${player.position}")
         } else {
             table.currentMove = table.puck?.position ?: player.position
-            logger.info(tableid, player.name, "setTrumpf", "set starting player to ${table.currentMove}")
+            logger.info(tableid, player.name, "setTrumpf", "set starting player to ${table.currentMove} due to puck opens")
         }
         table.state = TableState.PLAYING
         logger.info(tableid, player.name, "setTrumpf", "changed state to PLAYING")
@@ -158,6 +160,7 @@ class TableService {
             val teamIdx = player.position % table.logic.amountTeams()
             val writerTrumpf = WriterTrumpf.fromTrumpf(trumpf, joker)
             table.writer.anounce(teamIdx, writerTrumpf)
+            logger.info(tableid, player.name, "setTrumpf", "writer anounces $teamIdx with trumpf ${writerTrumpf.value}")
         }
 
         gameRepo.writeBack(table)
@@ -320,6 +323,7 @@ class TableService {
                 // writer calculations
                 val matsch = table.roundHistory.all { it.teamIndex === winningTeamIndex }
                 val kontraMatsch = matsch && winningTeamIndex !== table.writer.currentTeam
+                logger.info(tableid, player.name, "gameEnd", "Matsch=$matsch, KontraMatsch=$kontraMatsch")
                 if (matsch) {
                     table.writer.matsch(kontraMatsch)
                 } else {
@@ -328,11 +332,13 @@ class TableService {
                 for (i in 0 until table.logic.amountTeams()) {
                     if (!(matsch && i !== table.writer.currentTeam) && !(kontraMatsch && i === table.writer.currentTeam)) {
                         table.writer.writeWeiss(i, table.weisPoints[i])
+                        logger.info(tableid, " -- ", "gameEnd", "Writing weis for team $i: ${table.weisPoints[i]}")
                     }
                 }
                 val stoeckePlayer = table.players.find { it.stoecke === Stoeckability.Called }
                 if (stoeckePlayer !== null) {
                     table.writer.writeStoecke(stoeckePlayer.position % table.logic.amountTeams())
+                    logger.info(tableid, " -- ", "gameEnd", "Writing stoecke for team ${stoeckePlayer.position % table.logic.amountTeams()}")
                 }
             }
 
@@ -391,6 +397,7 @@ class TableService {
         var restart2 = restart
         if (table.writer?.over() === true) {
             table.writer.reset()
+            logger.info(tableid, player.name, "newGame", "Writer reseted")
             restart2 = true
         }
 
@@ -399,6 +406,7 @@ class TableService {
             organizePuck(table)
         } else if (table.puck !== null) {
             table.puck.position = (table.puck.position + 1) % table.logic.amountPlayers()
+            logger.info(tableid, player.name, "puck", "Next puck: ${table.puck.position}")
         }
         logger.info(tableid, player.name, "newGame", "started new Game")
         table.players.forEach { logger.info(tableid, it.name, "handCards", it.cards.map { c -> c.toString() }.stream().collect(Collectors.joining(","))) }
@@ -413,11 +421,13 @@ class TableService {
 
         // Remove player
         table.players.remove(player)
+        logger.info(tableid, player.name, "leave", "Player left")
         table.state = TableState.PENDING
 
         // delete table if empty
         if (table.players.isEmpty()) {
             gameRepo.delete(tableid)
+            logger.info(tableid, player.name, "leave", "Table is empty. Got deleted")
         } else {
             gameRepo.writeBack(table)
         }
