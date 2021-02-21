@@ -19,6 +19,7 @@ data class Table(
         val puck: Puck? = null,
         val writer: GameWriter?,
         val randomizePlayerOrder: Boolean? = false,
+        var cardDistribution: MutableList<MutableList<Card>>?,
         var state: TableState = TableState.PENDING
 
 )

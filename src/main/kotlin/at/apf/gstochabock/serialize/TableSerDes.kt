@@ -40,6 +40,7 @@ class TableSerDes {
                         table.writer.currentTeam
                 ) else null,
                 table.randomizePlayerOrder,
+                table.cardDistribution,
                 table.state
         )
         val history = table.history
@@ -65,6 +66,7 @@ class TableSerDes {
                             history.writer.currentTeam
                     ) else null,
                     table.randomizePlayerOrder,
+                    history.cardDistribution,
                     history.state
             )
         }
@@ -99,6 +101,7 @@ class TableSerDes {
                 tdo.puck,
                 writer,
                 tdo.randomizePlayerOrder ?: false,
+                tdo.cardDistribution,
                 tdo.state
         )
         val h = tdo.history
@@ -127,6 +130,7 @@ class TableSerDes {
                     h.puck,
                     historyWriter,
                     h.randomizePlayerOrder ?: false,
+                    h.cardDistribution,
                     h.state
             )
         }
@@ -151,6 +155,7 @@ private data class TableDO(
         val puck: Puck?,
         val writer: WriterDO?,
         val randomizePlayerOrder: Boolean?,
+        val cardDistribution: MutableList<MutableList<Card>>?,
         var state: TableState = TableState.PENDING
 )
 

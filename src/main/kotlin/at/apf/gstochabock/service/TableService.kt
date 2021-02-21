@@ -46,6 +46,8 @@ class TableService {
             table.players[i].stoecke = Stoeckability.None
             table.players[i].weises = mutableListOf()
         }
+
+        //table.cardDistribution = playercards.map { it.toMutableList() }.toMutableList()
     }
 
     /**
@@ -92,6 +94,8 @@ class TableService {
                 if (table.puck !== null) Puck(table.puck.position, table.puck.opens, table.puck.starter) else null,
                 table.writer?.clone(),
                 table.randomizePlayerOrder ?: false,
+                //if (table.state === TableState.TRUMPF) table.players.map { it.cards.toMutableList() }.toMutableList() else null,
+                null,
                 table.state
         )
         table.history = t2
@@ -368,7 +372,9 @@ class TableService {
 
         logger.info(tableid, player.name, "undo", "wants to undo")
         if (table.state === TableState.TRUMPF) {
+            val cardDistribution = table.players.map { it.cards.toMutableList() }.toMutableList()
             table = table.history!!
+            table.cardDistribution = cardDistribution
             logger.info(tableid, player.name, "undo", "undo and back to the last game")
         } else if (table.state === TableState.PLAYING && table.players.all { it.cards.size === table.logic.amountCards() }) {
             // no cards played yet
@@ -401,7 +407,16 @@ class TableService {
             restart2 = true
         }
 
+        val cardDistribution = table.cardDistribution
         nextGame(table)
+
+        // if we have to restore the previous card distribution
+        if (cardDistribution !== null) {
+            table.players.forEach {
+                it.cards = cardDistribution[it.position]
+            }
+        }
+
         if (restart2) {
             organizePuck(table)
         } else if (table.puck !== null) {

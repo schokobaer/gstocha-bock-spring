@@ -61,7 +61,8 @@ class LoungeService {
             logic,
             Puck(0, puckOpens, if (puckCard !== null) Card(puckCard) else null),
             writer,
-            randomizePlayerOrder ?: false
+            randomizePlayerOrder ?: false,
+            null
         )
         table.players.add(Player(playerid, playername, 0, mutableListOf(), mutableListOf(), Stoeckability.None))
         gameRepo.create(table)
