@@ -34,8 +34,8 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
   - Display starter from last round on lastRoundHover
   - last stich as table, not as list
   - show trumpf on GameResult
-  - table caching
   - if a writer exists: disable not available trumpfs visually as well
+  - confirm for "back"
 
 ### Stylings:
   - Mobile: Hand cards in 2 rows, not overlapping
@@ -43,3 +43,4 @@ docker run -d -p 8080:8080 -v C:\Users\Andreas\Desktop\tmp\docker:/data --name=g
 
 ## Bugs:
   - Untertrumpfen works in Webapp -> e.g. Laub Trumpf, EK, E8, E6 works
+  - Back: Dornbirn to base writer

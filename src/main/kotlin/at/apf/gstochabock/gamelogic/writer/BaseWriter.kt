@@ -120,6 +120,8 @@ open class BaseWriter : GameWriter {
                 map[k] = WriteEntry(v.played, v.points, v.weis)
             }
         }
+        clone.currentTrumpf = currentTrumpf
+        clone.currentTeam = currentTeam
         return clone
     }
 

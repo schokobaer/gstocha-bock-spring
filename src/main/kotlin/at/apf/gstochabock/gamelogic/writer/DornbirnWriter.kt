@@ -15,4 +15,12 @@ class DornbirnWriter : BaseWriter() {
             WriterTrumpf.Acht,
             WriterTrumpf.Kulmi
     )
+
+    override fun clone(): GameWriter {
+        val clone = DornbirnWriter()
+        clone.import(this.export())
+        clone.currentTeam = currentTeam
+        clone.currentTrumpf = currentTrumpf
+        return clone
+    }
 }
