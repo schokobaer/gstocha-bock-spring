@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.io.File
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +57,13 @@ class GameEventLogger {
 
     fun error(tableid: String, player: String, action: String, msg: String) {
         log("ERROR", tableid, player, action, msg)
+    }
+
+    fun stackTrace(tableid: String, e: Throwable) {
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        e.printStackTrace(pw)
+        error(tableid, "", "", sw.toString())
     }
 
     private fun flush(tableid: String, log: String) {

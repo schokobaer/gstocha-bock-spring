@@ -27,7 +27,7 @@ class TableCleanupScheduler {
 
         val thresholdTimestamp = ZonedDateTime.now().minusHours(1)
 
-        repo.list { it.created !== null && it.created.isNotEmpty() }
+        repo.list { it.created !== null && it.created.isNotEmpty() && !it.created.equals("N/A") }
             .filter {
                 getTimestamp(it.created).isBefore(thresholdTimestamp)
                         && it.players.size < it.logic.amountPlayers()

@@ -41,43 +41,55 @@ class GameController {
 
     @PostMapping("/api/table/{id}/trumpf")
     fun trumpf(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: TrumpfRequestBody) {
-        tableService.setTrumpf(id, playerid, Trumpf.fromValue(req.trumpf), req.joker)
+        kotlin.runCatching { tableService.setTrumpf(id, playerid, Trumpf.fromValue(req.trumpf), req.joker) }
+                    .onFailure { logger.stackTrace(id, it) }
     }
 
     @PostMapping("/api/table/{id}/weis")
     fun weis(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: WeisRequestBody): WeisResponseBody {
-        val weises = tableService.weis(id, playerid, req.cards.map { Card(it) })
-        return WeisResponseBody(weises.map { it.toString() })
+        try {
+            val weises = tableService.weis(id, playerid, req.cards.map { Card(it) })
+            return WeisResponseBody(weises.map { it.toString() })
+        } catch (e: Exception) {
+            logger.stackTrace(id, e)
+        }
+        return WeisResponseBody(listOf())
     }
 
     @PostMapping("/api/table/{id}/stoecke")
     fun stoecke(@PathVariable id: String, @RequestHeader playerid: String) {
-        tableService.stoecke(id, playerid)
+        kotlin.runCatching { tableService.stoecke(id, playerid) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
     @PostMapping("/api/table/{id}/play")
     fun play(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: PlayRequestBody) {
-        tableService.play(id, playerid, Card(req.card))
+        kotlin.runCatching { tableService.play(id, playerid, Card(req.card)) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
     @PostMapping("/api/table/{id}/lay")
     fun lay(@PathVariable id: String, @RequestHeader playerid: String) {
-        tableService.lay(id, playerid)
+        kotlin.runCatching { tableService.lay(id, playerid) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
     @PostMapping("/api/table/{id}/undo")
     fun undo(@PathVariable id: String, @RequestHeader playerid: String) {
-        tableService.undo(id, playerid)
+        kotlin.runCatching { tableService.undo(id, playerid) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
     @PostMapping("/api/table/{id}/new")
     fun newGame(@PathVariable id: String, @RequestHeader playerid: String, @RequestBody req: NewGameRequestBody) {
-        tableService.newGame(id, playerid, req.restart)
+        kotlin.runCatching { tableService.newGame(id, playerid, req.restart) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
     @DeleteMapping("/api/table/{id}")
     fun leave(@PathVariable id: String, @RequestHeader playerid: String) {
-        tableService.leave(id, playerid)
+        kotlin.runCatching { tableService.leave(id, playerid) }
+                .onFailure { logger.stackTrace(id, it) }
     }
 
 }
