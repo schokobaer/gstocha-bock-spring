@@ -397,21 +397,26 @@ class TableService {
             throw RuntimeException("Wrong state for new game")
         }
 
-        logger.info(tableid, player.name, "newGame", "clearing log buffer now...")
+        logger.info(tableid, player.name, "newGame", "initializing new game")
 
         addHistory(table)
         var restart2 = restart
         if (table.writer?.over() === true) {
             table.writer.reset()
-            logger.info(tableid, player.name, "newGame", "Writer reseted")
+            logger.info(tableid, player.name, "newGame", "Writer reset")
             restart2 = true
         }
 
-        val cardDistribution = table.cardDistribution
+        val cardDistribution = table.cardDistribution?.toMutableList()
         nextGame(table)
+        table.cardDistribution = null
 
         // if we have to restore the previous card distribution
-        if (cardDistribution !== null) {
+        if (cardDistribution !== null
+                && cardDistribution.size === table.logic.amountPlayers()
+                && cardDistribution.all { it.size === table.logic.amountCards() }) {
+            logger.info(tableid, player.name, "newGame", "CardDistribution set; Overriding player cards: "
+                    + cardDistribution.map { cards -> "{" + cards.map { it.toString() }.joinToString(",") + "}" }.joinToString(","))
             table.players.forEach {
                 it.cards = cardDistribution[it.position]
             }

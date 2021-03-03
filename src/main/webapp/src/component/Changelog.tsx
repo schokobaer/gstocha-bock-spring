@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import './Changelog.css'
 import {getLastVersion, setLastVersion, Version} from "../util/GameRepo";
 
-const version = new Version("1.3.7")
+const version = new Version("1.3.8")
 
 const features: Array<Feature> = [
     {icon: '🔀', description: 'Kein neues Mischen nach Back', version: new Version("1.3.6")},
